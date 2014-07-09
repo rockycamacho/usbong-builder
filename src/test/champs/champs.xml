@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process-definition  xmlns=""  name="champs">
+	<start-state name="start-state1">
+		<transition to="textImageDisplay~policestation~Previously, Ratdago was finally arrested for the crimes he had committed while he was in power, thanks to the persistence of the CHAMPs. A trip to the future through the TPG showed that peace and order was restored in the future version of their town. But will this last?"></transition>
+	</start-state>
+
+	<task-node name="textImageDisplay~policestation~Previously, Ratdago was finally arrested for the crimes he had committed while he was in power, thanks to the persistence of the CHAMPs. A trip to the future through the TPG showed that peace and order was restored in the future version of their town. But will this last?">	
+		<transition to="link~In the meantime, the CHAMPs had become good friends and started to bond…" name="Any"></transition>
+	</task-node>
+	
+	<task-node name="link~In the meantime, the CHAMPs had become good friends and started to bond…">	
+		<task name="textClickableImageDisplay~cafe~More info can be found here: {a href='http://www.coffeebean.com.ph/'}Coffee Bean and Tea Leaf{/a}~Jessa and Carl are having lunch in a small café, talking.~Follow Jessa’s Story."></task>
+		<task name="textClickableImageDisplay~campus3~More info can be found here: {a href='http://www.ateneo.edu'}Ateneo de Manila University{/a}~Mia and Rex are sitting on the grass on campus. She tells Rex about Jessa’s worries over Ratdago.~Follow Mia’s Story."></task>
+		<transition to="textClickableImageDisplay~cafe~More info can be found here: {a href='http://www.coffeebean.com.ph/'}Coffee Bean and Tea Leaf{/a}~Jessa and Carl are having lunch in a small café, talking.~Follow Jessa’s Story." name="Any"></transition>
+	</task-node>
+	
+	<task-node name="textClickableImageDisplay~cafe~More info can be found here: {a href='http://www.coffeebean.com.ph/'}Coffee Bean and Tea Leaf{/a}~Jessa and Carl are having lunch in a small café, talking.">
+		<transition to="textDisplay~'Carl, how do you even {i}stand{/i} to be around my parents? They drive me crazy almost all the time.'{br}{br}'Jessa, I know they drive you crazy, but you know you love them and they love you.'" name="Any"></transition>
+	</task-node>	
+	
+	<task-node name="textDisplay~'Carl, how do you even {i}stand{/i} to be around my parents? They drive me crazy almost all the time.'{br}{br}'Jessa, I know they drive you crazy, but you know you love them and they love you.'">	
+		<transition to="imageDisplay~cafeWithPeople~1" name="Any"></transition>
+	</task-node>	
+
+	<task-node name="imageDisplay~cafeWithPeople~1">	
+		<transition to="textDisplay~Jessa replies, 'I know, I know. But, sometimes, they just make me lose my passion, you know? I feel as if everything I do isn’t good enough for them.'{br}{br}'Oh, Jessa! Don’t think that! I have known you since we were kids and I know for a fact that {i}nothing{/i} could drive away that obsession you have over politics.'" name="Any"></transition>
+	</task-node>	
+
+	<task-node name="textDisplay~Jessa replies, 'I know, I know. But, sometimes, they just make me lose my passion, you know? I feel as if everything I do isn’t good enough for them.'{br}{br}'Oh, Jessa! Don’t think that! I have known you since we were kids and I know for a fact that {i}nothing{/i} could drive away that obsession you have over politics.'">	
+			<transition to="textDisplay~Jessa rolls her eyes and looks squarely at Carl.{br}{br}'I’m worried.'{br}{br}'Why? And what about?'" name="Any"></transition>
+	</task-node>	
+	
+	<task-node name="textDisplay~Jessa rolls her eyes and looks squarely at Carl.{br}{br}'I’m worried.'{br}{br}'Why? And what about?'">	
+		<transition to="textDisplay~Jessa, speaking softly, says, 'I have a feeling Ratdago might get out.'{br}{br}'Not funny, Jessa! He won’t get out, he can't.{br}{br}'He might find a way. You know how dirty he can be.'" name="Any"></transition>
+	</task-node>	
+
+	<task-node name="textDisplay~Jessa, speaking softly, says, 'I have a feeling Ratdago might get out.'{br}{br}'Not funny, Jessa! He won’t get out, he can't.{br}{br}'He might find a way. You know how dirty he can be.'">	
+		<transition to="imageDisplay~cafeWithPeople~2" name="Any"></transition>
+	</task-node>	
+
+	<task-node name="imageDisplay~cafeWithPeople~2">	
+		<transition to="textDisplay~Okay, let's say he {i}does{/i} get out. We'll just do what we did nine months ago, we'll get the dish on him and get him rearrested.'{br}{br}'I don’t know, Carl. I just have a really bad feeling that it won’t be that easy this time.'" name="Any"></transition>
+	</task-node>	
+
+	<task-node name="textDisplay~Okay, let's say he {i}does{/i} get out. We'll just do what we did nine months ago, we'll get the dish on him and get him rearrested.'{br}{br}'I don’t know, Carl. I just have a really bad feeling that it won’t be that easy this time.'">	
+		<transition to="textImageDisplay~ratdagoprison~Ratdago is in his jail cell, silently waiting. Then, a guard comes up to his cell and unlocks the door." name="Any"></transition>
+	</task-node>	
+
+	<task-node name="textImageDisplay~ratdagoprison~Ratdago is in his jail cell, silently waiting. Then, a guard comes up to his cell and unlocks the door.">	
+		<transition to="textDisplay~The guard says, 'Stand up, sir. Someone has bailed you out.'{br}{br}Ratdago stands up and exits the cell. He enters the main lobby of the guard station and sees who has bailed him out (this person is just a dark shadow). Once realizing who it was, Ratdago smiled evilly." name="Any"></transition>
+	</task-node>	
+	
+	<task-node name="textDisplay~The guard says, 'Stand up, sir. Someone has bailed you out.'{br}{br}Ratdago stands up and exits the cell. He enters the main lobby of the guard station and sees who has bailed him out (this person is just a dark shadow). Once realizing who it was, Ratdago smiled evilly.">	
+		<transition to="textClickableImageDisplay~campus~More info can be found here: {a href='http://www.ateneo.edu'}Ateneo de Manila University{/a}~Meanwhile… Jessa and Carl are in their English Literature class. The teacher asks something and Jessa raises her hand to answer." name="Any"></transition>
+	</task-node>	
+	
+	<task-node name="textClickableImageDisplay~campus~More info can be found here: {a href='http://www.ateneo.edu'}Ateneo de Manila University{/a}~Meanwhile… Jessa and Carl are in their English Literature class. The teacher asks something and Jessa raises her hand to answer.">
+		<transition to="textDisplay~'That story was written by Victor Hugo, sir.'{br}{br}'Correct, Jessa,' the teacher says, and continues lecturing.{br}{br}A knock makes the class look at the door. Professor Benedict enters." name="Any"></transition>
+	</task-node>
+
+	<task-node name="textDisplay~'That story was written by Victor Hugo, sir.'{br}{br}'Correct, Jessa,' the teacher says, and continues lecturing.{br}{br}A knock makes the class look at the door. Professor Benedict enters.">
+		<transition to="textDisplay~'Good Morning, everyone!'{br}{br}Everyone answers with a 'good morning' as well.{br}{br}Prof. Benedict looks at the other teacher, and says, 'Sir! I’m so sorry for bothering your English Literature class! But, may I please excuse Jessa and Carl?'" name="Any"></transition>
+	</task-node>
+
+	<task-node name="textDisplay~'Good Morning, everyone!'{br}{br}Everyone answers with a 'good morning' as well.{br}{br}Prof. Benedict looks at the other teacher, and says, 'Sir! I’m so sorry for bothering your English Literature class! But, may I please excuse Jessa and Carl?'">
+		<transition to="textDisplay~'It’s not a problem, Manong Bok! But remember, Jessa, Carl, the essays I asked you to write are due tomorrow.'{br}{br}'Yes, sir,' answers Jessa and Carl in unison." name="Any"></transition>
+	</task-node>
+
+	<task-node name="textDisplay~'It’s not a problem, Manong Bok! But remember, Jessa, Carl, the essays I asked you to write are due tomorrow.'{br}{br}'Yes, sir,' answers Jessa and Carl in unison.">
+		<transition to="textImageDisplay~briefingroom~The two of them leave the classroom and follow Manong Bok. He leads them to his office; inside are Rex and Mia. Without saying anything, Manong Bok goes to the TV and turns it on. A report is shown and Ratdago’s face is seen." name="Any"></transition>
+	</task-node>
+	
+	<task-node name="textImageDisplay~briefingroom~The two of them leave the classroom and follow Manong Bok. He leads them to his office; inside are Rex and Mia. Without saying anything, Manong Bok goes to the TV and turns it on. A report is shown and Ratdago’s face is seen.">
+		<transition to="textDisplay~The news reporter announces, 'The politician, Ratdago, has been let out of jail. He says he has been reformed from the experience and talks about how he’ll be back in office within the year.'{br}{br}Manong Bok looks at the CHAMPs, who all look shocked." name="Any"></transition>
+	</task-node>	
+	
+	<task-node name="textDisplay~The news reporter announces, 'The politician, Ratdago, has been let out of jail. He says he has been reformed from the experience and talks about how he’ll be back in office within the year.'{br}{br}Manong Bok looks at the CHAMPs, who all look shocked.">
+		<transition to="link~'You see, we have a problem. As usual, you have a decision to make,' Manong Bok explains as he looks at their confused faces. He shrugs. Decide." name="Any"></transition>
+	</task-node>	
+
+	<task-node name="link~'You see, we have a problem. As usual, you have a decision to make,' Manong Bok explains as he looks at their confused faces. He shrugs. Decide.">	
+		<task name="textDisplay~The CHAMPs barges into the home of Ratdago. They fight off the guards and threaten Ratdago.~Attack right away."></task>
+		<task to="textDisplay~Mia is chosen to follow Ratdago everywhere, Carl hacks into the security cameras in Ratdago’s house, Rex keeps tabs on Joe, and Jessa keeps an eye on Joe’s son Lucas.~Investigate first."></task>
+		<task to="textImageDisplay~timemachine2~The team decides to leave it alone, Jessa goes to the time machine and looks into the future. She sees the bad image, where the land is barren.~Do nothing."></task>
+		<transition to="textDisplay~The CHAMPs barge into the home of Ratdago. They fight off the guards and threaten Ratdago.~Attack right away." name="Any"></transition>		
+	</task-node>	
+				
+	<task-node name="textDisplay~The CHAMPs barges into the home of Ratdago. They fight off the guards and threaten Ratdago.">
+		<transition to="end-state1" name="Any"></transition>
+	</task-node>
+	
+	<task-node name="textDisplay~Mia is chosen to follow Ratdago everywhere, Carl hacks into the security cameras in Ratdago’s house, Rex keeps tabs on Joe, and Jessa keeps an eye on Joe’s son Lucas.">
+		<transition to="end-state1" name="Any"></transition>
+	</task-node>
+
+	<task-node name="textImageDisplay~timemachine2~The team decides to leave it alone, Jessa goes to the time machine and looks into the future. She sees the bad image, where the land is barren.">
+		<transition to="end-state1" name="Any"></transition>
+	</task-node>
+
+	<task-node name="textClickableImageDisplay~campus3~More info can be found here: {a href='http://www.ateneo.edu'}Ateneo de Manila University{/a}~Mia and Rex are sitting on the grass on campus. She tells Rex about Jessa’s worries over Ratdago.">
+		<transition to="textDisplay~'Honestly, Rex, you’d think he was already out.'{br}{br}'Well, think about it on Jessa’s side, Mia. She has every reason to be worried.'{br}{br}Suddenly, Mia gets an idea." name="Any"></transition>
+	</task-node>
+	
+	<task-node name="textDisplay~'Honestly, Rex, you’d think he was already out.'{br}{br}'Well, think about it on Jessa’s side, Mia. She has every reason to be worried.'{br}{br}Suddenly, Mia gets an idea.">
+		<transition to="end-state1" name="Any"></transition>
+	</task-node>
+
+	<end-state name="end-state1"></end-state>
+</process-definition>

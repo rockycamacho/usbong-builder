@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.Usbong" parent="@style/Theme.AppCompat.Light">
+        <item name="actionBarItemBackground">@drawable/selectable_background_usbong</item>
+        <item name="popupMenuStyle">@style/PopupMenu.Usbong</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Usbong</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabStyle.Usbong</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.Usbong</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Usbong</item>
+        <item name="actionModeBackground">@drawable/cab_background_top_usbong</item>
+        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_usbong</item>
+        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Usbong</item>
+
+
+    </style>
+
+    <style name="ActionBar.Solid.Usbong" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="background">@drawable/ab_solid_usbong</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_usbong</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_usbong</item>
+        <item name="progressBarStyle">@style/ProgressBar.Usbong</item>
+    </style>
+
+    <style name="ActionBar.Transparent.Usbong" parent="@style/Widget.AppCompat.Light.ActionBar">
+        <item name="background">@drawable/ab_transparent_usbong</item>
+        <item name="progressBarStyle">@style/ProgressBar.Usbong</item>
+    </style>
+
+    <style name="PopupMenu.Usbong" parent="@style/Widget.AppCompat.Light.PopupMenu">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_usbong</item>
+    </style>
+
+    <style name="DropDownListView.Usbong" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_usbong</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Usbong" parent="@style/Widget.AppCompat.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_usbong</item>
+    </style>
+
+    <style name="DropDownNav.Usbong" parent="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:background">@drawable/spinner_background_ab_usbong</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_usbong</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_usbong</item>
+    </style>
+
+    <style name="ProgressBar.Usbong" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_usbong</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.Usbong" parent="@style/Widget.AppCompat.Light.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_usbong</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Usbong.Widget" parent="@style/Theme.AppCompat">
+        <item name="popupMenuStyle">@style/PopupMenu.Usbong</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Usbong</item>
+    </style>
+
+    <style name="EditTextUsbong" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/usbong_edit_text_holo_light</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="AutoCompleteTextViewUsbong" parent="android:Widget.AutoCompleteTextView">
+        <item name="android:dropDownSelector">@drawable/usbong_list_selector_holo_light</item>
+        <item name="android:background">@drawable/usbong_edit_text_holo_light</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="CheckBoxUsbong" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/usbong_btn_check_holo_light</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="RadioButtonUsbong" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/usbong_btn_radio_holo_light</item>
+    </style>
+
+    <style name="ButtonUsbong" parent="android:Widget.Button">
+        <item name="android:background">@drawable/usbong_btn_default_holo_light</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:minWidth">64dip</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="ImageButtonUsbong" parent="android:Widget.ImageButton">
+        <item name="android:background">@drawable/usbong_btn_default_holo_light</item>
+    </style>
+
+    <style name="SpinnerUsbong" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/usbong_spinner_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/usbong_list_selector_holo_light</item>
+    </style>
+
+    <style name="SpinnerDropDownItemUsbong" parent="android:Widget.DropDownItem.Spinner">
+        <item name="android:checkMark">@drawable/usbong_btn_radio_holo_light</item>
+    </style>
+    <style name="TabUsbong">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+        <item name="android:background">@drawable/usbong_tab_indicator_holo</item>
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:minWidth">80dip</item>
+    </style>
+
+    <style name="TabTextUsbong">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <!-- v14 <item name="android:textAllCaps">true</item> -->
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:maxWidth">180dip</item>
+    </style>
+
+    <style name="ProgressBarUsbong" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/usbong_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/usbong_progress_indeterminate_horizontal_holo_light</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
+
+    <style name="SeekBarUsbong" parent="android:Widget.SeekBar">
+        <item name="android:progressDrawable">@drawable/usbong_scrubber_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/usbong_scrubber_progress_horizontal_holo_light</item>
+        <item name="android:minHeight">13dip</item>
+        <item name="android:maxHeight">13dip</item>
+        <item name="android:thumb">@drawable/usbong_scrubber_control_selector_holo_light</item>
+        <item name="android:thumbOffset">16dip</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+    </style>
+
+    <style name="RatingBarUsbong" parent="android:Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/usbong_ratingbar_full_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/usbong_ratingbar_full_holo_light</item>
+    </style>
+
+    <style name="RatingBarBigUsbong">
+        <item name="android:progressDrawable">@drawable/usbong_ratingbar_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/usbong_ratingbar_holo_light</item>
+        <item name="android:minHeight">35dip</item>
+        <item name="android:maxHeight">35dip</item>
+    </style>
+
+    <style name="RatingBarSmallUsbong">
+        <item name="android:progressDrawable">@drawable/usbong_ratingbar_small_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/usbong_ratingbar_small_holo_light</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
+
+    <style name="ToggleUsbong" parent="android:Widget.Button.Toggle">
+        <item name="android:background">@drawable/usbong_btn_toggle_holo_light</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="ListViewUsbong" parent="android:Widget.ListView">
+        <item name="android:listSelector">@drawable/usbong_list_selector_holo_light</item>
+    </style>
+
+    <style name="ListViewUsbong.White" parent="android:Widget.ListView.White">
+        <item name="android:listSelector">@drawable/usbong_list_selector_holo_light</item>
+    </style>
+
+    <style name="SpinnerItemUsbong" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:background">#22000000</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+
+    <style name="DividerVertical">
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:paddingRight">3dp</item>
+        <item name="android:background">#22000000</item>
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+</resources>

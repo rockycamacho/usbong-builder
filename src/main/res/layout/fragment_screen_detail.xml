@@ -1,0 +1,93 @@
+<android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="usbong.android.builder.fragments.ScreenDetailFragment">
+
+    <FrameLayout
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false">
+
+        <LinearLayout
+                android:id="@+id/screen_contents"
+                android:layout_gravity="top"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="50dp"
+                android:orientation="vertical"
+                android:layout_weight="1"/>
+
+        <LinearLayout
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <Button android:id="@android:id/button1"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:text="Save"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- Left drawer -->
+
+    <LinearLayout
+            android:id="@+id/left_drawer"
+            android:orientation="vertical"
+            android:layout_gravity="left"
+            android:background="#eeeeee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Parent Node(s)"/>
+
+        <ListView
+                android:id="@+id/parent_list"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <!-- Right drawer -->
+
+    <LinearLayout
+            android:id="@+id/right_drawer"
+            android:layout_gravity="right"
+            android:orientation="vertical"
+            android:background="#eeeeee"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Child Node(s)"/>
+
+        <ListView
+                android:id="@+id/child_list"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

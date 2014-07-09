@@ -1,0 +1,3 @@
+TRUNCATE TABLE Utrees;
+TRUNCATE TABLE ScreenRelations;
+TRUNCATE TABLE Screens;

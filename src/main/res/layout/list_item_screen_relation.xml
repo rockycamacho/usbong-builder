@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:background="@drawable/screen_item_selector"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <ImageView
+            android:id="@android:id/icon"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="4dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+    <TextView
+            android:id="@android:id/text1"
+            android:layout_toRightOf="@android:id/icon"
+            android:layout_marginTop="4dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Screen name"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+    <TextView
+            android:id="@android:id/text2"
+            android:layout_toRightOf="@android:id/icon"
+            android:layout_below="@android:id/text1"
+            android:layout_marginBottom="4dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Condition"
+            android:textSize="10sp"/>
+
+</RelativeLayout>

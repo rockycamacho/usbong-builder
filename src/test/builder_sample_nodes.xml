@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process-definition  xmlns="urn:jbpm.org:jpdl-3.2"  name="builderSampleNodes">
+	<start-state name="start-state1">
+		<transition to="textDisplay~Sample Nodes for Rocky"></transition>
+	</start-state>
+
+	<task-node name="textDisplay~Sample Nodes for Rocky">
+		<transition to='imageDisplay~my_image~This is a sample image.'></transition>
+	</task-node>
+
+	<task-node name='imageDisplay~my_image~This is a sample image.'>
+		<transition to='textImageDisplay~sample_image~You can display both a text and an image as well.'></transition>
+	</task-node>
+
+	<task-node name='textImageDisplay~sample_image~You can display both a text and an image as well.'>
+		<transition to='imageTextDisplay~sample_image~This is now image and text.'></transition>
+	</task-node>
+
+	<task-node name='imageTextDisplay~sample_image~This is now image and text.'>
+		<transition to="link~1~You and your brother are sitting in the dining room. In front of you is an orange. You are very hungry. You look at your brother, and you see that he is eyeing the orange too. What will you do?"></transition>
+	</task-node>
+
+	<task-node name="link~You and your brother are sitting in the dining room. In front of you is an orange. You are very hungry. You look at your brother, and you see that he is eyeing the orange too. What will you do?">	
+		<task name="textDisplay~You get the entire orange, and leave none for your brother. This is obviously not the best answer for this problem.~I will get the orange before my brother does."></task>
+		<task name="textDisplay~You and your brother both get half of the orange. This is not the best answer for this problem.~I will divide the orange in half, and share it evenly with my brother."></task>
+		<task name="textDisplay~This is the best answer. As it turns out, your brother just needs the outer portion, the orange peel, for his science project. If you had divided the orange into half, you both would have gotten only half of the orange. In this case, you both get 100% of the orange that you need.~I will talk to my brother and figure out how we should divide the orange."></task>
+		<task name="textDisplay~Martyr! Unfortunately, this is not the best answer for this problem.~I will not eat the orange. I'll give it all to my brother."></task>
+		<transition to="textDisplay~You get the entire orange, and leave none for your brother. This is obviously not the best answer for this problem.~I will get the orange before my brother does." name="Any"></transition>
+	</task-node>
+
+	<task-node name="textDisplay~You get the entire orange, and leave none for your brother. This is obviously not the best answer for this problem.">
+		<transition to="end-state1" name="Any"></transition>
+	</task-node>
+
+	<task-node name="textDisplay~You and your brother both get half of the orange. This is not the best answer for this problem.">
+		<transition to="end-state1" name="Any"></transition>
+	</task-node>
+
+	<task-node name="textDisplay~This is the best answer. As it turns out, your brother just needs the outer portion, the orange peel, for his science project. If you had divided the orange into half, you both would have gotten only half of the orange. In this case, you both get 100% of the orange that you need.">
+		<transition to="end-state1" name="Any"></transition>
+	</task-node>
+
+	<task-node name="textDisplay~Martyr! Unfortunately, this is not the best answer for this problem.">
+		<transition to="end-state1" name="Any"></transition>
+	</task-node>
+	
+	<end-state name="end-state1"></end-state>
+</process-definition>

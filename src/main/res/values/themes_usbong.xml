@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="Usbong" parent="@style/_Usbong"/>
+
+  <style name="_Usbong" parent="Theme.AppCompat.Light">
+
+    <item name="android:editTextStyle">@style/EditTextUsbong</item>
+
+    <item name="android:textColorHighlight">#99259b24</item>
+
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewUsbong</item>
+
+    <item name="android:checkboxStyle">@style/CheckBoxUsbong</item>
+
+    <item name="android:radioButtonStyle">@style/RadioButtonUsbong</item>
+
+    <item name="android:buttonStyle">@style/ButtonUsbong</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonUsbong</item>
+
+    <item name="android:spinnerStyle">@style/SpinnerUsbong</item>
+
+    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemUsbong</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarUsbong</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarUsbong</item>
+
+    <item name="android:ratingBarStyle">@style/RatingBarUsbong</item>
+
+    <item name="android:ratingBarStyleIndicator">@style/RatingBarBigUsbong</item>
+
+    <item name="android:ratingBarStyleSmall">@style/RatingBarSmallUsbong</item>
+
+    <item name="android:buttonStyleToggle">@style/ToggleUsbong</item>
+
+    <item name="android:listViewStyle">@style/ListViewUsbong</item>
+
+    <item name="android:listViewWhiteStyle">@style/ListViewUsbong.White</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemUsbong</item>
+
+  </style>
+
+</resources>

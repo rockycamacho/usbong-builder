@@ -1,33 +1,31 @@
 package usbong.android.builder.fragments;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.activeandroid.query.Select;
+import com.nononsenseapps.filepicker.FilePickerActivity;
 import de.greenrobot.event.EventBus;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenListActivity;
 import usbong.android.builder.activities.UtreeActivity;
 import usbong.android.builder.adapters.UtreeAdapter;
 import usbong.android.builder.controllers.UtreeListController;
 import usbong.android.builder.events.OnNeedRefreshTrees;
-import usbong.android.builder.events.OnScreenDetailsSave;
-import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.Utree;
 import rx.Observer;
 import usbong.android.builder.utils.IntentUtils;
-import usbong.android.builder.utils.ScreenUtils;
+import usbong.android.builder.utils.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -51,6 +49,8 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
     AbsListView listView;
     @InjectView(android.R.id.empty)
     TextView emptyView;
+    @InjectView(R.id.search)
+    EditText search;
 
     private UtreeListController controller;
 
@@ -104,6 +104,23 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         EventBus.getDefault().register(this);
         ((AdapterView<ListAdapter>) listView).setAdapter(adapter);
 
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         // Set OnItemClickListener so we can be notified on item clicks
         listView.setOnItemClickListener(this);
     }
@@ -138,6 +155,9 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         if(adapter.getCount() == 0) {
             setEmptyText(getString(R.string.empty_utrees));
         }
+        else {
+            setEmptyText(StringUtils.EMPTY);
+        }
     }
 
     @Override
@@ -159,7 +179,7 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         }
         else if(item.getItemId() == R.id.action_import) {
             try {
-                Intent fileDialogIntent = IntentUtils.getFileDialogIntent(getActivity(), "file/*.utree");
+                Intent fileDialogIntent = IntentUtils.getSelectFileIntent(getActivity(), "file/*.utree");
                 startActivityForResult(fileDialogIntent, IntentUtils.CHOOSE_FILE_REQUESTCODE);
             } catch (android.content.ActivityNotFoundException e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -179,27 +199,25 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == IntentUtils.CHOOSE_FILE_REQUESTCODE) {
-            if(resultCode == Activity.RESULT_OK) {
-                String fileLocation = data.getData().getPath();
-                String outputFolderLocation = getActivity().getFilesDir() + File.separator + "trees";
-                controller.importTree(fileLocation, outputFolderLocation, new Observer<String>() {
+        if (requestCode == IntentUtils.CHOOSE_FILE_REQUESTCODE && resultCode == Activity.RESULT_OK) {
+            String fileLocation = data.getData().getPath();
+            String outputFolderLocation = getActivity().getFilesDir() + File.separator + "trees";
+            controller.importTree(fileLocation, outputFolderLocation, new Observer<String>() {
 
-                    @Override
-                    public void onCompleted() {
-                    }
+                @Override
+                public void onCompleted() {
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, e.getMessage(), e);
-                    }
+                @Override
+                public void onError(Throwable e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
 
-                    @Override
-                    public void onNext(String o) {
+                @Override
+                public void onNext(String o) {
 
-                    }
-                });
-            }
+                }
+            });
         }
     }
 

@@ -18,7 +18,6 @@ public class ScreenTypeAdapter extends ArrayAdapter<ScreenType> {
     public static final int LAYOUT_RES_ID = android.R.layout.simple_list_item_1;
     private final Context context;
 
-    //TODO: add filter?
     public ScreenTypeAdapter(Context context) {
         super(context, LAYOUT_RES_ID);
         this.context = context;

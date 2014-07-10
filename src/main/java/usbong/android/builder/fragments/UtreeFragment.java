@@ -13,6 +13,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.dd.processbutton.iml.ActionProcessButton;
 import usbong.android.builder.R;
 import usbong.android.builder.controllers.UtreeController;
 import usbong.android.builder.models.Utree;
@@ -35,7 +36,7 @@ public class UtreeFragment extends Fragment {
     @InjectView(R.id.name)
     EditText name;
     @InjectView(android.R.id.button1)
-    Button save;
+    ActionProcessButton saveButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -81,19 +82,23 @@ public class UtreeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.inject(this, view);
+        saveButton.setMode(ActionProcessButton.Mode.PROGRESS);
     }
 
     @OnClick(android.R.id.button1)
     public void onSave() {
         //TODO: improve code
+        saveButton.setProgress(1);
         controller.fetchUtree(id, new Observer<Utree>() {
             @Override
             public void onCompleted() {
+                saveButton.setProgress(50);
             }
 
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                saveButton.setProgress(-1);
             }
 
             @Override
@@ -103,6 +108,7 @@ public class UtreeFragment extends Fragment {
                     @Override
                     public void onCompleted() {
                         //TODO: implement better transition?
+                        saveButton.setProgress(100);
                         Toast.makeText(getActivity(), "Utree saved", Toast.LENGTH_SHORT).show();
                         getActivity().finish();
                     }
@@ -110,6 +116,7 @@ public class UtreeFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, e.getMessage(), e);
+                        saveButton.setProgress(-1);
                     }
 
                     @Override

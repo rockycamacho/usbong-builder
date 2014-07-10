@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.activeandroid.query.Select;
+import com.dd.processbutton.iml.ActionProcessButton;
 import usbong.android.builder.R;
 import usbong.android.builder.adapters.ChildrenScreensAdapter;
 import usbong.android.builder.adapters.ParentsScreensAdapter;
@@ -64,6 +65,10 @@ public class ScreenDetailFragment extends Fragment {
     @InjectView(R.id.child_list)
     ListView childListView;
 
+    @InjectView(android.R.id.button1)
+    ActionProcessButton saveButton;
+
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -107,6 +112,7 @@ public class ScreenDetailFragment extends Fragment {
 
         ButterKnife.inject(this, view);
         EventBus.getDefault().register(this);
+        saveButton.setMode(ActionProcessButton.Mode.PROGRESS);
         parentListView.setAdapter(parentScreenAdapter);
         childListView.setAdapter(childrenScreenAdapter);
         initializeScreen();
@@ -149,6 +155,7 @@ public class ScreenDetailFragment extends Fragment {
 
     @OnClick(android.R.id.button1)
     public void onSave() {
+        saveButton.setProgress(1);
         EventBus.getDefault().post(OnScreenSave.EVENT);
     }
 
@@ -197,30 +204,26 @@ public class ScreenDetailFragment extends Fragment {
 
     public void onEvent(final OnScreenDetailsSave event) {
         Log.d(TAG, "onEvent(OnScreenDetailsSave event): " + event.getName() + ", " + event.getContent());
-        Observable.create(new Observable.OnSubscribe<Screen>() {
-            @Override
-            public void call(Subscriber<? super Screen> subscriber) {
-                Log.d(TAG, "saving...");
-                currentScreen.name = event.getName();
-                currentScreen.details = event.getContent();
-                //TODO: save parent and children
-                currentScreen.save();
-                Log.d(TAG, "saved");
-                currentScreen = new Select().from(Screen.class).where(Screen._ID + " = ?", currentScreen.getId()).executeSingle();
+        currentScreen.name = event.getName();
+        currentScreen.details = event.getContent();
+        controller.saveScreen(currentScreen, screenContainer, new Observer<Screen>() {
 
-                File screenshotFile = getActivity().getFileStreamPath(currentScreen.getScreenshotPath());
-                ScreenUtils.saveScreenshot(screenshotFile, screenContainer);
-                subscriber.onNext(currentScreen);
-                subscriber.onCompleted();
+            @Override
+            public void onCompleted() {
+                saveButton.setProgress(100);
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Screen>() {
-                    @Override
-                    public void call(Screen screen) {
-                        Log.d(TAG, "saved: " + screen.details);
-                    }
-                });
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                saveButton.setProgress(-1);
+            }
+
+            @Override
+            public void onNext(Screen screen) {
+                Log.d(TAG, "saved: " + screen.details);
+            }
+        });
     }
 
     @Override

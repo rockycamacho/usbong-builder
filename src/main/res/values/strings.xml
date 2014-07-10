@@ -13,13 +13,13 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_utree">UtreeActivity</string>
     <string name="hello_world">Hello world!</string>
-    <string name="new_tree">New Tree</string>
-    <string name="edit_tree">Edit Tree</string>
-    <string name="empty_utrees">No Utrees yet.</string>
+    <string name="new_tree">New .utree</string>
+    <string name="edit_tree">Edit .utree</string>
+    <string name="empty_utrees">No .utrees yet.</string>
     <string name="title_activity_screen_list">List of screens</string>
     <string name="empty_screens">No screens yet</string>
-    <string name="add_screen">Add New Screen</string>
-    <string name="add_tree">Add New Tree</string>
+    <string name="add_screen">Add new screen</string>
+    <string name="add_tree">Add new .utree</string>
     <string name="title_activity_screen">ScreenActivity</string>
     <string name="screen_saved">Screen saved</string>
     <string name="new_screen">New Screen</string>
@@ -27,8 +27,9 @@
     <string name="screen_type">Screen Type</string>
     <string name="title_activity_screen_detail">ScreenDetail</string>
     <string name="title_activity_select_screen">SelectScreenActivity</string>
-    <string name="select_a_tree">Select a tree</string>
+    <string name="select_a_tree">Select a .utree</string>
     <string name="title_activity_select_decision">SelectDecisionActivity</string>
     <string name="no_file_managers_found">No suitable File Manager was found.</string>
+    <string name="enter_search_keywords">Search</string>
 
 </resources>

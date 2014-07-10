@@ -17,6 +17,7 @@ public class FileUtils {
 
     private static final String TAG = FileUtils.class.getSimpleName();
     private static final int BUFFER_SIZE = 1024;
+    public static final String UTREE_FILE_EXTENSION = "\\.utree";
 
     private FileUtils() {
     }
@@ -85,7 +86,7 @@ public class FileUtils {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 zipEntry = entries.nextElement();
-                File newFile = new File(outputFolderLocation + File.separator + zipEntry.getName().replaceAll("\\.utree", ""));
+                File newFile = new File(outputFolderLocation + File.separator + zipEntry.getName().replaceAll(UTREE_FILE_EXTENSION, ""));
 
                 Log.d(TAG, "newFile: " + newFile.getAbsolutePath());
 

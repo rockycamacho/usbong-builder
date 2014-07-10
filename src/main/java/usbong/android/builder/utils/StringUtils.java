@@ -5,6 +5,8 @@ package usbong.android.builder.utils;
  */
 public class StringUtils {
 
+    public static final String EMPTY = "";
+
     private StringUtils() {}
 
     public static boolean isEmpty(String text) {

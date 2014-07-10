@@ -2,17 +2,17 @@ package usbong.android.builder.fragments;
 
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -43,18 +43,16 @@ public class SelectScreenFragment extends Fragment {
 
     private long screenId = -1;
     private Screen screen;
-
     private ScreenAdapter adapter;
-
     private String screenRelation;
-
     private SelectScreenController controller;
 
     @InjectView(android.R.id.list)
     ListView listView;
-
     @InjectView(R.id.image)
     ImageView image;
+    @InjectView(R.id.search)
+    EditText search;
 
     /**
      * Use this factory method to create a new instance of
@@ -97,6 +95,22 @@ public class SelectScreenFragment extends Fragment {
         ButterKnife.inject(this, view);
         listView.setAdapter(adapter);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         controller.fetchScreens(new Observer<List<Screen>>() {
             @Override
             public void onCompleted() {
@@ -117,7 +131,8 @@ public class SelectScreenFragment extends Fragment {
     }
 
     @OnItemClick(android.R.id.list)
-    public void onItemClick(int position) {
+    public void onItemClick(View view, int position) {
+        view.setSelected(true);
         Screen screen = adapter.getItem(position);
         Picasso.with(getActivity())
                 .load(getActivity().getFileStreamPath(screen.getScreenshotPath()))
@@ -131,7 +146,28 @@ public class SelectScreenFragment extends Fragment {
             Toast.makeText(getActivity(), "Select a screen first", Toast.LENGTH_SHORT).show();
             return;
         }
-        Screen screen = adapter.getItem(listView.getCheckedItemPosition());
+        final Screen screen = adapter.getItem(listView.getCheckedItemPosition());
+        if(screen.getId() == screenId) {
+            AddingChildToItselfWarningDialogFragment dialog = AddingChildToItselfWarningDialogFragment.newInstance();
+            dialog.setCallback(new AddingChildToItselfWarningDialogFragment.Callback() {
+                @Override
+                public void onYes() {
+                    passSelectedScreenIdToCallerActivity(screen);
+                }
+
+                @Override
+                public void onNo() {
+
+                }
+            });
+            dialog.show(getFragmentManager(), "DIALOG");
+        }
+        else {
+            passSelectedScreenIdToCallerActivity(screen);
+        }
+    }
+
+    private void passSelectedScreenIdToCallerActivity(Screen screen) {
         Intent data = new Intent();
         data.putExtra(EXTRA_SELECTED_SCREEN_ID, screen.getId().longValue());
         getActivity().setResult(Activity.RESULT_OK, data);

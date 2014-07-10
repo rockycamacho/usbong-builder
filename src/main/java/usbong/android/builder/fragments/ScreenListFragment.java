@@ -3,12 +3,11 @@ package usbong.android.builder.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
-import android.widget.TextView;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import usbong.android.builder.R;
@@ -18,6 +17,7 @@ import usbong.android.builder.adapters.ScreenAdapter;
 import usbong.android.builder.controllers.ScreenListController;
 import usbong.android.builder.models.Screen;
 import rx.Observer;
+import usbong.android.builder.utils.StringUtils;
 
 import java.util.List;
 
@@ -42,6 +42,8 @@ public class ScreenListFragment extends Fragment implements AbsListView.OnItemCl
     AbsListView listView;
     @InjectView(android.R.id.empty)
     TextView emptyView;
+    @InjectView(R.id.search)
+    EditText search;
 
     private ScreenListController controller;
 
@@ -109,6 +111,22 @@ public class ScreenListFragment extends Fragment implements AbsListView.OnItemCl
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.inject(this, view);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -140,6 +158,9 @@ public class ScreenListFragment extends Fragment implements AbsListView.OnItemCl
     public void onCompleted() {
         if (adapter.getCount() == 0) {
             setEmptyText(getString(R.string.empty_screens));
+        }
+        else {
+            setEmptyText(StringUtils.EMPTY);
         }
     }
 

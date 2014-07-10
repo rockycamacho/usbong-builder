@@ -5,68 +5,77 @@
           package="usbong.android.builder">
 
     <uses-sdk android:minSdkVersion="15"
-              android:targetSdkVersion="18"/>
+              android:targetSdkVersion="19"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application android:name="usbong.android.builder.UsbongBuilder"
                  android:allowBackup="true"
                  android:icon="@drawable/ic_launcher"
                  android:label="@string/app_name"
-                 android:theme="@style/Usbong" >>
+                 android:theme="@style/Usbong">>
 
         <activity android:name=".activities.DeckardActivity" android:screenOrientation="portrait">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--<action android:name="android.intent.action.MAIN"/>-->
+            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
         </activity>
 
         <activity
                 android:name="usbong.android.builder.activities.MainActivity"
-                android:label="@string/app_name" >
+                android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="usbong.android.builder.activities.UtreeActivity" >
+        <activity android:name="usbong.android.builder.activities.UtreeActivity">
         </activity>
         <activity
                 android:name="usbong.android.builder.activities.ScreenListActivity"
-                android:label="@string/title_activity_screen_list" >
+                android:label="@string/title_activity_screen_list">
         </activity>
-        <activity android:name="usbong.android.builder.activities.ScreenActivity" >
+        <activity android:name="usbong.android.builder.activities.ScreenActivity">
         </activity>
-        <!--<activity-->
-                <!--android:name="im.dino.dbinspector.activities.DbInspectorActivity"-->
-                <!--android:icon="@drawable/ic_launcher_dbinspector"-->
-                <!--android:label="Example DbInspector" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
 
         <activity
                 android:name="usbong.android.builder.activities.ScreenDetailActivity"
-                android:label="Screen Detail" >
+                android:label="Screen Detail">
         </activity>
         <activity
                 android:name="usbong.android.builder.activities.SelectScreenActivity"
-                android:label="Select screen" >
+                android:label="Select screen">
         </activity>
         <activity
                 android:name="usbong.android.builder.activities.SelectDecisionActivity"
-                android:label="Add decision" >
+                android:label="Add decision">
         </activity>
+
+        <activity
+                android:name="com.nononsenseapps.filepicker.FilePickerActivity"
+                android:label="@string/app_name"
+                android:theme="@style/FilePicker.Theme">
+        </activity>
+
+        <!--<activity-->
+                <!--android:name="im.dino.dbinspector.activities.DbInspectorActivity"-->
+                <!--android:icon="@drawable/ic_launcher_dbinspector"-->
+                <!--android:label="Example DbInspector">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
 
         <meta-data
                 android:name="AA_DB_NAME"
-                android:value="usbong.db" />
+                android:value="usbong.db"/>
         <meta-data
                 android:name="AA_DB_VERSION"
-                android:value="8" />
+                android:value="8"/>
 
     </application>
 </manifest>

@@ -1,7 +1,11 @@
 package usbong.android.builder.controllers;
 
+import android.content.Context;
+import android.util.Log;
+import android.view.View;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
+import rx.functions.Action1;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
 import rx.Observable;
@@ -9,13 +13,17 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import usbong.android.builder.utils.ScreenUtils;
 
+import java.io.File;
 import java.util.List;
 
 /**
  * Created by Rocky Camacho on 7/2/2014.
  */
 public class ScreenDetailController implements Controller {
+
+    private static final String TAG = ScreenDetailController.class.getSimpleName();
 
     public void deleteAllChildScreens(final long screenId, Observer<Object> observer) {
         Observable.create(new Observable.OnSubscribe<Object>() {
@@ -106,6 +114,26 @@ public class ScreenDetailController implements Controller {
                 screenRelation.condition = condition;
                 screenRelation.save();
                 subscriber.onNext(screenRelation);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void saveScreen(final Screen currentScreen, final View screenContainer, Observer<Screen> observer) {
+        Observable.create(new Observable.OnSubscribe<Screen>() {
+            @Override
+            public void call(Subscriber<? super Screen> subscriber) {
+                Log.d(TAG, "saving...");
+                //TODO: save parent and children
+                currentScreen.save();
+                Log.d(TAG, "saved");
+                //currentScreen = new Select().from(Screen.class).where(Screen._ID + " = ?", currentScreen.getId()).executeSingle();
+
+                File screenshotFile = screenContainer.getContext().getFileStreamPath(currentScreen.getScreenshotPath());
+                ScreenUtils.saveScreenshot(screenshotFile, screenContainer);
+                subscriber.onNext(currentScreen);
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())

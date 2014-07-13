@@ -1,17 +1,11 @@
 package usbong.android.builder.parsers;
 
-import android.app.Application;
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.Model;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
-import usbong.android.builder.UsbongBuilder;
 import usbong.android.builder.models.Utree;
 
 import java.io.File;
@@ -42,7 +36,7 @@ public class UtreeParserTest {
         FileInputStream fis = new FileInputStream(file);
         UtreeParser parser = UtreeParser.getInstance();
         System.out.println(parser == null);
-        parser.parseModels(fis);
+        parser.parseModels(fis, outputFolderLocation);
 
         Utree utree = parser.getUtree();
         assertEquals("the_orange_problem", utree.name);

@@ -7,12 +7,15 @@ import org.xml.sax.SAXException;
 import usbong.android.builder.exceptions.ParserException;
 import usbong.android.builder.models.Screen;
 
+import java.util.Map;
+
 /**
  * Created by Rocky Camacho on 7/11/2014.
  */
 public class TaskNodeHandler implements ElementHandler<Screen> {
 
     private static final String TAG = TaskNodeHandler.class.getSimpleName();
+    private Map<String, Screen> screenMap;
 
     @Override
     public Screen handle(String qName, Attributes attributes) throws SAXException {
@@ -20,23 +23,14 @@ public class TaskNodeHandler implements ElementHandler<Screen> {
         String[] attrs = nameAttribute.split("~");
         String screenType = attrs[0];
 
-        //TODO: split this up some more
-        if("textDisplay".equals(screenType) ||
-                "link".equals(screenType) ||
-                "decision".equals(screenType)) {
-            String details = attrs[attrs.length-1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");;
-            Screen parentScreen = new Select().from(Screen.class)
-                    .where("Details = ?", details)
-                    .executeSingle();
-            if(parentScreen == null) {
-                Log.e(TAG, "parentScreen == null: " + screenType);
-                throw new SAXException(new ParserException("unable to find `" + details + "` from database"));
-            }
-            return parentScreen;
+        if(!screenMap.containsKey(nameAttribute)) {
+            Log.e(TAG, "parentScreen == null: " + screenType);
+            throw new SAXException(new ParserException("unable to find `" + nameAttribute + "` from screen map"));
         }
-        else {
-            Log.w(TAG, "unhandled task-node screen type: " + screenType);
-            throw new SAXException(new ParserException("unhandled task-node screen type: " + screenType));
-        }
+        return screenMap.get(nameAttribute);
+    }
+
+    public void setScreenMap(Map<String, Screen> screenMap) {
+        this.screenMap = screenMap;
     }
 }

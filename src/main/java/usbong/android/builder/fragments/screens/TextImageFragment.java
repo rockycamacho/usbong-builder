@@ -28,8 +28,8 @@ import usbong.android.builder.events.OnScreenDetailsSave;
 import usbong.android.builder.events.OnScreenSave;
 import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.models.Screen;
+import usbong.android.builder.models.ScreenDetails;
 import usbong.android.builder.models.ScreenRelation;
-import usbong.android.builder.models.TextImageDetails;
 import usbong.android.builder.utils.IntentUtils;
 import usbong.android.builder.utils.StringUtils;
 
@@ -135,8 +135,8 @@ public class TextImageFragment extends Fragment {
                 name.setText(currentScreen.name);
                 String details = StringUtils.EMPTY;
                 if(currentScreen.details != null) {
-                    TextImageDetails textImageDetails = gson.fromJson(currentScreen.details, TextImageDetails.class);
-                    details = textImageDetails.getDetails();
+                    ScreenDetails textImageDetails = gson.fromJson(currentScreen.details, ScreenDetails.class);
+                    details = textImageDetails.getText();
 
                     imagePath = textImageDetails.getImagePath();
 
@@ -162,11 +162,11 @@ public class TextImageFragment extends Fragment {
         Log.d(TAG, "onEvent(OnScreenSave event): " + textDisplay.getText().toString());
 
         String screenName = name.getText().toString();
-        TextImageDetails details = new TextImageDetails();
+        ScreenDetails details = new ScreenDetails();
         //TODO: implement this
         String screenContent = textDisplay.getText().toString().replaceAll("\n", "<br>");
 
-        details.setDetails(screenContent);
+        details.setText(screenContent);
         details.setImagePath(imagePath);
         ImagePosition position = adapter.getItem(imagePosition.getSelectedItemPosition());
         details.setImagePosition(position.getName());

@@ -9,6 +9,7 @@ import usbong.android.builder.models.ScreenRelation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Rocky Camacho on 7/5/2014.
@@ -16,29 +17,32 @@ import java.util.List;
 public class ScreenRelationXmlHandler extends DefaultHandler {
 
     private static final String TAG = ScreenRelationXmlHandler.class.getSimpleName();
-    public static final String END_STATE = "end-state";
-    public static final String DEFAULT_CONDITION = "DEFAULT";
     public static final TaskNodeHandler TASK_NODE_HANDLER = new TaskNodeHandler();
+    public static final DecisionTransitionHandler DECISION_TRANSITION_HANDLER = new DecisionTransitionHandler();
+    public static final DefaultTransitionHandler DEFAULT_TRANSITION_HANDLER = new DefaultTransitionHandler();
+    public static final String TASK_NODE = "task-node";
+    public static final String TASK = "task";
+    public static final String TRANSITION = "transition";
     private List<ScreenRelation> screenRelations = new ArrayList<ScreenRelation>();
     private Screen parentScreen = null;
+    private Map<String, Screen> screenMap;
 
-    //TODO: refactor
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
-        if("task-node".equals(qName)) {
+        if(TASK_NODE.equals(qName)) {
             parentScreen = TASK_NODE_HANDLER.handle(qName, attributes);
         }
-        else if("task".equals(qName) ||
-                "transition".equals(qName)) {
+        else if(TASK.equals(qName) ||
+                TRANSITION.equals(qName)) {
             if(parentScreen != null) {
                 ScreenRelation screenRelation = null;
                 if(UsbongScreenType.LINK.getName().equals(parentScreen.screenType) ||
                         UsbongScreenType.DECISION.getName().equals(parentScreen.screenType)) {
-                    screenRelation = new DecisionTransitionHandler().handle(qName, attributes);
+                    screenRelation = DECISION_TRANSITION_HANDLER.handle(qName, attributes);
                 }
                 else {
-                    screenRelation = new DefaultTransitionHandler().handle(qName, attributes);
+                    screenRelation = DEFAULT_TRANSITION_HANDLER.handle(qName, attributes);
                 }
                 if(screenRelation != null) {
                     screenRelation.parent = parentScreen;
@@ -50,12 +54,19 @@ public class ScreenRelationXmlHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if("task-node".equals(qName)) {
+        if(TASK_NODE.equals(qName)) {
             parentScreen = null;
         }
     }
 
     public List<ScreenRelation> getScreenRelations() {
         return screenRelations;
+    }
+
+    public void setScreenMap(Map<String, Screen> screenMap) {
+        this.screenMap = screenMap;
+        TASK_NODE_HANDLER.setScreenMap(screenMap);
+        DECISION_TRANSITION_HANDLER.setScreenMap(screenMap);
+        DEFAULT_TRANSITION_HANDLER.setScreenMap(screenMap);
     }
 }

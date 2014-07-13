@@ -13,7 +13,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Rocky Camacho on 7/4/2014.
@@ -51,8 +53,10 @@ public class UtreeParser {
         }
     }
 
-    public void parseModels(InputStream inputStream) {
+    public void parseModels(InputStream inputStream, String utreeOutputFolder) {
         try {
+            utreeXmlHandler.setOutputFolderLocation(utreeOutputFolder);
+            utreeXmlHandler.clearScreens();
             utreeAndScreenXmlReader.parse(new InputSource(inputStream));
         } catch (IOException e) {
             Log.d(TAG, e.getMessage(), e);
@@ -63,6 +67,7 @@ public class UtreeParser {
 
     public void parseRelations(InputStream inputStream) {
         try {
+            screenRelationXmlHandler.setScreenMap(utreeXmlHandler.getScreens());
             screenRelationXmlReader.parse(new InputSource(inputStream));
         } catch (IOException e) {
             Log.d(TAG, e.getMessage(), e);
@@ -78,9 +83,9 @@ public class UtreeParser {
         return utreeXmlHandler.getUtree();
     }
 
-    public List<Screen> getScreens() {
+    public Map<String, Screen> getScreens() {
         if(utreeXmlHandler == null) {
-            return new ArrayList<Screen>();
+            return new HashMap<String, Screen>();
         }
         return utreeXmlHandler.getScreens();
     }
@@ -92,8 +97,8 @@ public class UtreeParser {
         return screenRelationXmlHandler.getScreenRelations();
     }
 
-    public void parseAndSave(String xmlPath) {
-        parseAndSaveModels(xmlPath);
+    public void parseAndSave(String xmlPath, String utreeOutputFolder) {
+        parseAndSaveModels(xmlPath, utreeOutputFolder);
         parseAndSaveRelations(xmlPath);
     }
 
@@ -112,14 +117,14 @@ public class UtreeParser {
         }
     }
 
-    private void parseAndSaveModels(String xmlPath) {
+    private void parseAndSaveModels(String xmlPath, String utreeOutputFolder) {
         FileInputStream modelInputStream = null;
         try {
             modelInputStream = new FileInputStream(new File(xmlPath));
-            parseModels(modelInputStream);
+            parseModels(modelInputStream, utreeOutputFolder);
             Utree utree = getUtree();
             utree.save();
-            for (Screen screen : getScreens()) {
+            for (Screen screen : getScreens().values()) {
                 screen.save();
             }
         } catch (FileNotFoundException e) {

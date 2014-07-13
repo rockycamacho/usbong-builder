@@ -41,39 +41,33 @@ public class UtreeListController implements Controller {
         }).subscribeOn(Schedulers.io());
     }
 
-    //TODO: there might be something wrong here
     public void importTree(final String fileLocation, final String outputFolderLocation, Observer<String> observer) {
         Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
                 if (fileLocation.endsWith(XML_FILE_EXTENSION)) {
+                    String treeName = fileLocation.substring(fileLocation.lastIndexOf("/") + 1, fileLocation.lastIndexOf(XML_FILE_EXTENSION));
+                    parseTreeDetails(fileLocation, outputFolderLocation + File.separator + treeName);
                     subscriber.onNext(fileLocation);
                     subscriber.onCompleted();
                 } else if (fileLocation.endsWith(UTREE_FILE_EXTENSION)) {
                     FileUtils.unzip(fileLocation, outputFolderLocation);
                     String treeName = fileLocation.substring(fileLocation.lastIndexOf("/") + 1, fileLocation.lastIndexOf(UTREE_FILE_EXTENSION));
                     String xmlFilePath = outputFolderLocation + File.separator + treeName + File.separator + treeName + XML_FILE_EXTENSION;
+                    parseTreeDetails(xmlFilePath, outputFolderLocation + File.separator + treeName);
                     subscriber.onNext(xmlFilePath);
                     subscriber.onCompleted();
                 } else {
-                    subscriber.onError(new IllegalArgumentException("Unable to read file. Make sure to select a valid *.utree or *.xml file"));
+                    throw new IllegalArgumentException("Unable to read file. Make sure to select a valid *.utree or *.xml file");
                 }
             }
-        }).map(new Func1<String, String>() {
-                   @Override
-                   public String call(String xmlPath) {
-                       parseTreeDetails(xmlPath);
-                       EventBus.getDefault().post(OnNeedRefreshTrees.EVENT);
-                       return null;
-                   }
-               }
-        ).subscribeOn(Schedulers.io())
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
     }
 
-    private void parseTreeDetails(String xmlPath) {
+    private void parseTreeDetails(String xmlPath, String utreeOutputFolder) {
         UtreeParser parser = UtreeParser.getInstance();
-        parser.parseAndSave(xmlPath);
+        parser.parseAndSave(xmlPath, utreeOutputFolder);
     }
 }

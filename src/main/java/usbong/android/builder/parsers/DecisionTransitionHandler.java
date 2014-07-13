@@ -4,7 +4,7 @@ import android.util.Log;
 import com.activeandroid.query.Select;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import usbong.android.builder.enums.ScreenType;
+import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.exceptions.ParserException;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
@@ -42,10 +42,10 @@ public class DecisionTransitionHandler implements ElementHandler<ScreenRelation>
         }
         ScreenRelation screenRelation = new ScreenRelation();
         screenRelation.child = childScreen;
-        if (ScreenType.TEXT_DISPLAY.getName().equals(screenType)) {
+        if (UsbongScreenType.TEXT_DISPLAY.getName().equals(screenType)) {
             screenRelation.condition = DEFAULT_CONDITION;
-        } else if (ScreenType.LINK.getName().equals(screenType) ||
-                ScreenType.DECISION.getName().equals(screenType)) {
+        } else if (UsbongScreenType.LINK.getName().equals(screenType) ||
+                UsbongScreenType.DECISION.getName().equals(screenType)) {
             screenRelation.condition = attrs[attrs.length - 1];
         } else {
             Log.w(TAG, "unhandled screen type: " + screenType);

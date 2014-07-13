@@ -4,7 +4,8 @@ import android.util.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import usbong.android.builder.enums.ScreenType;
+import usbong.android.builder.enums.UsbongBuilderScreenType;
+import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.Utree;
 
@@ -35,7 +36,7 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
             if("textDisplay".equals(screenType)) {
                 currentScreen = new Screen();
                 String details = attrs[1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
-                currentScreen.screenType = ScreenType.TEXT_DISPLAY.getName();
+                currentScreen.screenType = UsbongBuilderScreenType.TEXT.getName();
                 currentScreen.name = details;
                 currentScreen.details = details;
             }
@@ -46,7 +47,7 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
                 if(attrs.length > 2) {
                     name = attrs[1] + "~" + details;
                 }
-                currentScreen.screenType = ScreenType.DECISION.getName();
+                currentScreen.screenType = UsbongBuilderScreenType.DECISION.getName();
                 currentScreen.name = name;
                 currentScreen.details = details;
             }
@@ -57,7 +58,7 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
                 if(attrs.length > 2) {
                     name = attrs[1] + "~" + details;
                 }
-                currentScreen.screenType = ScreenType.DECISION.getName();
+                currentScreen.screenType = UsbongBuilderScreenType.DECISION.getName();
                 currentScreen.name = name;
                 currentScreen.details = details;
             }

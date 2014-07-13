@@ -119,6 +119,26 @@ public class FileUtils {
         }
     }
 
+    public static void copy(File sourceFile, File destinationFile) {
+        InputStream input = null;
+        OutputStream output = null;
+        try {
+            input = new FileInputStream(sourceFile);
+            output = new FileOutputStream(destinationFile);
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = input.read(buf)) > 0) {
+                output.write(buf, 0, bytesRead);
+            }
+        }
+        catch(IOException e) {
+            Log.e(TAG, e.getMessage(), e);
+        } finally {
+            ResourceUtils.close(input);
+            ResourceUtils.close(output);
+        }
+    }
+
     public static void mkdir(String location) {
         Log.d(TAG, "mkdir: " + location);
         File file = new File(location);

@@ -14,30 +14,24 @@ import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.activeandroid.query.Select;
 import com.dd.processbutton.iml.ActionProcessButton;
 import usbong.android.builder.R;
 import usbong.android.builder.adapters.ChildrenScreensAdapter;
 import usbong.android.builder.adapters.ParentsScreensAdapter;
 import usbong.android.builder.controllers.ScreenDetailController;
-import usbong.android.builder.enums.ScreenType;
+import usbong.android.builder.enums.UsbongBuilderScreenType;
+import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.events.OnNeedRefreshScreen;
 import usbong.android.builder.events.OnScreenDetailsSave;
 import usbong.android.builder.events.OnScreenSave;
 import usbong.android.builder.fragments.screens.DecisionFragment;
 import usbong.android.builder.fragments.screens.TextDisplayFragment;
+import usbong.android.builder.fragments.screens.TextImageFragment;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
-import usbong.android.builder.utils.ScreenUtils;
 import de.greenrobot.event.EventBus;
-import rx.Observable;
 import rx.Observer;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -135,10 +129,12 @@ public class ScreenDetailFragment extends Fragment {
             public void onNext(Screen screen) {
                 currentScreen = screen;
                 Fragment fragment = null;
-                if (ScreenType.TEXT_DISPLAY.getName().equals(screen.screenType)) {
+                if (UsbongBuilderScreenType.TEXT.getName().equals(screen.screenType)) {
                     fragment = TextDisplayFragment.newInstance(getArguments());
-                } else if (ScreenType.DECISION.getName().equals(screen.screenType)) {
+                } else if (UsbongBuilderScreenType.DECISION.getName().equals(screen.screenType)) {
                     fragment = DecisionFragment.newInstance(getArguments());
+                } else if (UsbongBuilderScreenType.TEXT_AND_IMAGE.getName().equals(screen.screenType)) {
+                    fragment = TextImageFragment.newInstance(getArguments());
                 } else {
                     throw new IllegalArgumentException("unhandled screen type: " + screen.screenType);
                 }

@@ -13,6 +13,7 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import usbong.android.builder.utils.FileUtils;
 import usbong.android.builder.utils.ScreenUtils;
 
 import java.io.File;
@@ -137,5 +138,30 @@ public class ScreenDetailController implements Controller {
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+    }
+
+    public void uploadImage(final String fileLocation, final String outputFolderLocation, Observer<File> observer) {
+        Observable.create(new Observable.OnSubscribe<File>() {
+            @Override
+            public void call(Subscriber<? super File> subscriber) {
+                if(!isValidImage(fileLocation)) {
+                    throw new IllegalArgumentException("Not a valid image file. Please select a jpg or png file");
+                }
+                FileUtils.mkdir(outputFolderLocation);
+                File sourceFile = new File(fileLocation);
+                File destinationFile = new File(outputFolderLocation + File.separator + sourceFile.getName());
+                FileUtils.copy(sourceFile, destinationFile);
+                subscriber.onNext(destinationFile);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(observer);
+    }
+
+    private boolean isValidImage(String filename) {
+        return filename.toLowerCase().endsWith(".jpg") ||
+                filename.toLowerCase().endsWith(".png") ||
+                filename.toLowerCase().endsWith(".jpeg");
     }
 }

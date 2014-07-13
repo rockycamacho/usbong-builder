@@ -8,18 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import usbong.android.builder.enums.ImagePosition;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
-import usbong.android.builder.enums.UsbongScreenType;
 
 /**
  * Created by Rocky Camacho on 6/27/2014.
  */
-public class ScreenTypeAdapter extends ArrayAdapter<UsbongBuilderScreenType> {
+public class ImagePositionAdapter extends ArrayAdapter<ImagePosition> {
 
     public static final int LAYOUT_RES_ID = android.R.layout.simple_list_item_1;
     private final Context context;
 
-    public ScreenTypeAdapter(Context context) {
+    public ImagePositionAdapter(Context context) {
         super(context, LAYOUT_RES_ID);
         this.context = context;
     }
@@ -34,8 +34,8 @@ public class ScreenTypeAdapter extends ArrayAdapter<UsbongBuilderScreenType> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        UsbongBuilderScreenType screenType = getItem(position);
-        viewHolder.name.setText(screenType.getName());
+        ImagePosition image = getItem(position);
+        viewHolder.name.setText(image.getName());
         return convertView;
     }
 

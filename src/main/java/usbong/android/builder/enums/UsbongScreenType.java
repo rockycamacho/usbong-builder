@@ -3,7 +3,7 @@ package usbong.android.builder.enums;
 /**
  * Created by Rocky Camacho on 6/27/2014.
  */
-public enum ScreenType {
+public enum UsbongScreenType {
 
     DECISION("decision"),
     TEXT_FIELD("textField"),
@@ -39,7 +39,7 @@ public enum ScreenType {
 
     private final String name;
 
-    ScreenType(String name) {
+    UsbongScreenType(String name) {
         this.name = name;
     }
 

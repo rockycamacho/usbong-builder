@@ -1,15 +1,11 @@
 package usbong.android.builder.parsers;
 
-import android.util.Log;
-import com.activeandroid.query.Select;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import usbong.android.builder.enums.ScreenType;
-import usbong.android.builder.exceptions.ParserException;
+import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
-import usbong.android.builder.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +33,8 @@ public class ScreenRelationXmlHandler extends DefaultHandler {
                 "transition".equals(qName)) {
             if(parentScreen != null) {
                 ScreenRelation screenRelation = null;
-                if(ScreenType.LINK.getName().equals(parentScreen.screenType) ||
-                        ScreenType.DECISION.getName().equals(parentScreen.screenType)) {
+                if(UsbongScreenType.LINK.getName().equals(parentScreen.screenType) ||
+                        UsbongScreenType.DECISION.getName().equals(parentScreen.screenType)) {
                     screenRelation = new DecisionTransitionHandler().handle(qName, attributes);
                 }
                 else {

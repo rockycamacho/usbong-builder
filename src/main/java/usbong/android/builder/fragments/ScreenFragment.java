@@ -18,7 +18,8 @@ import com.activeandroid.query.Select;
 import usbong.android.builder.R;
 import usbong.android.builder.adapters.ScreenTypeAdapter;
 import usbong.android.builder.controllers.ScreenController;
-import usbong.android.builder.enums.ScreenType;
+import usbong.android.builder.enums.UsbongBuilderScreenType;
+import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.Utree;
 import rx.Observer;
@@ -100,9 +101,10 @@ public class ScreenFragment extends Fragment {
 
         ButterKnife.inject(this, view);
 
-        adapter.add(ScreenType.TEXT_DISPLAY);
-//        adapter.add(ScreenType.LINK);
-        adapter.add(ScreenType.DECISION);
+        adapter.add(UsbongBuilderScreenType.TEXT);
+        adapter.add(UsbongBuilderScreenType.DECISION);
+        adapter.add(UsbongBuilderScreenType.IMAGE);
+        adapter.add(UsbongBuilderScreenType.TEXT_AND_IMAGE);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
@@ -145,7 +147,7 @@ public class ScreenFragment extends Fragment {
             public void onNext(Screen screen) {
                 screen.name = name.getText().toString();
                 screen.utree = new Select().from(Utree.class).where(Utree._ID + " = ?", treeId).executeSingle();
-                screen.screenType = ((ScreenType)spinner.getSelectedItem()).getName();
+                screen.screenType = adapter.getItem(spinner.getSelectedItemPosition()).getName();
                 controller.save(screen, callback);
             }
         });

@@ -25,6 +25,7 @@ import usbong.android.builder.events.OnNeedRefreshScreen;
 import usbong.android.builder.events.OnScreenDetailsSave;
 import usbong.android.builder.events.OnScreenSave;
 import usbong.android.builder.fragments.screens.DecisionFragment;
+import usbong.android.builder.fragments.screens.ImageFragment;
 import usbong.android.builder.fragments.screens.TextDisplayFragment;
 import usbong.android.builder.fragments.screens.TextImageFragment;
 import usbong.android.builder.models.Screen;
@@ -133,6 +134,8 @@ public class ScreenDetailFragment extends Fragment {
                     fragment = TextDisplayFragment.newInstance(getArguments());
                 } else if (UsbongBuilderScreenType.DECISION.getName().equals(screen.screenType)) {
                     fragment = DecisionFragment.newInstance(getArguments());
+                } else if (UsbongBuilderScreenType.IMAGE.getName().equals(screen.screenType)) {
+                    fragment = ImageFragment.newInstance(getArguments());
                 } else if (UsbongBuilderScreenType.TEXT_AND_IMAGE.getName().equals(screen.screenType)) {
                     fragment = TextImageFragment.newInstance(getArguments());
                 } else {

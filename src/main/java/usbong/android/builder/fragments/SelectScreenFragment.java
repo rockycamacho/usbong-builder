@@ -2,7 +2,6 @@ package usbong.android.builder.fragments;
 
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +19,7 @@ import butterknife.OnItemClick;
 import usbong.android.builder.R;
 import usbong.android.builder.adapters.ScreenAdapter;
 import usbong.android.builder.controllers.SelectScreenController;
+import usbong.android.builder.fragments.dialogs.AddingChildToItselfWarningDialogFragment;
 import usbong.android.builder.models.Screen;
 import com.squareup.picasso.Picasso;
 import rx.Observer;

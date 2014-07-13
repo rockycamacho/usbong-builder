@@ -51,8 +51,8 @@ public class UtreeListController implements Controller {
                     subscriber.onNext(fileLocation);
                     subscriber.onCompleted();
                 } else if (fileLocation.endsWith(UTREE_FILE_EXTENSION)) {
-                    FileUtils.unzip(fileLocation, outputFolderLocation);
                     String treeName = fileLocation.substring(fileLocation.lastIndexOf("/") + 1, fileLocation.lastIndexOf(UTREE_FILE_EXTENSION));
+                    FileUtils.unzip(fileLocation, outputFolderLocation + File.separator + treeName);
                     String xmlFilePath = outputFolderLocation + File.separator + treeName + File.separator + treeName + XML_FILE_EXTENSION;
                     parseTreeDetails(xmlFilePath, outputFolderLocation + File.separator + treeName);
                     subscriber.onNext(xmlFilePath);

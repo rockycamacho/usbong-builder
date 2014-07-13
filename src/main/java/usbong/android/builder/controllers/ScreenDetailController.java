@@ -129,8 +129,6 @@ public class ScreenDetailController implements Controller {
                 //TODO: save parent and children
                 currentScreen.save();
                 Log.d(TAG, "saved");
-                //currentScreen = new Select().from(Screen.class).where(Screen._ID + " = ?", currentScreen.getId()).executeSingle();
-
                 File screenshotFile = screenContainer.getContext().getFileStreamPath(currentScreen.getScreenshotPath());
                 ScreenUtils.saveScreenshot(screenshotFile, screenContainer);
                 subscriber.onNext(currentScreen);

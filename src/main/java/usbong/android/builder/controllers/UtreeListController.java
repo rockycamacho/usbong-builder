@@ -22,6 +22,8 @@ import java.util.List;
 public class UtreeListController implements Controller {
 
     public static final String TAG = UtreeListController.class.getSimpleName();
+    public static final String UTREE_FILE_EXTENSION = ".utree";
+    public static final String XML_FILE_EXTENSION = ".xml";
 
     public void fetchUtrees(Observer<List<Utree>> observer) {
         getUtrees().observeOn(AndroidSchedulers.mainThread())
@@ -44,13 +46,13 @@ public class UtreeListController implements Controller {
         Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
-                if (fileLocation.endsWith(".xml")) {
+                if (fileLocation.endsWith(XML_FILE_EXTENSION)) {
                     subscriber.onNext(fileLocation);
                     subscriber.onCompleted();
-                } else if (fileLocation.endsWith(".xml")) {
+                } else if (fileLocation.endsWith(UTREE_FILE_EXTENSION)) {
                     FileUtils.unzip(fileLocation, outputFolderLocation);
-                    String treeName = fileLocation.substring(fileLocation.lastIndexOf("/") + 1, fileLocation.lastIndexOf(".utree"));
-                    String xmlFilePath = outputFolderLocation + File.separator + treeName + File.separator + treeName + ".xml";
+                    String treeName = fileLocation.substring(fileLocation.lastIndexOf("/") + 1, fileLocation.lastIndexOf(UTREE_FILE_EXTENSION));
+                    String xmlFilePath = outputFolderLocation + File.separator + treeName + File.separator + treeName + XML_FILE_EXTENSION;
                     subscriber.onNext(xmlFilePath);
                     subscriber.onCompleted();
                 } else {

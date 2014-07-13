@@ -43,7 +43,7 @@ public class UtreeParser {
 
             screenRelationXmlReader = factory.newSAXParser().getXMLReader();
             screenRelationXmlHandler = new ScreenRelationXmlHandler();
-            screenRelationXmlReader.setContentHandler(utreeXmlHandler);
+            screenRelationXmlReader.setContentHandler(screenRelationXmlHandler);
         } catch (SAXException e) {
             Log.d(TAG, e.getMessage(), e);
         } catch (ParserConfigurationException e) {

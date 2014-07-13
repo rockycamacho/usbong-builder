@@ -46,15 +46,19 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
                 if(attrs.length > 2) {
                     name = attrs[1] + "~" + details;
                 }
-                currentScreen.screenType = ScreenType.TEXT_DISPLAY.getName();
-                currentScreen.name = details;
+                currentScreen.screenType = ScreenType.DECISION.getName();
+                currentScreen.name = name;
                 currentScreen.details = details;
             }
             else if("decision".equals(screenType)) {
                 currentScreen = new Screen();
-                String details = attrs[1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
-                currentScreen.screenType = ScreenType.TEXT_DISPLAY.getName();
-                currentScreen.name = details;
+                String details = attrs[attrs.length - 1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
+                String name = details;
+                if(attrs.length > 2) {
+                    name = attrs[1] + "~" + details;
+                }
+                currentScreen.screenType = ScreenType.DECISION.getName();
+                currentScreen.name = name;
                 currentScreen.details = details;
             }
             if(currentScreen == null) {

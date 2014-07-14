@@ -8,6 +8,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import usbong.android.builder.converters.UtreeConverter;
 import usbong.android.builder.events.OnNeedRefreshTrees;
 import usbong.android.builder.models.Utree;
 import usbong.android.builder.parsers.UtreeParser;
@@ -69,5 +70,24 @@ public class UtreeListController implements Controller {
     private void parseTreeDetails(String xmlPath, String utreeOutputFolder) {
         UtreeParser parser = UtreeParser.getInstance();
         parser.parseAndSave(xmlPath, utreeOutputFolder);
+    }
+
+    public void exportTree(final Utree utree, final String folderLocation, final String treeFolderLocation, Observer<String> observer) {
+        Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                FileUtils.mkdir(treeFolderLocation);
+                String xmlFileLocation = treeFolderLocation + utree.name + ".xml";
+                String zipFilePath = folderLocation + File.separator + utree.name + ".utree";
+                UtreeConverter converter = new UtreeConverter();
+                converter.convert(utree, xmlFileLocation);
+                FileUtils.zip(zipFilePath, treeFolderLocation);
+                subscriber.onNext(null);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+
     }
 }

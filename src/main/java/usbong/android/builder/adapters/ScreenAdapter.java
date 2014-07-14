@@ -1,6 +1,7 @@
 package usbong.android.builder.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,12 @@ public class ScreenAdapter extends BaseAdapter implements Filterable {
         }
         Screen screen = getItem(position);
         viewHolder.name.setText(screen.name);
+        if(screen.isStart == 1) {
+            viewHolder.name.setTextColor(context.getResources().getColor(R.color.usbong_color));
+        }
+        else {
+            viewHolder.name.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
+        }
         Picasso.with(context)
                 .load(context.getFileStreamPath(screen.getScreenshotPath()))
                 .fit()

@@ -61,6 +61,12 @@ public class ChildrenScreensAdapter extends BaseAdapter implements Filterable {
         }
         ScreenRelation screenRelation = getItem(position);
         viewHolder.name.setText(screenRelation.child.name);
+        if(screenRelation.child.isStart == 1) {
+            viewHolder.name.setTextColor(context.getResources().getColor(R.color.usbong_color));
+        }
+        else {
+            viewHolder.name.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
+        }
         Picasso.with(context)
                 .load(context.getFileStreamPath(screenRelation.child.getScreenshotPath()))
                 .fit()

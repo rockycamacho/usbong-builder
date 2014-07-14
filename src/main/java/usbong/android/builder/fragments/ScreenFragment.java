@@ -122,6 +122,7 @@ public class ScreenFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -141,6 +142,7 @@ public class ScreenFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -165,6 +167,7 @@ public class ScreenFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

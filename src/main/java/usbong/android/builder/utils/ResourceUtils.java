@@ -3,8 +3,10 @@ package usbong.android.builder.utils;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.nio.channels.FileChannel;
 
 /**
@@ -44,6 +46,16 @@ public class ResourceUtils {
         try{
             if(channel != null) {
                 channel.close();
+            }
+        } catch(Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+    public static void close(Writer writer) {
+        try{
+            if(writer != null) {
+                writer.close();
             }
         } catch(Exception e) {
             Log.e(TAG, e.getMessage(), e);

@@ -12,17 +12,14 @@ import usbong.android.builder.utils.ResourceUtils;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Rocky Camacho on 7/4/2014.
  */
 public class UtreeParser {
 
-    private static final String TAG = Utree.class.getSimpleName();
+    private static final String TAG = UtreeParser.class.getSimpleName();
     private static UtreeParser instance;
     private UtreeAndScreenXmlHandler utreeXmlHandler;
     private XMLReader utreeAndScreenXmlReader;
@@ -85,7 +82,7 @@ public class UtreeParser {
 
     public Map<String, Screen> getScreens() {
         if(utreeXmlHandler == null) {
-            return new HashMap<String, Screen>();
+            return new LinkedHashMap<String, Screen>();
         }
         return utreeXmlHandler.getScreens();
     }
@@ -124,7 +121,12 @@ public class UtreeParser {
             parseModels(modelInputStream, utreeOutputFolder);
             Utree utree = getUtree();
             utree.save();
+            boolean hasStart = false;
             for (Screen screen : getScreens().values()) {
+                if(!hasStart) {
+                    screen.isStart = 1;
+                    hasStart = true;
+                }
                 screen.save();
             }
         } catch (FileNotFoundException e) {

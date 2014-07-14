@@ -126,6 +126,7 @@ public class TextImageFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -205,6 +206,7 @@ public class TextImageFragment extends Fragment {
                 @Override
                 public void onError(Throwable e) {
                     Log.e(TAG, e.getMessage(), e);
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -223,7 +225,7 @@ public class TextImageFragment extends Fragment {
         if(requestCode == ADD_CHILD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             updateChildren(data);
         }
-        else if (requestCode == IntentUtils.CHOOSE_FILE_REQUESTCODE && resultCode == Activity.RESULT_OK) {
+        else if (requestCode == IntentUtils.CHOOSE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             String fileLocation = data.getData().getPath();
             final String outputFolderLocation = getActivity().getFilesDir() + File.separator + "trees" + File.separator + currentScreen.utree.name + File.separator + "res";
             controller.uploadImage(fileLocation, outputFolderLocation, new Observer<File>() {
@@ -236,6 +238,7 @@ public class TextImageFragment extends Fragment {
                 @Override
                 public void onError(Throwable e) {
                     Log.e(TAG, e.getMessage(), e);
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -264,6 +267,7 @@ public class TextImageFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -283,6 +287,7 @@ public class TextImageFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -310,6 +315,7 @@ public class TextImageFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -322,6 +328,6 @@ public class TextImageFragment extends Fragment {
     @OnClick(R.id.upload)
     public void onUploadClicked() {
         Intent fileDialogIntent = IntentUtils.getSelectFileIntent(getActivity(), "file/*.png");
-        startActivityForResult(fileDialogIntent, IntentUtils.CHOOSE_FILE_REQUESTCODE);
+        startActivityForResult(fileDialogIntent, IntentUtils.CHOOSE_FILE_REQUEST_CODE);
     }
 }

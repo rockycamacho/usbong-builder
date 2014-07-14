@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 import rx.functions.Action1;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
@@ -127,6 +128,14 @@ public class ScreenDetailController implements Controller {
             @Override
             public void call(Subscriber<? super Screen> subscriber) {
                 Log.d(TAG, "saving...");
+                if(currentScreen.isStart == 1) {
+                    new Update(Screen.class).set("IsStart = ?", 0)
+                            .where("Utree = ?", currentScreen.utree.getId())
+                            .execute();
+                }
+                else if(Screen.getScreens(currentScreen.utree.getId()).size() == 0) {
+                    currentScreen.isStart = 1;
+                }
                 //TODO: save parent and children
                 currentScreen.save();
                 Log.d(TAG, "saved");

@@ -39,6 +39,12 @@ public class ParentsScreensAdapter extends ArrayAdapter<ScreenRelation> {
         }
         ScreenRelation screenRelation = getItem(position);
         viewHolder.name.setText(screenRelation.parent.name);
+        if(screenRelation.parent.isStart == 1) {
+            viewHolder.name.setTextColor(context.getResources().getColor(R.color.usbong_color));
+        }
+        else {
+            viewHolder.name.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
+        }
         Picasso.with(context)
                 .load(context.getFileStreamPath(screenRelation.parent.getScreenshotPath()))
                 .fit()

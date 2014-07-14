@@ -14,10 +14,7 @@ import usbong.android.builder.models.ScreenDetails;
 import usbong.android.builder.models.Utree;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Rocky Camacho on 7/5/2014.
@@ -26,7 +23,7 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
     private static final String TAG = UtreeAndScreenXmlHandler.class.getSimpleName();
     public static final String[] IMAGE_FILE_EXTENSIONS = new String[]{".jpg", ".jpeg", ".png"};
     private Utree utree;
-    private Map<String, Screen> screenMap = new HashMap<String, Screen>();
+    private Map<String, Screen> screenMap = new LinkedHashMap<String, Screen>();
     private List<Screen> screens = new ArrayList<Screen>();
     private Screen currentScreen;
     private Gson gson;

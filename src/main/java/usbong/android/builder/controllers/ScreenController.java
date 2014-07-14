@@ -2,6 +2,7 @@ package usbong.android.builder.controllers;
 
 import android.util.Log;
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 import usbong.android.builder.models.Screen;
 import rx.Observable;
 import rx.Observer;
@@ -49,6 +50,14 @@ public class ScreenController implements Controller {
         Observable.create(new Observable.OnSubscribe<Screen>() {
             @Override
             public void call(Subscriber<? super Screen> subscriber) {
+                if(screen.isStart == 1) {
+                    new Update(Screen.class).set("IsStart = ?", 0)
+                            .where("Utree = ?", screen.utree.getId())
+                            .execute();
+                }
+                else if(Screen.getScreens(screen.utree.getId()).size() == 0) {
+                    screen.isStart = 1;
+                }
                 screen.save();
                 subscriber.onCompleted();
             }

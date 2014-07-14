@@ -1,10 +1,7 @@
 package usbong.android.builder.fragments;
 
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -14,7 +11,7 @@ import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.nononsenseapps.filepicker.FilePickerActivity;
+import butterknife.OnItemLongClick;
 import de.greenrobot.event.EventBus;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenListActivity;
@@ -59,6 +56,8 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
      * Views.
      */
     private UtreeAdapter adapter;
+    private ActionMode actionMode;
+    private Utree selectedUtree;
 
     public static UtreeListFragment newInstance() {
         UtreeListFragment fragment = new UtreeListFragment();
@@ -103,7 +102,7 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         ButterKnife.inject(this, view);
         EventBus.getDefault().register(this);
         ((AdapterView<ListAdapter>) listView).setAdapter(adapter);
-
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -163,6 +162,7 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
     @Override
     public void onError(Throwable e) {
         Log.e(TAG, e.getMessage(), e);
+        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -180,7 +180,7 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         else if(item.getItemId() == R.id.action_import) {
             try {
                 Intent fileDialogIntent = IntentUtils.getSelectFileIntent(getActivity(), "file/*.utree");
-                startActivityForResult(fileDialogIntent, IntentUtils.CHOOSE_FILE_REQUESTCODE);
+                startActivityForResult(fileDialogIntent, IntentUtils.CHOOSE_FILE_REQUEST_CODE);
             } catch (android.content.ActivityNotFoundException e) {
                 Log.e(TAG, e.getMessage(), e);
                 Toast.makeText(getActivity(), getString(R.string.no_file_managers_found), Toast.LENGTH_SHORT).show();
@@ -199,7 +199,7 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == IntentUtils.CHOOSE_FILE_REQUESTCODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == IntentUtils.CHOOSE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             String fileLocation = data.getData().getPath();
             String outputFolderLocation = getActivity().getFilesDir() + File.separator + "trees";
             controller.importTree(fileLocation, outputFolderLocation, new Observer<String>() {
@@ -211,6 +211,7 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
                 @Override
                 public void onError(Throwable e) {
                     Log.e(TAG, e.getMessage(), e);
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -219,6 +220,74 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
                 }
             });
         }
+        else if(requestCode == IntentUtils.CHOOSE_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            String outputFolderLocation = data.getData().getPath();
+            String treeFolderLocation = getActivity().getFilesDir() + File.separator + "trees" + File.separator + selectedUtree.name + File.separator;
+            controller.exportTree(selectedUtree, outputFolderLocation, treeFolderLocation, new Observer<String>() {
+
+                @Override
+                public void onCompleted() {
+                    Toast.makeText(getActivity(), ".utree exported", Toast.LENGTH_SHORT).show();
+                    selectedUtree = null;
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    selectedUtree = null;
+                }
+
+                @Override
+                public void onNext(String s) {
+
+                }
+            });
+        }
+    }
+
+    @OnItemLongClick(android.R.id.list)
+    public boolean onItemLongClick(View view, int position) {
+        if(actionMode != null) {
+            return false;
+        }
+        actionMode = getActivity().startActionMode(new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.selected_utree, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.action_export:
+                        exportTree();
+                        mode.finish();
+                        return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                actionMode = null;
+            }
+        });
+        selectedUtree = adapter.getItem(position);
+        view.setSelected(true);
+        return true;
+    }
+
+    private void exportTree() {
+        Intent intent = IntentUtils.getSelectFolderIntent(getActivity());
+        startActivityForResult(intent, IntentUtils.CHOOSE_FOLDER_REQUEST_CODE);
     }
 
     public void onEvent(final OnNeedRefreshTrees event) {
@@ -231,4 +300,5 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
 
         EventBus.getDefault().unregister(this);
     }
+
 }

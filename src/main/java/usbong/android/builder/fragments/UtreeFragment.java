@@ -98,6 +98,7 @@ public class UtreeFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 saveButton.setProgress(-1);
             }
 
@@ -116,6 +117,7 @@ public class UtreeFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, e.getMessage(), e);
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         saveButton.setProgress(-1);
                     }
 

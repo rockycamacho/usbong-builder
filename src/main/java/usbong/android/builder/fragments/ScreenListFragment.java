@@ -167,6 +167,7 @@ public class ScreenListFragment extends Fragment implements AbsListView.OnItemCl
     @Override
     public void onError(Throwable e) {
         Log.e(TAG, e.getMessage(), e);
+        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

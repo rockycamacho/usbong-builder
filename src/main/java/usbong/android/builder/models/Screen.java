@@ -31,9 +31,13 @@ public class Screen extends Model implements BaseColumns, Serializable {
     @Column(name = "Details")
     public String details;
 
+    @Column(name = "IsStart")
+    public int isStart = 0;
+
     public static List<Screen> getScreens(long treeId) {
         return new Select().from(Screen.class)
                 .where("Utree = ?", treeId)
+                .orderBy("IsStart DESC")
                 .execute();
     };
 

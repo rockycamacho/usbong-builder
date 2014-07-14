@@ -75,7 +75,7 @@
                 android:value="usbong.db"/>
         <meta-data
                 android:name="AA_DB_VERSION"
-                android:value="8"/>
+                android:value="9"/>
 
     </application>
 </manifest>

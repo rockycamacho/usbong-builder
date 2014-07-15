@@ -56,8 +56,37 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
      * Views.
      */
     private UtreeAdapter adapter;
-    private ActionMode actionMode;
     private Utree selectedUtree;
+    private ActionMode actionMode;
+    private ActionMode.Callback selectedUtreeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.selected_utree, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch(item.getItemId()) {
+                case R.id.action_export:
+                    exportTree();
+                    mode.finish();
+                    return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
+        }
+    };
 
     public static UtreeListFragment newInstance() {
         UtreeListFragment fragment = new UtreeListFragment();
@@ -251,37 +280,9 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         if(actionMode != null) {
             return false;
         }
-        actionMode = getActivity().startActionMode(new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.selected_utree, menu);
-                return true;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch(item.getItemId()) {
-                    case R.id.action_export:
-                        exportTree();
-                        mode.finish();
-                        return true;
-                }
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                actionMode = null;
-            }
-        });
-        selectedUtree = adapter.getItem(position);
         view.setSelected(true);
+        selectedUtree = adapter.getItem(position);
+        actionMode = getActivity().startActionMode(selectedUtreeCallback);
         return true;
     }
 

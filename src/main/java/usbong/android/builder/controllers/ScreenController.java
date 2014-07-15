@@ -23,7 +23,6 @@ public class ScreenController implements Controller {
     }
 
     private Observable<Screen> getScreen(final long id) {
-        Log.d(TAG, "id: " + id);
         return Observable.create(new Observable.OnSubscribe<Screen>() {
             @Override
             public void call(Subscriber<? super Screen> subscriber) {
@@ -59,6 +58,7 @@ public class ScreenController implements Controller {
                     screen.isStart = 1;
                 }
                 screen.save();
+                subscriber.onNext(screen);
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())

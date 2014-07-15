@@ -136,7 +136,6 @@ public class ScreenDetailController implements Controller {
                 else if(Screen.getScreens(currentScreen.utree.getId()).size() == 0) {
                     currentScreen.isStart = 1;
                 }
-                //TODO: save parent and children
                 currentScreen.save();
                 Log.d(TAG, "saved");
                 File screenshotFile = screenContainer.getContext().getFileStreamPath(currentScreen.getScreenshotPath());

@@ -19,6 +19,7 @@ import usbong.android.builder.controllers.ScreenDetailController;
 import usbong.android.builder.events.OnNeedRefreshScreen;
 import usbong.android.builder.events.OnScreenDetailsSave;
 import usbong.android.builder.events.OnScreenSave;
+import usbong.android.builder.fragments.ScreenDetailFragment;
 import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
@@ -39,9 +40,10 @@ public class DecisionFragment extends Fragment {
     public static final String RELATION_CONDITION = "DEFAULT";
 
     private long screenId = -1;
+    private long treeId = -1;
     private Screen currentScreen;
-    private ScreenDetailController controller;
 
+    private ScreenDetailController controller;
     @InjectView(R.id.name)
     EditText name;
     @InjectView(R.id.content)
@@ -69,10 +71,14 @@ public class DecisionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            screenId = getArguments().getLong(EXTRA_SCREEN_ID, -1);
+            screenId = getArguments().getLong(ScreenDetailFragment.EXTRA_SCREEN_ID, -1);
+            treeId = getArguments().getLong(ScreenDetailFragment.EXTRA_TREE_ID, -1);
         }
         if (screenId == -1) {
             throw new IllegalArgumentException("screen id is required");
+        }
+        if (treeId == -1) {
+            throw new IllegalArgumentException("tree id is required");
         }
         Log.d(TAG, "currentScreen id: " + screenId);
         setHasOptionsMenu(true);
@@ -147,6 +153,7 @@ public class DecisionFragment extends Fragment {
         if(item.getItemId() == R.id.action_add_child) {
             Intent data = new Intent(getActivity(), SelectDecisionActivity.class);
             data.putExtra(SelectDecisionActivity.EXTRA_SCREEN_ID, screenId);
+            data.putExtra(SelectDecisionActivity.EXTRA_TREE_ID, treeId);
             getParentFragment().startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
         }
         return super.onOptionsItemSelected(item);

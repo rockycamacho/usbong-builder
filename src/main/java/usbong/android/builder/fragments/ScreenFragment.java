@@ -1,6 +1,7 @@
 package usbong.android.builder.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,6 +17,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import com.activeandroid.query.Select;
 import usbong.android.builder.R;
+import usbong.android.builder.activities.ScreenDetailActivity;
 import usbong.android.builder.adapters.ScreenTypeAdapter;
 import usbong.android.builder.controllers.ScreenController;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
@@ -160,8 +162,6 @@ public class ScreenFragment extends Fragment {
         saveScreen(new Observer<Screen>() {
             @Override
             public void onCompleted() {
-                Toast.makeText(getActivity(), getString(R.string.screen_saved), Toast.LENGTH_SHORT).show();
-                getActivity().finish();
             }
 
             @Override
@@ -172,11 +172,12 @@ public class ScreenFragment extends Fragment {
 
             @Override
             public void onNext(Screen screen) {
-                Toast.makeText(getActivity(), getString(R.string.not_implemented_yet), Toast.LENGTH_SHORT).show();
-
-//                Toast.makeText(getActivity(), getString(R.string.screen_saved), Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(getActivity(), ScreenDetailActivity.class);
-//                startActivity(intent);
+                Toast.makeText(getActivity(), getString(R.string.screen_saved), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), ScreenDetailActivity.class);
+                intent.putExtra(ScreenDetailFragment.EXTRA_SCREEN_ID, screen.getId().longValue());
+                intent.putExtra(ScreenDetailFragment.EXTRA_TREE_ID, treeId);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
     }

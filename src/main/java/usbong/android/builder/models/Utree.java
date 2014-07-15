@@ -17,6 +17,8 @@ public class Utree extends Model implements BaseColumns, Serializable {
 
     @Column(name = "Name")
     public String name;
+    @Column(name = "FolderLocation")
+    public String folderLocation;
 
     public List<Screen> screens() {
         return getMany(Screen.class, "Utree");

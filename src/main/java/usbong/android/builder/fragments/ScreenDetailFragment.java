@@ -15,8 +15,10 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 import com.dd.processbutton.iml.ActionProcessButton;
 import usbong.android.builder.R;
+import usbong.android.builder.activities.ScreenDetailActivity;
 import usbong.android.builder.adapters.ChildrenScreensAdapter;
 import usbong.android.builder.adapters.ParentsScreensAdapter;
 import usbong.android.builder.controllers.ScreenDetailController;
@@ -45,6 +47,7 @@ public class ScreenDetailFragment extends Fragment {
 
     public static final String TAG = ScreenDetailFragment.class.getSimpleName();
     public static final String EXTRA_SCREEN_ID = "EXTRA_SCREEN_ID";
+    public static final String EXTRA_TREE_ID = "EXTRA_TREE_ID";
 
     private long screenId = -1;
     private Screen currentScreen;
@@ -243,5 +246,25 @@ public class ScreenDetailFragment extends Fragment {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @OnItemClick(R.id.parent_list)
+    public void onClickParent(int position) {
+        ScreenRelation screenRelation = parentScreenAdapter.getItem(position);
+        Intent intent = new Intent(getActivity(), ScreenDetailActivity.class);
+        intent.putExtra(ScreenDetailFragment.EXTRA_SCREEN_ID, screenRelation.parent.getId().longValue());
+        intent.putExtra(ScreenDetailFragment.EXTRA_TREE_ID, getArguments().getLong(EXTRA_TREE_ID));
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    @OnItemClick(R.id.child_list)
+    public void onClickChild(int position) {
+        ScreenRelation screenRelation = childrenScreenAdapter.getItem(position);
+        Intent intent = new Intent(getActivity(), ScreenDetailActivity.class);
+        intent.putExtra(ScreenDetailFragment.EXTRA_SCREEN_ID, screenRelation.child.getId().longValue());
+        intent.putExtra(ScreenDetailFragment.EXTRA_TREE_ID, getArguments().getLong(EXTRA_TREE_ID));
+        startActivity(intent);
+        getActivity().finish();
     }
 }

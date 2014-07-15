@@ -10,6 +10,8 @@ import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnItemClick;
+import butterknife.OnItemLongClick;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenActivity;
 import usbong.android.builder.activities.ScreenDetailActivity;
@@ -17,6 +19,7 @@ import usbong.android.builder.adapters.ScreenAdapter;
 import usbong.android.builder.controllers.ScreenListController;
 import usbong.android.builder.models.Screen;
 import rx.Observer;
+import usbong.android.builder.models.Utree;
 import usbong.android.builder.utils.StringUtils;
 
 import java.util.List;
@@ -29,7 +32,7 @@ import java.util.List;
  * <p/>
  * interface.
  */
-public class ScreenListFragment extends Fragment implements AbsListView.OnItemClickListener, Observer<List<Screen>> {
+public class ScreenListFragment extends Fragment implements Observer<List<Screen>> {
 
     private static final String TAG = ScreenListFragment.class.getSimpleName();
     public static final String EXTRA_TREE_ID = "EXTRA_TREE_ID";
@@ -46,6 +49,37 @@ public class ScreenListFragment extends Fragment implements AbsListView.OnItemCl
     EditText search;
 
     private ScreenListController controller;
+    private Screen selectedScreen;
+    private ActionMode actionMode;
+    private ActionMode.Callback selectedUtreeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.selected_screen, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch(item.getItemId()) {
+                case R.id.action_mark_as_start:
+                    markAsStart();
+                    mode.finish();
+                    return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
+        }
+    };
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -84,8 +118,6 @@ public class ScreenListFragment extends Fragment implements AbsListView.OnItemCl
                 throw new IllegalArgumentException("tree is required");
             }
         }
-
-
         setHasOptionsMenu(true);
         controller = new ScreenListController();
         adapter = new ScreenAdapter(getActivity());
@@ -99,9 +131,7 @@ public class ScreenListFragment extends Fragment implements AbsListView.OnItemCl
         // Set the adapter
         listView = (AbsListView) view.findViewById(android.R.id.list);
         ((AdapterView<ListAdapter>) listView).setAdapter(adapter);
-
-        // Set OnItemClickListener so we can be notified on item clicks
-        listView.setOnItemClickListener(this);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 
         return view;
     }
@@ -146,12 +176,46 @@ public class ScreenListFragment extends Fragment implements AbsListView.OnItemCl
         emptyView.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @OnItemClick(android.R.id.list)
+    public void onItemClick(int position) {
         Screen screen = adapter.getItem(position);
         Intent intent = new Intent(getActivity(), ScreenDetailActivity.class);
         intent.putExtra(ScreenDetailFragment.EXTRA_SCREEN_ID, screen.getId().longValue());
+        intent.putExtra(ScreenDetailFragment.EXTRA_TREE_ID, treeId);
         startActivity(intent);
+    }
+
+    @OnItemLongClick(android.R.id.list)
+    public boolean onItemLongClick(View view, int position) {
+        if(actionMode != null) {
+            return false;
+        }
+        view.setSelected(true);
+        selectedScreen = adapter.getItem(position);
+        actionMode = getActivity().startActionMode(selectedUtreeCallback);
+        return true;
+    }
+
+    private void markAsStart() {
+        controller.markAsStart(selectedScreen, new Observer<Screen>() {
+            @Override
+            public void onCompleted() {
+                controller.fetchScreens(treeId, ScreenListFragment.this);
+                Toast.makeText(getActivity(), getString(R.string.screen_saved), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(Screen screen) {
+
+            }
+        });
+        selectedScreen = null;
     }
 
     @Override

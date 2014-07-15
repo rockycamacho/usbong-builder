@@ -16,6 +16,7 @@ public class SelectDecisionActivity extends Activity {
     private static final String TAG = SelectDecisionActivity.class.getSimpleName();
     private static final int ADD_CHILD_REQUEST_CODE = 101;
     public static final String EXTRA_SCREEN_ID = "EXTRA_SCREEN_ID";
+    public static final String EXTRA_TREE_ID = "EXTRA_TREE_ID";
     public static final String EXTRA_CONDITION = "EXTRA_CONDITION";
     @InjectView(R.id.decision)
     EditText decision;
@@ -23,6 +24,7 @@ public class SelectDecisionActivity extends Activity {
     Button selectScreen;
 
     private long screenId = -1;
+    private long treeId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +35,13 @@ public class SelectDecisionActivity extends Activity {
 
         if(getIntent() != null) {
             screenId = getIntent().getLongExtra(EXTRA_SCREEN_ID, -1);
+            treeId = getIntent().getLongExtra(EXTRA_TREE_ID, -1);
         }
         if (screenId == -1) {
             throw new IllegalArgumentException("screen id is required");
+        }
+        if (treeId == -1) {
+            throw new IllegalArgumentException("tree id is required");
         }
     }
 
@@ -44,6 +50,7 @@ public class SelectDecisionActivity extends Activity {
         Intent data = new Intent(this, SelectScreenActivity.class);
         data.putExtra(SelectScreenFragment.EXTRA_SCREEN_RELATION, SelectScreenFragment.CHILD);
         data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
+        data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
         startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
     }
 

@@ -18,7 +18,7 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 import usbong.android.builder.R;
 import usbong.android.builder.adapters.ScreenAdapter;
-import usbong.android.builder.controllers.SelectScreenController;
+import usbong.android.builder.controllers.ScreenListController;
 import usbong.android.builder.fragments.dialogs.AddingChildToItselfWarningDialogFragment;
 import usbong.android.builder.models.Screen;
 import com.squareup.picasso.Picasso;
@@ -35,6 +35,7 @@ import java.util.List;
 public class SelectScreenFragment extends Fragment {
 
     public static final String EXTRA_SCREEN_ID = "EXTRA_SCREEN_ID";
+    public static final String EXTRA_TREE_ID = "EXTRA_TREE_ID";
     public static final String EXTRA_SCREEN_RELATION = "EXTRA_SCREEN_RELATION";
     public static final String PARENT = "PARENT";
     public static final String CHILD = "CHILD";
@@ -42,10 +43,11 @@ public class SelectScreenFragment extends Fragment {
     public static final String EXTRA_SELECTED_SCREEN_ID = "EXTRA_SELECTED_SCREEN_ID";
 
     private long screenId = -1;
+    private long treeId = -1;
     private Screen screen;
     private ScreenAdapter adapter;
     private String screenRelation;
-    private SelectScreenController controller;
+    private ScreenListController controller;
 
     @InjectView(android.R.id.list)
     ListView listView;
@@ -74,11 +76,15 @@ public class SelectScreenFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             screenId = getArguments().getLong(EXTRA_SCREEN_ID, -1);
+            treeId = getArguments().getLong(EXTRA_TREE_ID, -1);
         }
         if(screenId == -1) {
             throw new IllegalArgumentException("screen id is required");
         }
-        controller = new SelectScreenController();
+        if(treeId == -1) {
+            throw new IllegalArgumentException("tree id is required");
+        }
+        controller = new ScreenListController();
         adapter = new ScreenAdapter(getActivity());
     }
 
@@ -111,7 +117,7 @@ public class SelectScreenFragment extends Fragment {
 
             }
         });
-        controller.fetchScreens(new Observer<List<Screen>>() {
+        controller.fetchScreens(treeId, new Observer<List<Screen>>() {
             @Override
             public void onCompleted() {
 

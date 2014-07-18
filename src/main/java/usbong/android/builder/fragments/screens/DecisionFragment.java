@@ -174,7 +174,6 @@ public class DecisionFragment extends Fragment {
     private void updateChildren(Intent data) {
         Log.d(TAG, "resultCode == Activity.RESULT_OK");
         long childScreenId = data.getLongExtra(SelectScreenFragment.EXTRA_SELECTED_SCREEN_ID, -1);
-        Toast.makeText(getActivity(), "screenId: " + childScreenId, Toast.LENGTH_SHORT).show();
         final String condition = data.getStringExtra(SelectDecisionActivity.EXTRA_CONDITION);
         controller.loadScreen(childScreenId, new Observer<Screen>() {
 

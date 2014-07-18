@@ -11,7 +11,6 @@ import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
-import butterknife.OnItemLongClick;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenActivity;
 import usbong.android.builder.activities.ScreenDetailActivity;
@@ -19,7 +18,6 @@ import usbong.android.builder.adapters.ScreenAdapter;
 import usbong.android.builder.controllers.ScreenListController;
 import usbong.android.builder.models.Screen;
 import rx.Observer;
-import usbong.android.builder.models.Utree;
 import usbong.android.builder.utils.StringUtils;
 
 import java.util.List;
@@ -51,7 +49,7 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
     private ScreenListController controller;
     private Screen selectedScreen;
     private ActionMode actionMode;
-    private ActionMode.Callback selectedUtreeCallback = new ActionMode.Callback() {
+    private ActionMode.Callback selectedScreenCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
@@ -67,9 +65,14 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch(item.getItemId()) {
-                case R.id.action_mark_as_start:
-                    markAsStart();
+                case R.id.action_edit:
                     mode.finish();
+                    editScreen();
+                    return true;
+
+                case R.id.action_mark_as_start:
+                    mode.finish();
+                    markAsStart();
                     return true;
             }
             return false;
@@ -176,24 +179,28 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
         emptyView.setVisibility(View.VISIBLE);
     }
 
-    @OnItemClick(android.R.id.list)
-    public void onItemClick(int position) {
-        Screen screen = adapter.getItem(position);
+    public void editScreen() {
         Intent intent = new Intent(getActivity(), ScreenDetailActivity.class);
-        intent.putExtra(ScreenDetailFragment.EXTRA_SCREEN_ID, screen.getId().longValue());
+        intent.putExtra(ScreenDetailFragment.EXTRA_SCREEN_ID, selectedScreen.getId().longValue());
         intent.putExtra(ScreenDetailFragment.EXTRA_TREE_ID, treeId);
         startActivity(intent);
+        selectedScreen = null;
     }
 
-    @OnItemLongClick(android.R.id.list)
-    public boolean onItemLongClick(View view, int position) {
+    @OnItemClick(android.R.id.list)
+    public void onItemClick(View view, int position) {
         if(actionMode != null) {
-            return false;
+            if(selectedScreen != null && selectedScreen.getId().equals(adapter.getItem(position).getId())) {
+                actionMode.finish();
+                editScreen();
+            }
+            view.setSelected(true);
+            selectedScreen = adapter.getItem(position);
+            return;
         }
         view.setSelected(true);
         selectedScreen = adapter.getItem(position);
-        actionMode = getActivity().startActionMode(selectedUtreeCallback);
-        return true;
+        actionMode = getActivity().startActionMode(selectedScreenCallback);
     }
 
     private void markAsStart() {

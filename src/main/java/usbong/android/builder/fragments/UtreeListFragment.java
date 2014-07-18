@@ -11,6 +11,7 @@ import android.view.*;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
 import de.greenrobot.event.EventBus;
 import usbong.android.builder.R;
@@ -35,7 +36,7 @@ import java.util.List;
  * <p />
  * interface.
  */
-public class UtreeListFragment extends Fragment implements AbsListView.OnItemClickListener, Observer<List<Utree>> {
+public class UtreeListFragment extends Fragment implements Observer<List<Utree>> {
 
     public static final String TAG = UtreeListFragment.class.getSimpleName();
 
@@ -74,9 +75,13 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch(item.getItemId()) {
-                case R.id.action_export:
-                    exportTree();
+                case R.id.action_edit:
                     mode.finish();
+                    editUtree();
+                    return true;
+                case R.id.action_export:
+                    mode.finish();
+                    exportTree();
                     return true;
             }
             return false;
@@ -148,9 +153,6 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
 
             }
         });
-
-        // Set OnItemClickListener so we can be notified on item clicks
-        listView.setOnItemClickListener(this);
     }
 
     @Override
@@ -160,12 +162,11 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         controller.fetchUtrees(this);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Utree utree = adapter.getItem(position);
+    public void editUtree() {
         Intent intent = new Intent(getActivity(), ScreenListActivity.class);
-        intent.putExtra(ScreenListFragment.EXTRA_TREE_ID, utree.getId().longValue());
+        intent.putExtra(ScreenListFragment.EXTRA_TREE_ID, selectedUtree.getId().longValue());
         startActivity(intent);
+        selectedUtree = null;
     }
 
     /**
@@ -275,15 +276,20 @@ public class UtreeListFragment extends Fragment implements AbsListView.OnItemCli
         }
     }
 
-    @OnItemLongClick(android.R.id.list)
-    public boolean onItemLongClick(View view, int position) {
+    @OnItemClick(android.R.id.list)
+    public void onItemClick(View view, int position) {
         if(actionMode != null) {
-            return false;
+            if(selectedUtree != null && selectedUtree.getId().equals(adapter.getItem(position).getId())) {
+                actionMode.finish();
+                editUtree();
+            }
+            view.setSelected(true);
+            selectedUtree = adapter.getItem(position);
+            return;
         }
         view.setSelected(true);
         selectedUtree = adapter.getItem(position);
         actionMode = getActivity().startActionMode(selectedUtreeCallback);
-        return true;
     }
 
     private void exportTree() {

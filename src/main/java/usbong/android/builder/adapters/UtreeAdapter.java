@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import usbong.android.builder.R;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.Utree;
 
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class UtreeAdapter extends BaseAdapter implements Filterable {
 
-    public static final int LAYOUT_RES_ID = android.R.layout.simple_list_item_1;
+    public static final int LAYOUT_RES_ID = R.layout.list_item_utree;
     private static final String TAG = UtreeAdapter.class.getSimpleName();
     private final Context context;
     private List<Utree> allItems;

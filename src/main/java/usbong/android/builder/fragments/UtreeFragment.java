@@ -110,7 +110,7 @@ public class UtreeFragment extends Fragment {
                     public void onCompleted() {
                         //TODO: implement better transition?
                         saveButton.setProgress(100);
-                        Toast.makeText(getActivity(), "Utree saved", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.utree_saved), Toast.LENGTH_SHORT).show();
                         getActivity().finish();
                     }
 

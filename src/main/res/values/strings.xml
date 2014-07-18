@@ -31,5 +31,6 @@
     <string name="title_activity_select_decision">SelectDecisionActivity</string>
     <string name="no_file_managers_found">No suitable File Manager was found.</string>
     <string name="enter_search_keywords">Search</string>
+    <string name="utree_saved">.utree saved</string>
 
 </resources>

@@ -1,17 +1,14 @@
 package usbong.android.builder.controllers;
 
 import android.util.Log;
-import android.view.View;
 import com.activeandroid.query.Update;
-import usbong.android.builder.models.Screen;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import usbong.android.builder.utils.ScreenUtils;
+import usbong.android.builder.models.Screen;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -36,7 +33,6 @@ public class ScreenListController implements Controller {
             }
         }).subscribeOn(Schedulers.io());
     }
-
 
 
     public void markAsStart(final Screen screen, Observer<Screen> observer) {

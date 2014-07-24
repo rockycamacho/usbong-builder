@@ -1,7 +1,6 @@
 package usbong.android.builder.fragments.dialogs;
 
 
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import usbong.android.builder.R;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link usbong.android.builder.fragments.dialogs.DecisionListDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class DecisionListDialogFragment extends DialogFragment {
 
@@ -31,6 +29,7 @@ public class DecisionListDialogFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public DecisionListDialogFragment() {
         // Required empty public constructor
     }

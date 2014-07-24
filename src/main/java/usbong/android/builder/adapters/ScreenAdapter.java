@@ -1,16 +1,15 @@
 package usbong.android.builder.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.squareup.picasso.Picasso;
 import usbong.android.builder.R;
 import usbong.android.builder.models.Screen;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class ScreenAdapter extends BaseAdapter implements Filterable {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(LAYOUT_RES_ID, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
@@ -60,10 +59,9 @@ public class ScreenAdapter extends BaseAdapter implements Filterable {
         }
         Screen screen = getItem(position);
         viewHolder.name.setText(screen.name);
-        if(screen.isStart == 1) {
+        if (screen.isStart == 1) {
             viewHolder.name.setTextColor(context.getResources().getColor(R.color.usbong_color));
-        }
-        else {
+        } else {
             viewHolder.name.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
         }
         Picasso.with(context)

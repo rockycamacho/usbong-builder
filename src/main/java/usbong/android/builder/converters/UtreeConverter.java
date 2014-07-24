@@ -24,46 +24,46 @@ public class UtreeConverter {
     public static final String FEATURE_INDENT_OUTPUT = "http://xmlpull.org/v1/doc/features.html#indent-output";
     public static final String ENCODING = "UTF-8";
     public static final String NAMESPACE = StringUtils.EMPTY;
-    private XmlSerializer xmlSerializer;
+    public static final String NEWLINE = "\n";
+    public static final String TAB = "   ";
     private ScreenConverterStrategy strategy;
     private Queue<Screen> pendingNodes;
     private Map<String, Screen> nodes;
+    private BufferedWriter fw;
 
     public UtreeConverter() {
-        xmlSerializer = Xml.newSerializer();
-        xmlSerializer.setFeature(FEATURE_INDENT_OUTPUT, true);
         strategy = new ScreenConverterStrategy();
         nodes = new HashMap<String, Screen>();
         pendingNodes = new LinkedList<Screen>();
     }
 
     public void convert(Utree tree, String outputFileLocation) {
-        BufferedWriter fw = null;
+        fw = null;
         try {
             fw = new BufferedWriter(new FileWriter(new File(outputFileLocation)));
-            xmlSerializer.setOutput(fw);
-            xmlSerializer.startDocument(ENCODING, true);
-            xmlSerializer.startTag(NAMESPACE, "process-definition");
-            xmlSerializer.attribute(NAMESPACE, "name", tree.name);
+            fw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            fw.write(NEWLINE);
+            fw.write(NEWLINE);
+            fw.write("<process-definition xmlns=\"\" name=\"" + tree.name + "\">");
+            fw.write(NEWLINE);
 
             Screen startingScreen = Utree.getStartScreen(tree);
-            if(startingScreen == null) {
+            if (startingScreen == null) {
                 throw new IllegalStateException(".utree has not defined a start screen");
             }
             Log.d(TAG, "startingScreen details: " + startingScreen.details);
             createStartNode(startingScreen);
             pendingNodes.add(startingScreen);
-            while(!pendingNodes.isEmpty()) {
+            while (!pendingNodes.isEmpty()) {
                 Screen screen = pendingNodes.remove();
                 String name = strategy.getName(screen);
-                if(!nodes.containsKey(name)) {
+                if (!nodes.containsKey(name)) {
                     nodes.put(name, screen);
                     createTaskNode(screen);
                 }
             }
             createExitNode();
-            xmlSerializer.endTag(NAMESPACE, "process-definition");
-            xmlSerializer.endDocument();
+            fw.write("</process-definition>");
             fw.flush();
         } catch (IOException e) {
             Log.e(TAG, e.getMessage(), e);
@@ -73,50 +73,52 @@ public class UtreeConverter {
     }
 
     private void createTaskNode(Screen screen) throws IOException {
-        xmlSerializer.startTag(NAMESPACE, "task-node");
-        xmlSerializer.attribute(NAMESPACE, "name", strategy.getName(screen));
+        fw.write(TAB);
+        fw.write("<task-node name=\"" + strategy.getName(screen) + "\">");
+        fw.write(NEWLINE);
         List<ScreenRelation> screenRelations = ScreenRelation.getChildrenOf(screen.getId());
-        if(screenRelations.isEmpty()) {
-            xmlSerializer.startTag(NAMESPACE, "transition");
-            xmlSerializer.attribute(NAMESPACE, "to", "end-state1");
-            xmlSerializer.attribute(NAMESPACE, "name", "Any");
-            xmlSerializer.endTag(NAMESPACE, "transition");
-        }
-        else {
-            for(int i = 0; i < screenRelations.size(); i++) {
+        if (screenRelations.isEmpty()) {
+            fw.write(TAB);
+            fw.write(TAB);
+            fw.write("<transition to=\"end-state1\" name=\"Any\"></transition>");
+            fw.write(NEWLINE);
+        } else {
+            for (int i = 0; i < screenRelations.size(); i++) {
                 ScreenRelation screenRelation = screenRelations.get(i);
-                if(i == screenRelations.size() - 1) {
-                    xmlSerializer.startTag(NAMESPACE, "transition");
-                    xmlSerializer.attribute(NAMESPACE, "to", strategy.getTransition(screenRelation));
-                    xmlSerializer.endTag(NAMESPACE, "transition");
+                fw.write(TAB);
+                fw.write(TAB);
+                if (i == screenRelations.size() - 1) {
+                    fw.write("<transition to=\"" + strategy.getTransition(screenRelation) + "\" name=\"Any\"></transition>");
+                } else {
+                    fw.write("<task name=\"" + strategy.getTransition(screenRelation) + "\" name=\"Any\"></task>");
                 }
-                else {
-                    xmlSerializer.startTag(NAMESPACE, "task");
-                    xmlSerializer.attribute(NAMESPACE, "name", strategy.getTransition(screenRelation));
-                    xmlSerializer.endTag(NAMESPACE, "task");
-                }
-                String childScreenName = strategy.getName(screenRelation.child);
-                if(!nodes.containsKey(childScreenName)) {
-                    pendingNodes.add(screenRelation.child);
-                }
+                fw.write(NEWLINE);
             }
         }
-        xmlSerializer.endTag(NAMESPACE, "task-node");
+        fw.write(TAB);
+        fw.write("</task-node>");
+        fw.write(NEWLINE);
+        fw.write(NEWLINE);
     }
 
     private void createStartNode(Screen screen) throws IOException {
-        xmlSerializer.startTag(NAMESPACE, "start-state");
-        xmlSerializer.attribute(NAMESPACE, "name", "start-state1");
-        xmlSerializer.startTag(NAMESPACE, "transition");
-        xmlSerializer.attribute(NAMESPACE, "to", strategy.getName(screen));
-        xmlSerializer.endTag(NAMESPACE, "transition");
-        xmlSerializer.endTag(NAMESPACE, "start-state");
+        fw.write(TAB);
+        fw.write("<start-state name=\"start-state1\">");
+        fw.write(NEWLINE);
+        fw.write(TAB);
+        fw.write(TAB);
+        fw.write("<transition to=\"" + strategy.getName(screen) + "\"></transition>");
+        fw.write(NEWLINE);
+        fw.write(TAB);
+        fw.write("</start-state>");
+        fw.write(NEWLINE);
+        fw.write(NEWLINE);
     }
 
     private void createExitNode() throws IOException {
-        xmlSerializer.startTag(NAMESPACE, "end-state");
-        xmlSerializer.attribute(NAMESPACE, "name", "end-state1");
-        xmlSerializer.endTag(NAMESPACE, "end-state");
+        fw.write(TAB);
+        fw.write("<end-state name=\"end-state1\"></end-state>");
+        fw.write(NEWLINE);
     }
 
 }

@@ -16,9 +16,9 @@ import java.util.List;
 @Table(name = "ScreenRelations", id = BaseColumns._ID)
 public class ScreenRelation extends Model implements BaseColumns, Serializable {
 
-    @Column(name = "parent", onDelete=Column.ForeignKeyAction.CASCADE)
+    @Column(name = "parent", onDelete = Column.ForeignKeyAction.CASCADE)
     public Screen parent;
-    @Column(name = "child", onDelete=Column.ForeignKeyAction.CASCADE)
+    @Column(name = "child", onDelete = Column.ForeignKeyAction.CASCADE)
     public Screen child;
     @Column(name = "condition")
     public String condition;

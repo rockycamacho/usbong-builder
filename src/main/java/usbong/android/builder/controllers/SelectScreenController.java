@@ -1,12 +1,12 @@
 package usbong.android.builder.controllers;
 
 import com.activeandroid.query.Select;
-import usbong.android.builder.models.Screen;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import usbong.android.builder.models.Screen;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class SelectScreenController implements Controller {
     public void fetchScreens(Observer<List<Screen>> observer) {
         getScreens().observeOn(AndroidSchedulers.mainThread())
-            .subscribe(observer);
+                .subscribe(observer);
     }
 
     private Observable<List<Screen>> getScreens() {
@@ -28,6 +28,6 @@ public class SelectScreenController implements Controller {
                 subscriber.onCompleted();
             }
         })
-        .subscribeOn(Schedulers.io());
+                .subscribeOn(Schedulers.io());
     }
 }

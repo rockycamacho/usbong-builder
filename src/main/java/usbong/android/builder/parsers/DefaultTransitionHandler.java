@@ -1,11 +1,9 @@
 package usbong.android.builder.parsers;
 
 import android.util.Log;
-import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.exceptions.ParserException;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
@@ -36,10 +34,10 @@ public class DefaultTransitionHandler implements ElementHandler<ScreenRelation> 
         }
         String[] attrs = toAttribute.split("~");
         String screenType = attrs[0];
-        if(toAttribute.startsWith(END_STATE)) {
+        if (toAttribute.startsWith(END_STATE)) {
             return null;
         }
-        if(!screenMap.containsKey(toAttribute)) {
+        if (!screenMap.containsKey(toAttribute)) {
             Log.e(TAG, "childScreen == null: " + screenType + " " + toAttribute);
             throw new SAXException(new ParserException("unable to find `" + toAttribute + "` from screen map"));
         }

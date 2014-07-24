@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import usbong.android.builder.R;
-import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.ScreenRelation;
 import com.squareup.picasso.Picasso;
-import usbong.android.builder.models.Utree;
+import usbong.android.builder.R;
+import usbong.android.builder.models.ScreenRelation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +50,7 @@ public class ChildrenScreensAdapter extends BaseAdapter implements Filterable {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(LAYOUT_RES_ID, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
@@ -61,10 +59,9 @@ public class ChildrenScreensAdapter extends BaseAdapter implements Filterable {
         }
         ScreenRelation screenRelation = getItem(position);
         viewHolder.name.setText(screenRelation.child.name);
-        if(screenRelation.child.isStart == 1) {
+        if (screenRelation.child.isStart == 1) {
             viewHolder.name.setTextColor(context.getResources().getColor(R.color.usbong_color));
-        }
-        else {
+        } else {
             viewHolder.name.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
         }
         Picasso.with(context)

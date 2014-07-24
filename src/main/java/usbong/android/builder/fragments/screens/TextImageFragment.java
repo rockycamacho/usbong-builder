@@ -9,17 +9,19 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.*;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoUtils;
+import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 import de.greenrobot.event.EventBus;
 import rx.Observer;
 import usbong.android.builder.R;
-import usbong.android.builder.activities.SelectDecisionActivity;
 import usbong.android.builder.activities.SelectScreenActivity;
 import usbong.android.builder.adapters.ImagePositionAdapter;
 import usbong.android.builder.controllers.ScreenDetailController;
@@ -33,6 +35,7 @@ import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenDetails;
 import usbong.android.builder.models.ScreenRelation;
 import usbong.android.builder.utils.IntentUtils;
+import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
 import java.io.File;
@@ -57,17 +60,15 @@ public class TextImageFragment extends Fragment {
 
     private ScreenDetailController controller;
     @InjectView(R.id.name)
-    EditText name;
+    FloatLabeledEditText name;
     @InjectView(R.id.content)
-    EditText textDisplay;
+    FloatLabeledEditText textDisplay;
     @InjectView(R.id.image)
     ImageView image;
     @InjectView(R.id.image_position)
     Spinner imagePosition;
     private ImagePositionAdapter adapter;
     private String imagePath = StringUtils.EMPTY;
-    private Gson gson;
-
 
     /**
      * Use this factory method to create a new instance of
@@ -102,7 +103,6 @@ public class TextImageFragment extends Fragment {
         setHasOptionsMenu(true);
         controller = new ScreenDetailController();
         adapter = new ImagePositionAdapter(getActivity());
-        gson = new Gson();
     }
 
     @Override
@@ -142,20 +142,20 @@ public class TextImageFragment extends Fragment {
                 Log.d(TAG, "currentScreen id3: " + currentScreen.getId());
                 name.setText(currentScreen.name);
                 String details = StringUtils.EMPTY;
-                if(currentScreen.details != null) {
-                    ScreenDetails textImageDetails = gson.fromJson(currentScreen.details, ScreenDetails.class);
+                if (currentScreen.details != null) {
+                    ScreenDetails textImageDetails = JsonUtils.fromJson(currentScreen.details, ScreenDetails.class);
                     details = textImageDetails.getText();
 
                     imagePath = textImageDetails.getImagePath();
 
-                    if(!StringUtils.isEmpty(textImageDetails.getImagePosition())) {
+                    if (!StringUtils.isEmpty(textImageDetails.getImagePosition())) {
                         ImagePosition position = ImagePosition.from(textImageDetails.getImagePosition());
                         imagePosition.setSelection(adapter.getPosition(position));
                     }
                 }
                 SpannableString text = new SpannableString(Html.fromHtml(details));
                 textDisplay.setText(text);
-                if(!StringUtils.isEmpty(imagePath)) {
+                if (!StringUtils.isEmpty(imagePath)) {
                     Picasso.with(getActivity())
                             .load(new File(imagePath))
                             .fit()
@@ -169,16 +169,15 @@ public class TextImageFragment extends Fragment {
     public void onEvent(OnScreenSave event) {
         Log.d(TAG, "onEvent(OnScreenSave event): " + textDisplay.getText().toString());
 
-        String screenName = name.getText().toString();
+        String screenName = name.getText().toString().trim();
         ScreenDetails details = new ScreenDetails();
-        //TODO: implement this
         String screenContent = textDisplay.getText().toString().replaceAll("\n", "<br>");
-
         details.setText(screenContent);
         details.setImagePath(imagePath);
         ImagePosition position = adapter.getItem(imagePosition.getSelectedItemPosition());
         details.setImagePosition(position.getName());
-        EventBus.getDefault().post(new OnScreenDetailsSave(screenName, gson.toJson(details)));
+
+        EventBus.getDefault().post(new OnScreenDetailsSave(screenName, JsonUtils.toJson(details)));
     }
 
     @Override
@@ -197,14 +196,14 @@ public class TextImageFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_add_child) {
+        if (item.getItemId() == R.id.action_add_child) {
             Intent data = new Intent(getActivity(), SelectScreenActivity.class);
             data.putExtra(SelectScreenFragment.EXTRA_SCREEN_RELATION, SelectScreenFragment.CHILD);
             data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
             data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
             getParentFragment().startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
         }
-        if(item.getItemId() == R.id.action_remove_child) {
+        if (item.getItemId() == R.id.action_remove_child) {
             controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
                 @Override
                 public void onCompleted() {
@@ -229,14 +228,12 @@ public class TextImageFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult("+ requestCode +", "+ resultCode +", Intent data)");
-        if(requestCode == ADD_CHILD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", Intent data)");
+        if (requestCode == ADD_CHILD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             updateChildren(data);
-        }
-        else if (requestCode == IntentUtils.CHOOSE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            String fileLocation = data.getData().getPath();
+        } else if (requestCode == IntentUtils.CHOOSE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             final String outputFolderLocation = getActivity().getFilesDir() + File.separator + "trees" + File.separator + currentScreen.utree.name + File.separator + "res";
-            controller.uploadImage(fileLocation, outputFolderLocation, new Observer<File>() {
+            controller.uploadImage(getActivity(), data.getData(), outputFolderLocation, new Observer<File>() {
 
                 @Override
                 public void onCompleted() {
@@ -336,6 +333,12 @@ public class TextImageFragment extends Fragment {
     @OnClick(R.id.upload)
     public void onUploadClicked() {
         Intent fileDialogIntent = IntentUtils.getSelectFileIntent(getActivity(), "file/*.png");
-        startActivityForResult(fileDialogIntent, IntentUtils.CHOOSE_FILE_REQUEST_CODE);
+        try {
+            startActivityForResult(
+                    Intent.createChooser(fileDialogIntent, getString(R.string.select_an_image)),
+                    IntentUtils.CHOOSE_FILE_REQUEST_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), getString(R.string.please_install_file_manager), Toast.LENGTH_SHORT).show();
+        }
     }
 }

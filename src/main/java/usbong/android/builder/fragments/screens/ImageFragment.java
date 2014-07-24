@@ -3,6 +3,7 @@ package usbong.android.builder.fragments.screens;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,14 +14,15 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoUtils;
+import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 import de.greenrobot.event.EventBus;
 import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.SelectScreenActivity;
 import usbong.android.builder.controllers.ScreenDetailController;
+import usbong.android.builder.enums.ImagePosition;
 import usbong.android.builder.events.OnNeedRefreshScreen;
 import usbong.android.builder.events.OnScreenDetailsSave;
 import usbong.android.builder.events.OnScreenSave;
@@ -30,6 +32,7 @@ import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenDetails;
 import usbong.android.builder.models.ScreenRelation;
 import usbong.android.builder.utils.IntentUtils;
+import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
 import java.io.File;
@@ -53,11 +56,10 @@ public class ImageFragment extends Fragment {
 
     private ScreenDetailController controller;
     @InjectView(R.id.name)
-    EditText name;
+    FloatLabeledEditText name;
     @InjectView(R.id.image)
     ImageView image;
     private String imagePath = StringUtils.EMPTY;
-    private Gson gson;
 
 
     /**
@@ -92,7 +94,6 @@ public class ImageFragment extends Fragment {
         Log.d(TAG, "currentScreen id: " + screenId);
         setHasOptionsMenu(true);
         controller = new ScreenDetailController();
-        gson = new Gson();
     }
 
     @Override
@@ -106,7 +107,6 @@ public class ImageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.inject(this, view);
-//        textDisplay.enableActionModes(true);
 
         EventBus.getDefault().register(this);
 
@@ -127,11 +127,11 @@ public class ImageFragment extends Fragment {
                 currentScreen = screen;
                 Log.d(TAG, "currentScreen id3: " + currentScreen.getId());
                 name.setText(currentScreen.name);
-                if(currentScreen.details != null) {
-                    ScreenDetails textImageDetails = gson.fromJson(currentScreen.details, ScreenDetails.class);
+                if (currentScreen.details != null) {
+                    ScreenDetails textImageDetails = JsonUtils.fromJson(currentScreen.details, ScreenDetails.class);
                     imagePath = textImageDetails.getImagePath();
                 }
-                if(!StringUtils.isEmpty(imagePath)) {
+                if (!StringUtils.isEmpty(imagePath)) {
                     Picasso.with(getActivity())
                             .load(new File(imagePath))
                             .fit()
@@ -143,10 +143,14 @@ public class ImageFragment extends Fragment {
     }
 
     public void onEvent(OnScreenSave event) {
-        String screenName = name.getText().toString();
+        String screenName = name.getText().toString().trim();
         ScreenDetails details = new ScreenDetails();
+        String screenContent = StringUtils.EMPTY;
+        details.setText(screenContent);
         details.setImagePath(imagePath);
-        EventBus.getDefault().post(new OnScreenDetailsSave(screenName, gson.toJson(details)));
+        ImagePosition position = ImagePosition.ABOVE_TEXT;
+        details.setImagePosition(position.getName());
+        EventBus.getDefault().post(new OnScreenDetailsSave(screenName, JsonUtils.toJson(details)));
     }
 
     @Override
@@ -165,14 +169,14 @@ public class ImageFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_add_child) {
+        if (item.getItemId() == R.id.action_add_child) {
             Intent data = new Intent(getActivity(), SelectScreenActivity.class);
             data.putExtra(SelectScreenFragment.EXTRA_SCREEN_RELATION, SelectScreenFragment.CHILD);
             data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
             data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
             getParentFragment().startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
         }
-        if(item.getItemId() == R.id.action_remove_child) {
+        if (item.getItemId() == R.id.action_remove_child) {
             controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
                 @Override
                 public void onCompleted() {
@@ -197,14 +201,12 @@ public class ImageFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult("+ requestCode +", "+ resultCode +", Intent data)");
-        if(requestCode == ADD_CHILD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", Intent data)");
+        if (requestCode == ADD_CHILD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             updateChildren(data);
-        }
-        else if (requestCode == IntentUtils.CHOOSE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            String fileLocation = data.getData().getPath();
+        } else if (requestCode == IntentUtils.CHOOSE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             final String outputFolderLocation = getActivity().getFilesDir() + File.separator + "trees" + File.separator + currentScreen.utree.name + File.separator + "res";
-            controller.uploadImage(fileLocation, outputFolderLocation, new Observer<File>() {
+            controller.uploadImage(getActivity(), data.getData(), outputFolderLocation, new Observer<File>() {
 
                 @Override
                 public void onCompleted() {
@@ -304,6 +306,12 @@ public class ImageFragment extends Fragment {
     @OnClick(R.id.upload)
     public void onUploadClicked() {
         Intent fileDialogIntent = IntentUtils.getSelectFileIntent(getActivity(), "file/*.png");
-        startActivityForResult(fileDialogIntent, IntentUtils.CHOOSE_FILE_REQUEST_CODE);
+        try {
+            startActivityForResult(
+                    Intent.createChooser(fileDialogIntent, getString(R.string.select_an_image)),
+                    IntentUtils.CHOOSE_FILE_REQUEST_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), getString(R.string.please_install_file_manager), Toast.LENGTH_SHORT).show();
+        }
     }
 }

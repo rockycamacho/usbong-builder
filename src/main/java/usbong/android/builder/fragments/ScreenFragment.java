@@ -16,15 +16,19 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.activeandroid.query.Select;
+import com.wrapp.floatlabelededittext.FloatLabeledEditText;
+import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenDetailActivity;
 import usbong.android.builder.adapters.ScreenTypeAdapter;
 import usbong.android.builder.controllers.ScreenController;
+import usbong.android.builder.enums.ImagePosition;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
-import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
+import usbong.android.builder.models.ScreenDetails;
 import usbong.android.builder.models.Utree;
-import rx.Observer;
+import usbong.android.builder.utils.JsonUtils;
+import usbong.android.builder.utils.StringUtils;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -44,7 +48,7 @@ public class ScreenFragment extends Fragment {
     private ScreenTypeAdapter adapter;
 
     @InjectView(R.id.name)
-    EditText name;
+    FloatLabeledEditText name;
     @InjectView(R.id.screen_type)
     Spinner spinner;
     @InjectView(android.R.id.button1)
@@ -77,7 +81,7 @@ public class ScreenFragment extends Fragment {
             id = arguments.getLong(EXTRA_ID, NEW_SCREEN);
             treeId = arguments.getLong(EXTRA_TREE_ID, -1);
         }
-        if(treeId == -1) {
+        if (treeId == -1) {
             throw new IllegalArgumentException("tree is required");
         }
         Log.d(TAG, "tree id:  " + treeId);
@@ -149,9 +153,19 @@ public class ScreenFragment extends Fragment {
 
             @Override
             public void onNext(Screen screen) {
-                screen.name = name.getText().toString();
+                screen.name = name.getText().toString().trim();
                 screen.utree = new Select().from(Utree.class).where(Utree._ID + " = ?", treeId).executeSingle();
                 screen.screenType = adapter.getItem(spinner.getSelectedItemPosition()).getName();
+                if (UsbongBuilderScreenType.TEXT_AND_IMAGE.getName().equals(screen.screenType) ||
+                        UsbongBuilderScreenType.IMAGE.getName().equals(screen.screenType)) {
+                    ScreenDetails screenDetails = new ScreenDetails();
+                    screenDetails.setText(screen.name);
+                    screenDetails.setImagePosition(ImagePosition.ABOVE_TEXT.getName());
+                    screenDetails.setImagePath(StringUtils.EMPTY);
+                    screen.details = JsonUtils.toJson(screenDetails);
+                } else {
+                    screen.details = screen.name;
+                }
                 controller.save(screen, callback);
             }
         });

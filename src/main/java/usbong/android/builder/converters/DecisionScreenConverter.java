@@ -10,6 +10,6 @@ public class DecisionScreenConverter implements ScreenConverter {
 
     @Override
     public String getName(Screen screen) {
-        return UsbongScreenType.DECISION.getName() + SEPARATOR + screen.details;
+        return UsbongScreenType.LINK.getName() + SEPARATOR + screen.details;
     }
 }

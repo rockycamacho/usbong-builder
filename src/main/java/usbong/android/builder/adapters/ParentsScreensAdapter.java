@@ -9,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.squareup.picasso.Picasso;
 import usbong.android.builder.R;
 import usbong.android.builder.models.ScreenRelation;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by Rocky Camacho on 6/26/2014.
@@ -30,7 +30,7 @@ public class ParentsScreensAdapter extends ArrayAdapter<ScreenRelation> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(LAYOUT_RES_ID, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
@@ -39,10 +39,9 @@ public class ParentsScreensAdapter extends ArrayAdapter<ScreenRelation> {
         }
         ScreenRelation screenRelation = getItem(position);
         viewHolder.name.setText(screenRelation.parent.name);
-        if(screenRelation.parent.isStart == 1) {
+        if (screenRelation.parent.isStart == 1) {
             viewHolder.name.setTextColor(context.getResources().getColor(R.color.usbong_color));
-        }
-        else {
+        } else {
             viewHolder.name.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
         }
         Picasso.with(context)

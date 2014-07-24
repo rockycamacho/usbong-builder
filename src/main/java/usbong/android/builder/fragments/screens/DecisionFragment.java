@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.wrapp.floatlabelededittext.FloatLabeledEditText;
+import de.greenrobot.event.EventBus;
+import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.SelectDecisionActivity;
 import usbong.android.builder.controllers.ScreenDetailController;
@@ -23,14 +26,11 @@ import usbong.android.builder.fragments.ScreenDetailFragment;
 import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
-import de.greenrobot.event.EventBus;
-import rx.Observer;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link DecisionFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class DecisionFragment extends Fragment {
 
@@ -45,10 +45,9 @@ public class DecisionFragment extends Fragment {
 
     private ScreenDetailController controller;
     @InjectView(R.id.name)
-    EditText name;
+    FloatLabeledEditText name;
     @InjectView(R.id.content)
-//    RichEditText textDisplay;
-    EditText textDisplay;
+    FloatLabeledEditText textDisplay;
 
 
     /**
@@ -118,7 +117,7 @@ public class DecisionFragment extends Fragment {
                 Log.d(TAG, "currentScreen id3: " + currentScreen.getId());
                 name.setText(currentScreen.name);
                 String details = "";
-                if(currentScreen.details != null) {
+                if (currentScreen.details != null) {
                     details = currentScreen.details;
                 }
                 SpannableString text = new SpannableString(Html.fromHtml(details));
@@ -130,7 +129,7 @@ public class DecisionFragment extends Fragment {
     public void onEvent(OnScreenSave event) {
         Log.d(TAG, "onEvent(OnScreenSave event): " + textDisplay.getText().toString());
 
-        String screenName = name.getText().toString();
+        String screenName = name.getText().toString().trim();
         String screenContent = textDisplay.getText().toString().replaceAll("\n", "<br>");
         EventBus.getDefault().post(new OnScreenDetailsSave(screenName, screenContent));
     }
@@ -150,7 +149,7 @@ public class DecisionFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_add_child) {
+        if (item.getItemId() == R.id.action_add_child) {
             Intent data = new Intent(getActivity(), SelectDecisionActivity.class);
             data.putExtra(SelectDecisionActivity.EXTRA_SCREEN_ID, screenId);
             data.putExtra(SelectDecisionActivity.EXTRA_TREE_ID, treeId);
@@ -162,10 +161,10 @@ public class DecisionFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult("+ requestCode +", "+ resultCode +", Intent data)");
-        if(requestCode == ADD_CHILD_REQUEST_CODE) {
+        Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", Intent data)");
+        if (requestCode == ADD_CHILD_REQUEST_CODE) {
             Log.d(TAG, "requestCode == ADD_CHILD_REQUEST_CODE");
-            if(resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 updateChildren(data);
             }
         }

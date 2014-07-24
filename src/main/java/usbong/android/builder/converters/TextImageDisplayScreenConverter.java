@@ -22,7 +22,7 @@ public class TextImageDisplayScreenConverter implements ScreenConverter {
         ScreenDetails screenDetails = gson.fromJson(screen.details, ScreenDetails.class);
         String imageId = screenDetails.getImagePath().substring(screenDetails.getImagePath().lastIndexOf("/") + 1, screenDetails.getImagePath().lastIndexOf("."));
         String screenType = UsbongScreenType.TEXT_IMAGE_DISPLAY.getName();
-        if(ImagePosition.ABOVE_TEXT.equals(screenDetails.getImagePosition())) {
+        if (ImagePosition.ABOVE_TEXT.equals(screenDetails.getImagePosition())) {
             screenType = UsbongScreenType.IMAGE_TEXT_DISPLAY.getName();
         }
         return screenType + SEPARATOR + imageId + SEPARATOR + screen.name;

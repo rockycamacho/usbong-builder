@@ -1,15 +1,12 @@
 package usbong.android.builder.controllers;
 
 import com.activeandroid.query.Select;
-import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import usbong.android.builder.converters.UtreeConverter;
-import usbong.android.builder.events.OnNeedRefreshTrees;
 import usbong.android.builder.models.Utree;
 import usbong.android.builder.parsers.UtreeParser;
 import usbong.android.builder.utils.FileUtils;
@@ -72,7 +69,7 @@ public class UtreeListController implements Controller {
         parser.parseAndSave(xmlPath, utreeOutputFolder);
     }
 
-    public void exportTree(final Utree utree, final String folderLocation, final String treeFolderLocation, Observer<String> observer) {
+    public void exportTree(final Utree utree, final String folderLocation, final String treeFolderLocation, final String tempFolderLocation, Observer<String> observer) {
         Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
@@ -81,7 +78,9 @@ public class UtreeListController implements Controller {
                 String zipFilePath = folderLocation + File.separator + utree.name + ".utree";
                 UtreeConverter converter = new UtreeConverter();
                 converter.convert(utree, xmlFileLocation);
-                FileUtils.zip(zipFilePath, treeFolderLocation);
+                FileUtils.copyAll(treeFolderLocation, tempFolderLocation + utree.name + ".utree" + File.separator);
+                FileUtils.zip(zipFilePath, tempFolderLocation);
+                FileUtils.delete(tempFolderLocation);
                 subscriber.onNext(null);
                 subscriber.onCompleted();
             }

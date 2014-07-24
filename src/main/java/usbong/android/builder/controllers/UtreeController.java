@@ -1,12 +1,12 @@
 package usbong.android.builder.controllers;
 
 import com.activeandroid.query.Select;
-import usbong.android.builder.models.Utree;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import usbong.android.builder.models.Utree;
 
 /**
  * Created by Rocky Camacho on 6/26/2014.

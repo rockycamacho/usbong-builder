@@ -39,7 +39,7 @@ public class Screen extends Model implements BaseColumns, Serializable {
                 .where("Utree = ?", treeId)
                 .orderBy("IsStart DESC")
                 .execute();
-    };
+    }
 
     public static List<Screen> getParentsOf(long screenId) {
         return new Select().from(Screen.class)

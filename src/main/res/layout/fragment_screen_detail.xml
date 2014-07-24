@@ -33,12 +33,31 @@
 
             <com.dd.processbutton.iml.ActionProcessButton
                     android:id="@android:id/button1"
+                    android:layout_marginRight="2dp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
                     android:text="Save"
+                    custom:pb_colorComplete="@color/green_complete"
+                    custom:pb_colorNormal="@color/blue_normal"
+                    custom:pb_colorPressed="@color/blue_pressed"
+                    custom:pb_colorProgress="@color/purple_progress"
+                    custom:pb_textComplete="Saved"
+                    custom:pb_textProgress="Saving..."
+                    custom:pb_textError="Error"
+                    custom:pb_colorError="@color/red_error" />
+
+            <com.dd.processbutton.iml.ActionProcessButton
+                    android:id="@android:id/button2"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:text="Save and Exit"
                     custom:pb_colorComplete="@color/green_complete"
                     custom:pb_colorNormal="@color/blue_normal"
                     custom:pb_colorPressed="@color/blue_pressed"

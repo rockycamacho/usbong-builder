@@ -17,6 +17,7 @@ public class UsbongBuilder extends Application {
     public void onCreate() {
         super.onCreate();
         ActiveAndroid.initialize(this);
+        ActiveAndroid.setLoggingEnabled(true);
 
         if (DEVELOPER_MODE) {
             //enableStrictMode();

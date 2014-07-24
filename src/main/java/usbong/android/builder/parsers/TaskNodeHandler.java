@@ -1,7 +1,6 @@
 package usbong.android.builder.parsers;
 
 import android.util.Log;
-import com.activeandroid.query.Select;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import usbong.android.builder.exceptions.ParserException;
@@ -23,7 +22,7 @@ public class TaskNodeHandler implements ElementHandler<Screen> {
         String[] attrs = nameAttribute.split("~");
         String screenType = attrs[0];
 
-        if(!screenMap.containsKey(nameAttribute)) {
+        if (!screenMap.containsKey(nameAttribute)) {
             Log.e(TAG, "parentScreen == null: " + screenType);
             throw new SAXException(new ParserException("unable to find `" + nameAttribute + "` from screen map"));
         }

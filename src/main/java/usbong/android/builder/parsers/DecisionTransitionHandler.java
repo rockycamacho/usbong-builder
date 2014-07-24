@@ -1,11 +1,9 @@
 package usbong.android.builder.parsers;
 
 import android.util.Log;
-import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.exceptions.ParserException;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
@@ -38,10 +36,10 @@ public class DecisionTransitionHandler implements ElementHandler<ScreenRelation>
         String screenType = attrs[0];
         String name = toAttribute.substring(0, toAttribute.lastIndexOf("~"));
         String condition = toAttribute.substring(toAttribute.lastIndexOf("~") + 1);
-        if(name.startsWith(END_STATE)) {
+        if (name.startsWith(END_STATE)) {
             return null;
         }
-        if(!screenMap.containsKey(name)) {
+        if (!screenMap.containsKey(name)) {
             Log.e(TAG, "childScreen == null: " + screenType + " " + name);
             throw new SAXException(new ParserException("unable to find `" + name + "` from screen map"));
         }

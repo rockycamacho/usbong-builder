@@ -12,7 +12,10 @@ import usbong.android.builder.utils.ResourceUtils;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Rocky Camacho on 7/4/2014.
@@ -74,21 +77,21 @@ public class UtreeParser {
     }
 
     public Utree getUtree() {
-        if(utreeXmlHandler == null) {
+        if (utreeXmlHandler == null) {
             return null;
         }
         return utreeXmlHandler.getUtree();
     }
 
     public Map<String, Screen> getScreens() {
-        if(utreeXmlHandler == null) {
+        if (utreeXmlHandler == null) {
             return new LinkedHashMap<String, Screen>();
         }
         return utreeXmlHandler.getScreens();
     }
 
     public List<ScreenRelation> getScreenRelations() {
-        if(screenRelationXmlHandler == null) {
+        if (screenRelationXmlHandler == null) {
             return new ArrayList<ScreenRelation>();
         }
         return screenRelationXmlHandler.getScreenRelations();
@@ -123,7 +126,7 @@ public class UtreeParser {
             utree.save();
             boolean hasStart = false;
             for (Screen screen : getScreens().values()) {
-                if(!hasStart) {
+                if (!hasStart) {
                     screen.isStart = 1;
                     hasStart = true;
                 }

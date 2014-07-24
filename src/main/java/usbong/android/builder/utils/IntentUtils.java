@@ -1,9 +1,8 @@
 package usbong.android.builder.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
+import android.support.v4.app.FragmentActivity;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 //import com.nononsenseapps.filepicker.FilePickerActivity;
 
@@ -12,13 +11,28 @@ import com.nononsenseapps.filepicker.FilePickerActivity;
  */
 public class IntentUtils {
 
-    public static final String SAMSUNG_MY_FILES_INTENT_ACTION = "com.sec.android.app.myfiles.PICK_DATA";
     public static final int CHOOSE_FILE_REQUEST_CODE = 888;
     public static final int CHOOSE_FOLDER_REQUEST_CODE = 999;
 
-    private IntentUtils() {}
+    private IntentUtils() {
+    }
 
     public static Intent getSelectFileIntent(Activity activity, String mimeType) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        return intent;
+    }
+
+    public static Intent getSelectFolderIntent(Activity activity) {
+        Intent i = new Intent(activity, FilePickerActivity.class);
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true);
+        i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR);
+        return i;
+    }
+
+    public static Intent getSelectUtreeIntent(Activity activity, String mimeType) {
         // This always works
         Intent i = new Intent(activity, FilePickerActivity.class);
         // This works if you defined the intent filter
@@ -30,13 +44,4 @@ public class IntentUtils {
         i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
         return i;
     }
-
-    public static Intent getSelectFolderIntent(Activity activity) {
-        Intent i = new Intent(activity, FilePickerActivity.class);
-        i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-        i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true);
-        i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR);
-        return i;
-    }
-
 }

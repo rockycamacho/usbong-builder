@@ -11,13 +11,13 @@ import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
+import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenActivity;
 import usbong.android.builder.activities.ScreenDetailActivity;
 import usbong.android.builder.adapters.ScreenAdapter;
 import usbong.android.builder.controllers.ScreenListController;
 import usbong.android.builder.models.Screen;
-import rx.Observer;
 import usbong.android.builder.utils.StringUtils;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch(item.getItemId()) {
+            switch (item.getItemId()) {
                 case R.id.action_edit:
                     mode.finish();
                     editScreen();
@@ -189,8 +189,8 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
 
     @OnItemClick(android.R.id.list)
     public void onItemClick(View view, int position) {
-        if(actionMode != null) {
-            if(selectedScreen != null && selectedScreen.getId().equals(adapter.getItem(position).getId())) {
+        if (actionMode != null) {
+            if (selectedScreen != null && selectedScreen.getId().equals(adapter.getItem(position).getId())) {
                 actionMode.finish();
                 editScreen();
             }
@@ -229,8 +229,7 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
     public void onCompleted() {
         if (adapter.getCount() == 0) {
             setEmptyText(getString(R.string.empty_screens));
-        }
-        else {
+        } else {
             setEmptyText(StringUtils.EMPTY);
         }
     }

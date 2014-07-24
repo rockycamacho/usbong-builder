@@ -19,8 +19,8 @@ public enum ImagePosition {
     }
 
     public static ImagePosition from(String name) {
-        for(ImagePosition imagePosition : ImagePosition.values()) {
-            if(imagePosition.getName().equals(name)) {
+        for (ImagePosition imagePosition : ImagePosition.values()) {
+            if (imagePosition.getName().equals(name)) {
                 return imagePosition;
             }
         }

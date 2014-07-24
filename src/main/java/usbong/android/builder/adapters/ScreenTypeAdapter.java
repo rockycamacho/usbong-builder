@@ -9,7 +9,6 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
-import usbong.android.builder.enums.UsbongScreenType;
 
 /**
  * Created by Rocky Camacho on 6/27/2014.

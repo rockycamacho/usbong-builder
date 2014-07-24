@@ -17,7 +17,8 @@ public class ScreenUtils {
 
     private static final String TAG = ScreenUtils.class.getSimpleName();
 
-    private ScreenUtils() {}
+    private ScreenUtils() {
+    }
 
     public static Bitmap loadBitmapFromView(View v) {
         v.setDrawingCacheEnabled(true);
@@ -30,7 +31,7 @@ public class ScreenUtils {
         FileOutputStream out = null;
         Bitmap bmp = loadBitmapFromView(screenContainer);
         try {
-            if(file.exists()) {
+            if (file.exists()) {
                 file.delete();
             }
             out = new FileOutputStream(file);

@@ -12,8 +12,8 @@ import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
-import butterknife.OnItemLongClick;
 import de.greenrobot.event.EventBus;
+import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenListActivity;
 import usbong.android.builder.activities.UtreeActivity;
@@ -21,7 +21,6 @@ import usbong.android.builder.adapters.UtreeAdapter;
 import usbong.android.builder.controllers.UtreeListController;
 import usbong.android.builder.events.OnNeedRefreshTrees;
 import usbong.android.builder.models.Utree;
-import rx.Observer;
 import usbong.android.builder.utils.IntentUtils;
 import usbong.android.builder.utils.StringUtils;
 
@@ -30,10 +29,10 @@ import java.util.List;
 
 /**
  * A fragment representing a list of Items.
- * <p />
+ * <p/>
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
- * <p />
+ * <p/>
  * interface.
  */
 public class UtreeListFragment extends Fragment implements Observer<List<Utree>> {
@@ -74,7 +73,7 @@ public class UtreeListFragment extends Fragment implements Observer<List<Utree>>
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch(item.getItemId()) {
+            switch (item.getItemId()) {
                 case R.id.action_edit:
                     mode.finish();
                     editUtree();
@@ -119,7 +118,7 @@ public class UtreeListFragment extends Fragment implements Observer<List<Utree>>
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+
         activity.setTitle(getString(R.string.select_a_tree));
     }
 
@@ -181,10 +180,9 @@ public class UtreeListFragment extends Fragment implements Observer<List<Utree>>
 
     @Override
     public void onCompleted() {
-        if(adapter.getCount() == 0) {
+        if (adapter.getCount() == 0) {
             setEmptyText(getString(R.string.empty_utrees));
-        }
-        else {
+        } else {
             setEmptyText(StringUtils.EMPTY);
         }
     }
@@ -203,13 +201,12 @@ public class UtreeListFragment extends Fragment implements Observer<List<Utree>>
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_add) {
+        if (item.getItemId() == R.id.action_add) {
             Intent intent = new Intent(getActivity(), UtreeActivity.class);
             startActivity(intent);
-        }
-        else if(item.getItemId() == R.id.action_import) {
+        } else if (item.getItemId() == R.id.action_import) {
             try {
-                Intent fileDialogIntent = IntentUtils.getSelectFileIntent(getActivity(), "file/*.utree");
+                Intent fileDialogIntent = IntentUtils.getSelectUtreeIntent(getActivity(), "file/*.utree");
                 startActivityForResult(fileDialogIntent, IntentUtils.CHOOSE_FILE_REQUEST_CODE);
             } catch (android.content.ActivityNotFoundException e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -249,11 +246,11 @@ public class UtreeListFragment extends Fragment implements Observer<List<Utree>>
 
                 }
             });
-        }
-        else if(requestCode == IntentUtils.CHOOSE_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == IntentUtils.CHOOSE_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             String outputFolderLocation = data.getData().getPath();
             String treeFolderLocation = getActivity().getFilesDir() + File.separator + "trees" + File.separator + selectedUtree.name + File.separator;
-            controller.exportTree(selectedUtree, outputFolderLocation, treeFolderLocation, new Observer<String>() {
+            String tempFolderLocation = getActivity().getFilesDir() + File.separator + "temp" + File.separator;
+            controller.exportTree(selectedUtree, outputFolderLocation, treeFolderLocation, tempFolderLocation, new Observer<String>() {
 
                 @Override
                 public void onCompleted() {
@@ -278,8 +275,8 @@ public class UtreeListFragment extends Fragment implements Observer<List<Utree>>
 
     @OnItemClick(android.R.id.list)
     public void onItemClick(View view, int position) {
-        if(actionMode != null) {
-            if(selectedUtree != null && selectedUtree.getId().equals(adapter.getItem(position).getId())) {
+        if (actionMode != null) {
+            if (selectedUtree != null && selectedUtree.getId().equals(adapter.getItem(position).getId())) {
                 actionMode.finish();
                 editUtree();
             }

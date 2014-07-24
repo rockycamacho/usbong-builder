@@ -17,13 +17,14 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import com.dd.processbutton.iml.ActionProcessButton;
+import de.greenrobot.event.EventBus;
+import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenDetailActivity;
 import usbong.android.builder.adapters.ChildrenScreensAdapter;
 import usbong.android.builder.adapters.ParentsScreensAdapter;
 import usbong.android.builder.controllers.ScreenDetailController;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
-import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.events.OnNeedRefreshScreen;
 import usbong.android.builder.events.OnScreenDetailsSave;
 import usbong.android.builder.events.OnScreenSave;
@@ -33,14 +34,12 @@ import usbong.android.builder.fragments.screens.TextDisplayFragment;
 import usbong.android.builder.fragments.screens.TextImageFragment;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
-import de.greenrobot.event.EventBus;
-import rx.Observer;
 
 import java.util.List;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
- * Use the {@link ScreenDetailFragment#newInstance} factory method to
+ * Use the {@link usbong.android.builder.fragments.ScreenDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ScreenDetailFragment extends Fragment {
@@ -66,6 +65,8 @@ public class ScreenDetailFragment extends Fragment {
 
     @InjectView(android.R.id.button1)
     ActionProcessButton saveButton;
+    @InjectView(android.R.id.button2)
+    ActionProcessButton saveAndExitButton;
 
 
     /**
@@ -160,6 +161,14 @@ public class ScreenDetailFragment extends Fragment {
     @OnClick(android.R.id.button1)
     public void onSave() {
         saveButton.setProgress(1);
+        saveAndExitButton.setEnabled(false);
+        EventBus.getDefault().post(OnScreenSave.EVENT);
+    }
+
+    @OnClick(android.R.id.button2)
+    public void onSaveAndExit() {
+        saveAndExitButton.setProgress(1);
+        saveButton.setEnabled(false);
         EventBus.getDefault().post(OnScreenSave.EVENT);
     }
 
@@ -212,22 +221,44 @@ public class ScreenDetailFragment extends Fragment {
         Log.d(TAG, "onEvent(OnScreenDetailsSave event): " + event.getName() + ", " + event.getContent());
         currentScreen.name = event.getName();
         currentScreen.details = event.getContent();
-        controller.saveScreen(currentScreen, screenContainer, new Observer<Screen>() {
+        Log.d(TAG, "currentScreen: " + currentScreen.name + ", " + currentScreen.details);
+        currentScreen.name = event.getName();
+        currentScreen.details = event.getContent();
+        Log.d(TAG, "currentScreen: " + currentScreen.name + ", " + currentScreen.details);
+        controller.saveScreen(currentScreen, event, screenContainer, new Observer<Screen>() {
 
             @Override
             public void onCompleted() {
                 saveButton.setProgress(100);
+                if(saveButton.getProgress() > 0) {
+                    saveButton.setProgress(100);
+                    saveButton.setEnabled(true);
+                    saveAndExitButton.setEnabled(true);
+                }
+                if(saveAndExitButton.getProgress() > 0) {
+                    saveAndExitButton.setProgress(100);
+                    saveButton.setEnabled(true);
+                    saveAndExitButton.setEnabled(true);
+                    getActivity().finish();
+                }
             }
 
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
-                saveButton.setProgress(-1);
+                if(saveButton.getProgress() > 0) {
+                    saveButton.setProgress(-1);
+                }
+                if(saveAndExitButton.getProgress() > 0) {
+                    saveAndExitButton.setProgress(-1);
+                }
+                saveButton.setEnabled(true);
+                saveAndExitButton.setEnabled(true);
             }
 
             @Override
             public void onNext(Screen screen) {
-                Log.d(TAG, "saved: " + screen.details);
+                Log.d(TAG, "saved: " + screen.name + screen.details);
             }
         });
     }

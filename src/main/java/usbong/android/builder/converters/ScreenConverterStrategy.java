@@ -24,14 +24,14 @@ public class ScreenConverterStrategy {
     }
 
     public String getName(Screen screen) {
-        if(SCREEN_CONVERTER_MAP.containsKey(screen.screenType)) {
+        if (SCREEN_CONVERTER_MAP.containsKey(screen.screenType)) {
             return SCREEN_CONVERTER_MAP.get(screen.screenType).getName(screen);
         }
         return DEFAULT_SCREEN_CONVERTER.getName(screen);
     }
 
     public String getTransition(ScreenRelation screenRelation) {
-        if("DEFAULT".equals(screenRelation.condition)) {
+        if ("DEFAULT".equals(screenRelation.condition)) {
             return getName(screenRelation.child);
         }
         return getName(screenRelation.child) + ScreenConverter.SEPARATOR + screenRelation.condition;

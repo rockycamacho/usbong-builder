@@ -3,15 +3,18 @@ package usbong.android.builder.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 import usbong.android.builder.R;
 import usbong.android.builder.fragments.SelectScreenFragment;
+import usbong.android.builder.fragments.dialogs.DecisionListDialogFragment;
 
-public class SelectDecisionActivity extends Activity {
+public class SelectDecisionActivity extends ActionBarActivity {
 
     private static final String TAG = SelectDecisionActivity.class.getSimpleName();
     private static final int ADD_CHILD_REQUEST_CODE = 101;
@@ -19,7 +22,7 @@ public class SelectDecisionActivity extends Activity {
     public static final String EXTRA_TREE_ID = "EXTRA_TREE_ID";
     public static final String EXTRA_CONDITION = "EXTRA_CONDITION";
     @InjectView(R.id.decision)
-    EditText decision;
+    FloatLabeledEditText decision;
     @InjectView(android.R.id.button1)
     Button selectScreen;
 
@@ -33,7 +36,7 @@ public class SelectDecisionActivity extends Activity {
 
         ButterKnife.inject(this);
 
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             screenId = getIntent().getLongExtra(EXTRA_SCREEN_ID, -1);
             treeId = getIntent().getLongExtra(EXTRA_TREE_ID, -1);
         }
@@ -54,11 +57,23 @@ public class SelectDecisionActivity extends Activity {
         startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
     }
 
+    @OnClick(android.R.id.button2)
+    public void onOpenDialog() {
+        DecisionListDialogFragment dialog = DecisionListDialogFragment.newInstance();
+        dialog.setCallback(new DecisionListDialogFragment.Callback() {
+            @Override
+            public void onSelect(String text) {
+                decision.setText(text);
+            }
+        });
+        dialog.show(getSupportFragmentManager(), "DIALOG");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == ADD_CHILD_REQUEST_CODE) {
-            if(resultCode == Activity.RESULT_OK) {
-                data.putExtra(EXTRA_CONDITION, "DECISION" + "~" + decision.getText().toString());
+        if (requestCode == ADD_CHILD_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                data.putExtra(EXTRA_CONDITION, "DECISION" + "~" + decision.getText().toString().trim());
                 setResult(Activity.RESULT_OK, data);
                 finish();
             }

@@ -7,7 +7,8 @@ public class StringUtils {
 
     public static final String EMPTY = "";
 
-    private StringUtils() {}
+    private StringUtils() {
+    }
 
     public static boolean isEmpty(String text) {
         return text == null || text.trim().length() == 0;

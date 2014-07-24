@@ -7,17 +7,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.dd.processbutton.iml.ActionProcessButton;
+import com.wrapp.floatlabelededittext.FloatLabeledEditText;
+import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.controllers.UtreeController;
 import usbong.android.builder.models.Utree;
-import rx.Observer;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -34,7 +34,7 @@ public class UtreeFragment extends Fragment {
     private UtreeController controller;
 
     @InjectView(R.id.name)
-    EditText name;
+    FloatLabeledEditText name;
     @InjectView(android.R.id.button1)
     ActionProcessButton saveButton;
 
@@ -104,7 +104,7 @@ public class UtreeFragment extends Fragment {
 
             @Override
             public void onNext(Utree utree) {
-                utree.name = name.getText().toString();
+                utree.name = name.getText().toString().trim();
                 controller.save(utree, new Observer<Utree>() {
                     @Override
                     public void onCompleted() {

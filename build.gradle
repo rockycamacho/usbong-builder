@@ -63,6 +63,7 @@ dependencies {
         }
     }
 
+    compile 'com.wrapp.floatlabelededittext:library:0.0.3'
     compile 'com.nononsenseapps:filepicker:1.1.3'
     compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.0'
     compile 'com.google.code.gson:gson:2.2.4'

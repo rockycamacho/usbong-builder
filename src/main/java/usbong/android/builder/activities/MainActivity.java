@@ -1,15 +1,10 @@
 package usbong.android.builder.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import usbong.android.builder.R;
-import usbong.android.builder.fragments.NavigationDrawerFragment;
 import usbong.android.builder.fragments.UtreeListFragment;
-import usbong.android.builder.utils.IntentUtils;
 
 
 public class MainActivity extends BaseActivity {

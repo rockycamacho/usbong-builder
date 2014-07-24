@@ -30,21 +30,19 @@ public class ScreenRelationXmlHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
-        if(TASK_NODE.equals(qName)) {
+        if (TASK_NODE.equals(qName)) {
             parentScreen = TASK_NODE_HANDLER.handle(qName, attributes);
-        }
-        else if(TASK.equals(qName) ||
+        } else if (TASK.equals(qName) ||
                 TRANSITION.equals(qName)) {
-            if(parentScreen != null) {
+            if (parentScreen != null) {
                 ScreenRelation screenRelation = null;
-                if(UsbongScreenType.LINK.getName().equals(parentScreen.screenType) ||
+                if (UsbongScreenType.LINK.getName().equals(parentScreen.screenType) ||
                         UsbongScreenType.DECISION.getName().equals(parentScreen.screenType)) {
                     screenRelation = DECISION_TRANSITION_HANDLER.handle(qName, attributes);
-                }
-                else {
+                } else {
                     screenRelation = DEFAULT_TRANSITION_HANDLER.handle(qName, attributes);
                 }
-                if(screenRelation != null) {
+                if (screenRelation != null) {
                     screenRelation.parent = parentScreen;
                     screenRelations.add(screenRelation);
                 }
@@ -54,7 +52,7 @@ public class ScreenRelationXmlHandler extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if(TASK_NODE.equals(qName)) {
+        if (TASK_NODE.equals(qName)) {
             parentScreen = null;
         }
     }

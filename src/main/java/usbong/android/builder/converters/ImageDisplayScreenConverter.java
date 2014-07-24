@@ -20,6 +20,6 @@ public class ImageDisplayScreenConverter implements ScreenConverter {
     public String getName(Screen screen) {
         ScreenDetails screenDetails = gson.fromJson(screen.details, ScreenDetails.class);
         String imageId = screenDetails.getImagePath().substring(screenDetails.getImagePath().lastIndexOf("/") + 1, screenDetails.getImagePath().lastIndexOf("."));
-        return UsbongScreenType.IMAGE_DISPLAY.getName() + SEPARATOR + imageId + SEPARATOR + screenDetails.getText();
+        return UsbongScreenType.IMAGE_DISPLAY.getName() + SEPARATOR + imageId + SEPARATOR + "null";
     }
 }

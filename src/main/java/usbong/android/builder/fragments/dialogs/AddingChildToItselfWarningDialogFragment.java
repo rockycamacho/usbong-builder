@@ -1,7 +1,6 @@
 package usbong.android.builder.fragments.dialogs;
 
 
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,7 +11,6 @@ import android.support.v4.app.DialogFragment;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link AddingChildToItselfWarningDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class AddingChildToItselfWarningDialogFragment extends DialogFragment {
 
@@ -30,6 +28,7 @@ public class AddingChildToItselfWarningDialogFragment extends DialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public AddingChildToItselfWarningDialogFragment() {
         // Required empty public constructor
     }
@@ -45,7 +44,7 @@ public class AddingChildToItselfWarningDialogFragment extends DialogFragment {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(callback != null) {
+                        if (callback != null) {
                             callback.onYes();
                         }
                     }
@@ -63,6 +62,7 @@ public class AddingChildToItselfWarningDialogFragment extends DialogFragment {
 
     public interface Callback {
         void onYes();
+
         void onNo();
     }
 }

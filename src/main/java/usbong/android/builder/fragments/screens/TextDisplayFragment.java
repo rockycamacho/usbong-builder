@@ -13,8 +13,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.wrapp.floatlabelededittext.FloatLabeledEditText;
+import de.greenrobot.event.EventBus;
+import rx.Observer;
 import usbong.android.builder.R;
-import usbong.android.builder.activities.SelectDecisionActivity;
 import usbong.android.builder.activities.SelectScreenActivity;
 import usbong.android.builder.controllers.ScreenDetailController;
 import usbong.android.builder.events.OnNeedRefreshScreen;
@@ -24,8 +26,6 @@ import usbong.android.builder.fragments.ScreenDetailFragment;
 import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
-import de.greenrobot.event.EventBus;
-import rx.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +48,9 @@ public class TextDisplayFragment extends Fragment {
 
     private ScreenDetailController controller;
     @InjectView(R.id.name)
-    EditText name;
+    FloatLabeledEditText name;
     @InjectView(R.id.content)
-//    RichEditText textDisplay;
-    EditText textDisplay;
+    FloatLabeledEditText textDisplay;
 
 
     /**
@@ -121,7 +120,7 @@ public class TextDisplayFragment extends Fragment {
                 Log.d(TAG, "currentScreen id3: " + currentScreen.getId());
                 name.setText(currentScreen.name);
                 String details = "";
-                if(currentScreen.details != null) {
+                if (currentScreen.details != null) {
                     details = currentScreen.details;
                 }
                 SpannableString text = new SpannableString(Html.fromHtml(details));
@@ -133,7 +132,7 @@ public class TextDisplayFragment extends Fragment {
     public void onEvent(OnScreenSave event) {
         Log.d(TAG, "onEvent(OnScreenSave event): " + textDisplay.getText().toString());
 
-        String screenName = name.getText().toString();
+        String screenName = name.getText().toString().trim();
         String screenContent = textDisplay.getText().toString().replaceAll("\n", "<br>");
         EventBus.getDefault().post(new OnScreenDetailsSave(screenName, screenContent));
     }
@@ -154,14 +153,14 @@ public class TextDisplayFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_add_child) {
+        if (item.getItemId() == R.id.action_add_child) {
             Intent data = new Intent(getActivity(), SelectScreenActivity.class);
             data.putExtra(SelectScreenFragment.EXTRA_SCREEN_RELATION, SelectScreenFragment.CHILD);
             data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
             data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
             getParentFragment().startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
         }
-        if(item.getItemId() == R.id.action_remove_child) {
+        if (item.getItemId() == R.id.action_remove_child) {
             controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
                 @Override
                 public void onCompleted() {
@@ -186,10 +185,10 @@ public class TextDisplayFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult("+ requestCode +", "+ resultCode +", Intent data)");
-        if(requestCode == ADD_CHILD_REQUEST_CODE) {
+        Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", Intent data)");
+        if (requestCode == ADD_CHILD_REQUEST_CODE) {
             Log.d(TAG, "requestCode == ADD_CHILD_REQUEST_CODE");
-            if(resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 updateChildren(data);
             }
         }

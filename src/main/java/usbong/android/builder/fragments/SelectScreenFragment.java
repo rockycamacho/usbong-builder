@@ -16,13 +16,13 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import com.squareup.picasso.Picasso;
+import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.adapters.ScreenAdapter;
 import usbong.android.builder.controllers.ScreenListController;
 import usbong.android.builder.fragments.dialogs.AddingChildToItselfWarningDialogFragment;
 import usbong.android.builder.models.Screen;
-import com.squareup.picasso.Picasso;
-import rx.Observer;
 
 import java.util.List;
 
@@ -30,7 +30,6 @@ import java.util.List;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Use the {@link SelectScreenFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
 public class SelectScreenFragment extends Fragment {
 
@@ -67,6 +66,7 @@ public class SelectScreenFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     public SelectScreenFragment() {
         // Required empty public constructor
     }
@@ -78,10 +78,10 @@ public class SelectScreenFragment extends Fragment {
             screenId = getArguments().getLong(EXTRA_SCREEN_ID, -1);
             treeId = getArguments().getLong(EXTRA_TREE_ID, -1);
         }
-        if(screenId == -1) {
+        if (screenId == -1) {
             throw new IllegalArgumentException("screen id is required");
         }
-        if(treeId == -1) {
+        if (treeId == -1) {
             throw new IllegalArgumentException("tree id is required");
         }
         controller = new ScreenListController();
@@ -149,12 +149,12 @@ public class SelectScreenFragment extends Fragment {
 
     @OnClick(android.R.id.button1)
     public void onSelectScreen() {
-        if(listView.getSelectedItem() != null) {
+        if (listView.getSelectedItem() != null) {
             Toast.makeText(getActivity(), "Select a screen first", Toast.LENGTH_SHORT).show();
             return;
         }
         final Screen screen = adapter.getItem(listView.getCheckedItemPosition());
-        if(screen.getId() == screenId) {
+        if (screen.getId() == screenId) {
             AddingChildToItselfWarningDialogFragment dialog = AddingChildToItselfWarningDialogFragment.newInstance();
             dialog.setCallback(new AddingChildToItselfWarningDialogFragment.Callback() {
                 @Override
@@ -168,8 +168,7 @@ public class SelectScreenFragment extends Fragment {
                 }
             });
             dialog.show(getFragmentManager(), "DIALOG");
-        }
-        else {
+        } else {
             passSelectedScreenIdToCallerActivity(screen);
         }
     }

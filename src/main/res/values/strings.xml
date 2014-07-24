@@ -32,5 +32,16 @@
     <string name="no_file_managers_found">No suitable File Manager was found.</string>
     <string name="enter_search_keywords">Search</string>
     <string name="utree_saved">.utree saved</string>
+    <string name="select_an_image">Select an image</string>
+    <string name="please_install_file_manager">Please install a file manager.</string>
+
+    <array name="decisions">
+        <item>Yes</item>
+        <item>No</item>
+        <item>Maybe</item>
+        <item>Okay</item>
+        <item>Agree</item>
+        <item>Disagree</item>
+    </array>
 
 </resources>

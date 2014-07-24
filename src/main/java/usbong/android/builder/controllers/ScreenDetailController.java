@@ -1,23 +1,28 @@
 package usbong.android.builder.controllers;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
+import com.activeandroid.query.Set;
 import com.activeandroid.query.Update;
-import rx.functions.Action1;
-import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.ScreenRelation;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import usbong.android.builder.events.OnScreenDetailsSave;
+import usbong.android.builder.models.Screen;
+import usbong.android.builder.models.ScreenRelation;
 import usbong.android.builder.utils.FileUtils;
+import usbong.android.builder.utils.ResourceUtils;
 import usbong.android.builder.utils.ScreenUtils;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -64,7 +69,7 @@ public class ScreenDetailController implements Controller {
             public void call(Subscriber<? super Object> subscriber) {
                 ActiveAndroid.beginTransaction();
                 try {
-                    for(int i = 0; i < screenRelations.size(); i++) {
+                    for (int i = 0; i < screenRelations.size(); i++) {
                         ScreenRelation screenRelation = screenRelations.get(i);
                         screenRelation.save();
                     }
@@ -123,24 +128,34 @@ public class ScreenDetailController implements Controller {
                 .subscribe(observer);
     }
 
-    public void saveScreen(final Screen currentScreen, final View screenContainer, Observer<Screen> observer) {
+    public void saveScreen(final Screen screen, final OnScreenDetailsSave event, final View screenContainer, Observer<Screen> observer) {
         Observable.create(new Observable.OnSubscribe<Screen>() {
             @Override
             public void call(Subscriber<? super Screen> subscriber) {
                 Log.d(TAG, "saving...");
-                if(currentScreen.isStart == 1) {
+                if (screen.isStart == 1) {
+                    Log.d(TAG, "screen.isStart == 1");
                     new Update(Screen.class).set("IsStart = ?", 0)
-                            .where("Utree = ?", currentScreen.utree.getId())
+                            .where("Utree = ?", screen.utree.getId())
                             .execute();
+                    screen.isStart = 1;
+                    screen.save();
+                } else if (Screen.getScreens(screen.utree.getId()).size() == 0) {
+                    Log.d(TAG, "Screen.getScreens(screen.utree.getId()).size() == 0");
+                    screen.isStart = 1;
+                    screen.save();
+                } else {
+                    //WTF?!? need to re-set the values of screen name and details if isStart == 0
+                    screen.name = event.getName();
+                    screen.details = event.getContent();
+                    Log.d(TAG, "screen.save() " + screen.name + " " + screen.details);
+                    screen.save();
                 }
-                else if(Screen.getScreens(currentScreen.utree.getId()).size() == 0) {
-                    currentScreen.isStart = 1;
-                }
-                currentScreen.save();
+
                 Log.d(TAG, "saved");
-                File screenshotFile = screenContainer.getContext().getFileStreamPath(currentScreen.getScreenshotPath());
+                File screenshotFile = screenContainer.getContext().getFileStreamPath(screen.getScreenshotPath());
                 ScreenUtils.saveScreenshot(screenshotFile, screenContainer);
-                subscriber.onNext(currentScreen);
+                subscriber.onNext(screen);
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())
@@ -148,11 +163,13 @@ public class ScreenDetailController implements Controller {
                 .subscribe(observer);
     }
 
-    public void uploadImage(final String fileLocation, final String outputFolderLocation, Observer<File> observer) {
+    public void uploadImage(final Context context, final Uri uri, final String outputFolderLocation, Observer<File> observer) {
         Observable.create(new Observable.OnSubscribe<File>() {
             @Override
             public void call(Subscriber<? super File> subscriber) {
-                if(!isValidImage(fileLocation)) {
+                String fileLocation = getPath(context, uri);
+                Log.d(TAG, "fileLocation: " + fileLocation);
+                if (!isValidImage(fileLocation)) {
                     throw new IllegalArgumentException("Not a valid image file. Please select a jpg or png file");
                 }
                 FileUtils.mkdir(outputFolderLocation);
@@ -163,13 +180,34 @@ public class ScreenDetailController implements Controller {
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(observer);
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
     }
 
     private boolean isValidImage(String filename) {
         return filename.toLowerCase().endsWith(".jpg") ||
                 filename.toLowerCase().endsWith(".png") ||
                 filename.toLowerCase().endsWith(".jpeg");
+    }
+
+    public static String getPath(Context context, Uri uri) {
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = { "_data" };
+            Cursor cursor = null;
+
+            try {
+                cursor = context.getContentResolver().query(uri, projection, null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow("_data");
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } finally {
+                ResourceUtils.close(cursor);
+            }
+        }
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
     }
 }

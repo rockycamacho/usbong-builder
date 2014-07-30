@@ -87,12 +87,14 @@ public class UtreeConverter {
                 ScreenRelation screenRelation = screenRelations.get(i);
                 fw.write(TAB);
                 fw.write(TAB);
+                String nodeName = strategy.getTransition(screenRelation);
                 if (i == screenRelations.size() - 1) {
-                    fw.write("<transition to=\"" + strategy.getTransition(screenRelation) + "\" name=\"Any\"></transition>");
+                    fw.write("<transition to=\"" + nodeName + "\" name=\"Any\"></transition>");
                 } else {
-                    fw.write("<task name=\"" + strategy.getTransition(screenRelation) + "\" name=\"Any\"></task>");
+                    fw.write("<task name=\"" + nodeName + "\" name=\"Any\"></task>");
                 }
                 fw.write(NEWLINE);
+                pendingNodes.add(screenRelation.child);
             }
         }
         fw.write(TAB);

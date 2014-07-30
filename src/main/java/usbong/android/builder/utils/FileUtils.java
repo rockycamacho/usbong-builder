@@ -28,15 +28,21 @@ public class FileUtils {
         File zipFile = new File(zipFilePath);
         mkdir(zipFilePath.substring(0, zipFilePath.lastIndexOf("/")));
         ZipOutputStream out = null;
-        Stack<File> files = new Stack<File>();
+        Queue<File> files = new LinkedList<File>();
         try {
             out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
             byte data[] = new byte[BUFFER_SIZE];
             files.addAll(Arrays.asList(contentDir.listFiles()));
             while (!files.isEmpty()) {
-                File file = files.pop();
+                File file = files.remove();
                 Log.d(TAG, "file.getPath(): " + file.getPath() + " file.isDirectory(): " + file.isDirectory());
                 if (file.isDirectory()) {
+                    ZipEntry entry = new ZipEntry(file.getAbsolutePath().substring(contentDir.getAbsolutePath().length() + 1) + "/");
+                    try {
+                        out.putNextEntry(entry);
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
                     files.addAll(Arrays.asList(file.listFiles()));
                     continue;
                 }

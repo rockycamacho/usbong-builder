@@ -35,9 +35,7 @@ import usbong.android.builder.models.ScreenRelation;
 public class DecisionFragment extends Fragment {
 
     private static final String TAG = DecisionFragment.class.getSimpleName();
-    private static final String EXTRA_SCREEN_ID = "EXTRA_SCREEN_ID";
     public static final int ADD_CHILD_REQUEST_CODE = 101;
-    public static final String RELATION_CONDITION = "DEFAULT";
 
     private long screenId = -1;
     private long treeId = -1;

@@ -175,8 +175,19 @@ public class FileUtils {
         File file = new File(tempFolderLocation);
         files.add(file);
         while(!files.isEmpty()) {
-
+            File fileToBeDeleted = files.remove();
+            if(fileToBeDeleted.isDirectory()) {
+                if(fileToBeDeleted.listFiles().length > 0) {
+                    files.addAll(Arrays.asList(fileToBeDeleted.listFiles()));
+                    files.add(fileToBeDeleted);
+                }
+                else {
+                    fileToBeDeleted.delete();
+                }
+            }
+            else {
+                fileToBeDeleted.delete();
+            }
         }
-        file.delete();
     }
 }

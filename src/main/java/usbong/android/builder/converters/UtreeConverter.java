@@ -3,6 +3,7 @@ package usbong.android.builder.converters;
 import android.util.Log;
 import android.util.Xml;
 import org.xmlpull.v1.XmlSerializer;
+import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
 import usbong.android.builder.models.Utree;
@@ -87,11 +88,14 @@ public class UtreeConverter {
                 ScreenRelation screenRelation = screenRelations.get(i);
                 fw.write(TAB);
                 fw.write(TAB);
-                String nodeName = strategy.getTransition(screenRelation);
+                String transitionTo = strategy.getTransition(screenRelation);
                 if (i == screenRelations.size() - 1) {
-                    fw.write("<transition to=\"" + nodeName + "\" name=\"Any\"></transition>");
+                    if(UsbongBuilderScreenType.DECISION.getName().equals(screen.screenType)) {
+                        fw.write("<task name=\"" + transitionTo + "\"></task>");
+                    }
+                    fw.write("<transition to=\"" + transitionTo + "\" name=\"Any\"></transition>");
                 } else {
-                    fw.write("<task name=\"" + nodeName + "\" name=\"Any\"></task>");
+                    fw.write("<task name=\"" + transitionTo + "\"></task>");
                 }
                 fw.write(NEWLINE);
                 pendingNodes.add(screenRelation.child);

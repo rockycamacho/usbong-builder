@@ -23,6 +23,8 @@ public class ScreenConverterStrategy {
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.IMAGE.getName(), new ImageDisplayScreenConverter());
     }
 
+    public static final String DECISION_PREFIX = "DECISION~";
+
     public String getName(Screen screen) {
         if (SCREEN_CONVERTER_MAP.containsKey(screen.screenType)) {
             return SCREEN_CONVERTER_MAP.get(screen.screenType).getName(screen);
@@ -33,6 +35,9 @@ public class ScreenConverterStrategy {
     public String getTransition(ScreenRelation screenRelation) {
         if ("DEFAULT".equals(screenRelation.condition)) {
             return getName(screenRelation.child);
+        }
+        else if(screenRelation.condition.startsWith(DECISION_PREFIX)) {
+            return getName(screenRelation.child) + ScreenConverter.SEPARATOR + screenRelation.condition.substring(DECISION_PREFIX.length());
         }
         return getName(screenRelation.child) + ScreenConverter.SEPARATOR + screenRelation.condition;
     }

@@ -78,6 +78,7 @@ public class UtreeListController implements Controller {
                 String zipFilePath = folderLocation + File.separator + utree.name + ".utree";
                 UtreeConverter converter = new UtreeConverter();
                 converter.convert(utree, xmlFileLocation);
+                FileUtils.delete(tempFolderLocation);
                 FileUtils.copyAll(treeFolderLocation, tempFolderLocation + utree.name + ".utree" + File.separator);
                 FileUtils.zip(zipFilePath, tempFolderLocation);
                 FileUtils.delete(tempFolderLocation);

@@ -58,11 +58,12 @@ public class ScreenAdapter extends BaseAdapter implements Filterable {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         Screen screen = getItem(position);
-        viewHolder.name.setText(screen.name);
         if (screen.isStart == 1) {
             viewHolder.name.setTextColor(context.getResources().getColor(R.color.usbong_color));
+            viewHolder.name.setText("*" + screen.name);
         } else {
             viewHolder.name.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
+            viewHolder.name.setText(screen.name);
         }
         Picasso.with(context)
                 .load(context.getFileStreamPath(screen.getScreenshotPath()))

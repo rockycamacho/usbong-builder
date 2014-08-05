@@ -10,6 +10,10 @@ public class ScreenDetails {
     private String imagePosition;
     @Expose
     private String imagePath;
+    @Expose
+    private boolean hasCaption;
+    @Expose
+    private String imageCaption;
 
     public String getText() {
         return text;
@@ -33,6 +37,22 @@ public class ScreenDetails {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public boolean isHasCaption() {
+        return hasCaption;
+    }
+
+    public void setHasCaption(boolean hasCaption) {
+        this.hasCaption = hasCaption;
+    }
+
+    public String getImageCaption() {
+        return imageCaption;
+    }
+
+    public void setImageCaption(String imageCaption) {
+        this.imageCaption = imageCaption;
     }
 
 }

@@ -9,10 +9,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.*;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -67,6 +64,10 @@ public class TextImageFragment extends Fragment {
     ImageView image;
     @InjectView(R.id.image_position)
     Spinner imagePosition;
+    @InjectView(R.id.hasCaption)
+    Switch hasCaption;
+    @InjectView(R.id.caption)
+    FloatLabeledEditText caption;
     private ImagePositionAdapter adapter;
     private String imagePath = StringUtils.EMPTY;
 
@@ -152,6 +153,9 @@ public class TextImageFragment extends Fragment {
                         ImagePosition position = ImagePosition.from(textImageDetails.getImagePosition());
                         imagePosition.setSelection(adapter.getPosition(position));
                     }
+                    hasCaption.setChecked(textImageDetails.isHasCaption());
+                    caption.setEnabled(textImageDetails.isHasCaption());
+                    caption.setText(textImageDetails.getImageCaption());
                 }
                 SpannableString text = new SpannableString(Html.fromHtml(details));
                 textDisplay.setText(text);
@@ -174,6 +178,8 @@ public class TextImageFragment extends Fragment {
         String screenContent = textDisplay.getText().toString().replaceAll("\n", "<br>");
         details.setText(screenContent);
         details.setImagePath(imagePath);
+        details.setHasCaption(hasCaption.isChecked());
+        details.setImageCaption(caption.getTextString());
         ImagePosition position = adapter.getItem(imagePosition.getSelectedItemPosition());
         details.setImagePosition(position.getName());
 

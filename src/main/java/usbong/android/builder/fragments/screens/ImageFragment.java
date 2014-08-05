@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -59,6 +60,10 @@ public class ImageFragment extends Fragment {
     FloatLabeledEditText name;
     @InjectView(R.id.image)
     ImageView image;
+    @InjectView(R.id.hasCaption)
+    Switch hasCaption;
+    @InjectView(R.id.caption)
+    FloatLabeledEditText caption;
     private String imagePath = StringUtils.EMPTY;
 
 
@@ -130,6 +135,10 @@ public class ImageFragment extends Fragment {
                 if (currentScreen.details != null) {
                     ScreenDetails textImageDetails = JsonUtils.fromJson(currentScreen.details, ScreenDetails.class);
                     imagePath = textImageDetails.getImagePath();
+
+                    hasCaption.setChecked(textImageDetails.isHasCaption());
+                    caption.setEnabled(textImageDetails.isHasCaption());
+                    caption.setText(textImageDetails.getImageCaption());
                 }
                 if (!StringUtils.isEmpty(imagePath)) {
                     Picasso.with(getActivity())
@@ -148,6 +157,8 @@ public class ImageFragment extends Fragment {
         String screenContent = StringUtils.EMPTY;
         details.setText(screenContent);
         details.setImagePath(imagePath);
+        details.setHasCaption(hasCaption.isChecked());
+        details.setImageCaption(caption.getTextString());
         ImagePosition position = ImagePosition.ABOVE_TEXT;
         details.setImagePosition(position.getName());
         EventBus.getDefault().post(new OnScreenDetailsSave(screenName, JsonUtils.toJson(details)));

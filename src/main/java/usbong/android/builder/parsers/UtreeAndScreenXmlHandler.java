@@ -11,6 +11,7 @@ import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenDetails;
 import usbong.android.builder.models.Utree;
 import usbong.android.builder.utils.JsonUtils;
+import usbong.android.builder.utils.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,13 +45,13 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
             String screenType = attrs[0];
             if (UsbongScreenType.TEXT_DISPLAY.getName().equals(screenType)) {
                 currentScreen = new Screen();
-                String details = attrs[1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
+                String details = StringUtils.toUsbongBuilderText(attrs[1]);
                 currentScreen.screenType = UsbongBuilderScreenType.TEXT.getName();
                 currentScreen.name = details;
                 currentScreen.details = details;
             } else if (UsbongScreenType.LINK.getName().equals(screenType)) {
                 currentScreen = new Screen();
-                String details = attrs[attrs.length - 1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
+                String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
                 String name = details;
                 if (attrs.length > 2) {
                     name = attrs[1] + "~" + details;
@@ -60,7 +61,7 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
                 currentScreen.details = details;
             } else if (UsbongScreenType.DECISION.getName().equals(screenType)) {
                 currentScreen = new Screen();
-                String details = attrs[attrs.length - 1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
+                String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
                 String name = details;
                 if (attrs.length > 2) {
                     name = attrs[1] + "~" + details;
@@ -68,30 +69,39 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
                 currentScreen.screenType = UsbongBuilderScreenType.DECISION.getName();
                 currentScreen.name = name;
                 currentScreen.details = details;
-            } else if (UsbongScreenType.IMAGE_DISPLAY.getName().equals(screenType)) {
-                String name = attrs[attrs.length - 1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
+            } else if (UsbongScreenType.IMAGE_DISPLAY.getName().equals(screenType) ||
+                    UsbongScreenType.CLICKABLE_IMAGE_DISPLAY.getName().equals(screenType)) {
+                String name = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
                 ScreenDetails screenDetails = new ScreenDetails();
                 screenDetails.setImagePath(getImagePath(attrs[1], IMAGE_FILE_EXTENSIONS));
+                if(UsbongScreenType.CLICKABLE_IMAGE_DISPLAY.getName().equals(screenType)) {
+                    screenDetails.setHasCaption(true);
+                    screenDetails.setImageCaption(name);
+                }
                 currentScreen = new Screen();
                 currentScreen.screenType = UsbongBuilderScreenType.IMAGE.getName();
                 currentScreen.name = name;
                 currentScreen.details = JsonUtils.toJson(screenDetails);
-            } else if (UsbongScreenType.TEXT_IMAGE_DISPLAY.getName().equals(screenType)) {
-                String details = attrs[attrs.length - 1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
+            } else if (UsbongScreenType.TEXT_IMAGE_DISPLAY.getName().equals(screenType) ||
+                    UsbongScreenType.IMAGE_TEXT_DISPLAY.getName().equals(screenType) ||
+                    UsbongScreenType.TEXT_CLICKABLE_IMAGE_DISPLAY.getName().equals(screenType) ||
+                    UsbongScreenType.CLICKABLE_IMAGE_TEXT_DISPLAY.getName().equals(screenType)) {
+                String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
                 ScreenDetails screenDetails = new ScreenDetails();
                 screenDetails.setText(details);
-                screenDetails.setImagePosition(ImagePosition.BELOW_TEXT.getName());
+                ImagePosition imagePosition = ImagePosition.BELOW_TEXT;
+                if(UsbongScreenType.TEXT_IMAGE_DISPLAY.getName().equals(screenType) ||
+                        UsbongScreenType.TEXT_CLICKABLE_IMAGE_DISPLAY.getName().equals(screenType)) {
+                    imagePosition = ImagePosition.ABOVE_TEXT;
+                }
+                screenDetails.setImagePosition(imagePosition.getName());
                 screenDetails.setImagePath(getImagePath(attrs[1], IMAGE_FILE_EXTENSIONS));
-                currentScreen = new Screen();
-                currentScreen.screenType = UsbongBuilderScreenType.TEXT_AND_IMAGE.getName();
-                currentScreen.name = details;
-                currentScreen.details = JsonUtils.toJson(screenDetails);
-            } else if (UsbongScreenType.IMAGE_TEXT_DISPLAY.getName().equals(screenType)) {
-                String details = attrs[attrs.length - 1].replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
-                ScreenDetails screenDetails = new ScreenDetails();
-                screenDetails.setText(details);
-                screenDetails.setImagePosition(ImagePosition.ABOVE_TEXT.getName());
-                screenDetails.setImagePath(getImagePath(attrs[1], IMAGE_FILE_EXTENSIONS));
+                if(UsbongScreenType.TEXT_CLICKABLE_IMAGE_DISPLAY.getName().equals(screenType) ||
+                        UsbongScreenType.CLICKABLE_IMAGE_TEXT_DISPLAY.getName().equals(screenType)) {
+                    screenDetails.setHasCaption(true);
+                    String imageCaption = StringUtils.toUsbongBuilderText(attrs[2]);
+                    screenDetails.setImageCaption(imageCaption);
+                }
                 currentScreen = new Screen();
                 currentScreen.screenType = UsbongBuilderScreenType.TEXT_AND_IMAGE.getName();
                 currentScreen.name = details;
@@ -114,16 +124,12 @@ public class UtreeAndScreenXmlHandler extends DefaultHandler {
 
     private String getImagePath(String imageId, String... fileExtensions) {
         for (String fileExtension : fileExtensions) {
-            File imageFile = new File(resFolder + File.separator + imageId + ".jpg");
+            File imageFile = new File(resFolder + File.separator + imageId + fileExtension);
             if (imageFile.exists()) {
                 return imageFile.getAbsolutePath();
             }
         }
         return null;
-    }
-
-    private String getImagePath(File imageFile) {
-        return imageFile.getAbsolutePath();
     }
 
     public Utree getUtree() {

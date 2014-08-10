@@ -1,7 +1,6 @@
 package usbong.android.builder.utils;
 
 import com.google.gson.Gson;
-import usbong.android.builder.models.ScreenDetails;
 
 /**
  * Created by Rocky Camacho on 7/19/2014.

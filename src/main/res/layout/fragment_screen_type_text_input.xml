@@ -56,65 +56,68 @@
 
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <Button
-                        android:id="@+id/upload"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Select Image"/>
-
-                <Spinner
-                        android:id="@+id/image_position"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-            </RelativeLayout>
-
-
-            <ImageView
-                    android:id="@+id/image"
-                    android:background="@android:color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"/>
-
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <TextView
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Show caption"/>
-
-                <Switch android:id="@+id/hasCaption"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textOn="Yes"
-                        android:textOff="No"/>
-
-            </RelativeLayout>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:id="@+id/caption"
+            <RadioButton
+                    android:id="@+id/alphanumeric"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="top|left"
-                    android:enabled="false"
+                    android:text="Alphanumeric (letters and numbers)"/>
+
+            <CheckBox
+                    android:id="@+id/has_multiple_lines"
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Multiple lines"/>
+
+            <RadioButton
+                    android:id="@+id/numeric"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Numeric only"/>
+
+            <CheckBox
+                    android:id="@+id/has_unit"
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Unit"/>
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:id="@+id/unit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    float:fletSingleLine="true"
                     float:fletHintTextColor="@color/usbong_color"
-                    float:fletFloatingHint="Image Caption"
-                    float:fletImeOptions="flagNoExtractUi"
-                    float:fletInputType="textMultiLine"/>
+                    float:fletFloatingHint="Unit"/>
+
+        </LinearLayout>
+
+        <View style="@style/Divider"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:orientation="vertical">
+
+            <CheckBox
+                    android:id="@+id/should_store_variable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Store input as variable"/>
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:id="@+id/variable"
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    float:fletSingleLine="true"
+                    float:fletHintTextColor="@color/usbong_color"
+                    float:fletFloatingHint="Variable Name"/>
 
         </LinearLayout>
 

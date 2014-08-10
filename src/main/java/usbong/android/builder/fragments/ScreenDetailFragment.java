@@ -27,11 +27,9 @@ import usbong.android.builder.controllers.ScreenDetailController;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.events.OnNeedRefreshScreen;
 import usbong.android.builder.events.OnScreenDetailsSave;
+import usbong.android.builder.events.OnScreenDetailsSaveError;
 import usbong.android.builder.events.OnScreenSave;
-import usbong.android.builder.fragments.screens.DecisionFragment;
-import usbong.android.builder.fragments.screens.ImageFragment;
-import usbong.android.builder.fragments.screens.TextDisplayFragment;
-import usbong.android.builder.fragments.screens.TextImageFragment;
+import usbong.android.builder.fragments.screens.*;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
 
@@ -135,24 +133,11 @@ public class ScreenDetailFragment extends Fragment {
             @Override
             public void onNext(Screen screen) {
                 currentScreen = screen;
-                Fragment fragment = null;
-                if (UsbongBuilderScreenType.TEXT.getName().equals(screen.screenType)) {
-                    fragment = TextDisplayFragment.newInstance(getArguments());
-                } else if (UsbongBuilderScreenType.DECISION.getName().equals(screen.screenType)) {
-                    fragment = DecisionFragment.newInstance(getArguments());
-                } else if (UsbongBuilderScreenType.IMAGE.getName().equals(screen.screenType)) {
-                    fragment = ImageFragment.newInstance(getArguments());
-                } else if (UsbongBuilderScreenType.TEXT_AND_IMAGE.getName().equals(screen.screenType)) {
-                    fragment = TextImageFragment.newInstance(getArguments());
-                } else {
-                    throw new IllegalArgumentException("unhandled screen type: " + screen.screenType);
-                }
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getChildFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.screen_contents, fragment)
-                            .commit();
-                }
+                Fragment fragment = ScreenFragmentFactory.getFragment(screen.screenType, getArguments());
+                FragmentManager fragmentManager = getChildFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.screen_contents, fragment)
+                        .commit();
             }
         });
         refreshRelations();
@@ -245,15 +230,7 @@ public class ScreenDetailFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage(), e);
-                if(saveButton.getProgress() > 0) {
-                    saveButton.setProgress(-1);
-                }
-                if(saveAndExitButton.getProgress() > 0) {
-                    saveAndExitButton.setProgress(-1);
-                }
-                saveButton.setEnabled(true);
-                saveAndExitButton.setEnabled(true);
+                showErrorButton(e);
             }
 
             @Override
@@ -261,6 +238,30 @@ public class ScreenDetailFragment extends Fragment {
                 Log.d(TAG, "saved: " + screen.name + screen.details);
             }
         });
+    }
+
+    public void onEvent(OnScreenDetailsSaveError event) {
+        Log.e(TAG, event.getException().getMessage(), event.getException());
+        if(saveButton.getProgress() > 0) {
+            saveButton.setProgress(-1);
+        }
+        if(saveAndExitButton.getProgress() > 0) {
+            saveAndExitButton.setProgress(-1);
+        }
+        saveButton.setEnabled(true);
+        saveAndExitButton.setEnabled(true);
+    }
+
+    private void showErrorButton(Throwable e) {
+        Log.e(TAG, e.getMessage(), e);
+        if(saveButton.getProgress() > 0) {
+            saveButton.setProgress(-1);
+        }
+        if(saveAndExitButton.getProgress() > 0) {
+            saveAndExitButton.setProgress(-1);
+        }
+        saveButton.setEnabled(true);
+        saveAndExitButton.setEnabled(true);
     }
 
     @Override

@@ -32,21 +32,11 @@ import usbong.android.builder.models.ScreenRelation;
  * Use the {@link DecisionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DecisionFragment extends Fragment {
+public class DecisionFragment extends BaseScreenFragment {
 
     private static final String TAG = DecisionFragment.class.getSimpleName();
-    public static final int ADD_CHILD_REQUEST_CODE = 101;
-
-    private long screenId = -1;
-    private long treeId = -1;
-    private Screen currentScreen;
-
-    private ScreenDetailController controller;
-    @InjectView(R.id.name)
-    FloatLabeledEditText name;
     @InjectView(R.id.content)
     FloatLabeledEditText textDisplay;
-
 
     /**
      * Use this factory method to create a new instance of
@@ -65,84 +55,29 @@ public class DecisionFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            screenId = getArguments().getLong(ScreenDetailFragment.EXTRA_SCREEN_ID, -1);
-            treeId = getArguments().getLong(ScreenDetailFragment.EXTRA_TREE_ID, -1);
-        }
-        if (screenId == -1) {
-            throw new IllegalArgumentException("screen id is required");
-        }
-        if (treeId == -1) {
-            throw new IllegalArgumentException("tree id is required");
-        }
-        Log.d(TAG, "currentScreen id: " + screenId);
-        setHasOptionsMenu(true);
-        controller = new ScreenDetailController();
+    protected int getLayoutResId() {
+        return R.layout.fragment_screen_type_decision;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_screen_type_decision, container, false);
+    protected void onScreenLoad(Screen screen) {
+        name.setText(currentScreen.name);
+        String details = "";
+        if (currentScreen.details != null) {
+            details = currentScreen.details;
+        }
+        SpannableString text = new SpannableString(Html.fromHtml(details));
+        textDisplay.setText(text);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        ButterKnife.inject(this, view);
-//        textDisplay.enableActionModes(true);
-
-        EventBus.getDefault().register(this);
-
-        controller.loadScreen(screenId, new Observer<Screen>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e(TAG, e.getMessage(), e);
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNext(Screen screen) {
-                currentScreen = screen;
-                Log.d(TAG, "currentScreen id3: " + currentScreen.getId());
-                name.setText(currentScreen.name);
-                String details = "";
-                if (currentScreen.details != null) {
-                    details = currentScreen.details;
-                }
-                SpannableString text = new SpannableString(Html.fromHtml(details));
-                textDisplay.setText(text);
-            }
-        });
-    }
-
-    public void onEvent(OnScreenSave event) {
-        Log.d(TAG, "onEvent(OnScreenSave event): " + textDisplay.getText().toString());
-
-        String screenName = name.getText().toString().trim();
-        String screenContent = textDisplay.getText().toString().replaceAll("\n", "<br>");
-        EventBus.getDefault().post(new OnScreenDetailsSave(screenName, screenContent));
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        EventBus.getDefault().unregister(this);
+    protected String convertFormDataToScreenDetails() throws Exception {
+        return textDisplay.getText().toString().replaceAll("\n", "<br>");
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.decision, menu);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -153,12 +88,32 @@ public class DecisionFragment extends Fragment {
             data.putExtra(SelectDecisionActivity.EXTRA_TREE_ID, treeId);
             getParentFragment().startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
         }
-        return super.onOptionsItemSelected(item);
+        //TODO: change this to remove a single child selected by the user
+        if (item.getItemId() == R.id.action_remove_child) {
+            controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
+                @Override
+                public void onCompleted() {
+                    Toast.makeText(getActivity(), "Screen navigation removed", Toast.LENGTH_SHORT).show();
+                    EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNext(Object o) {
+
+                }
+            });
+        }
+        return true;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", Intent data)");
         if (requestCode == ADD_CHILD_REQUEST_CODE) {
             Log.d(TAG, "requestCode == ADD_CHILD_REQUEST_CODE");
@@ -168,7 +123,8 @@ public class DecisionFragment extends Fragment {
         }
     }
 
-    private void updateChildren(Intent data) {
+    @Override
+    protected void updateChildren(Intent data) {
         Log.d(TAG, "resultCode == Activity.RESULT_OK");
         long childScreenId = data.getLongExtra(SelectScreenFragment.EXTRA_SELECTED_SCREEN_ID, -1);
         final String condition = data.getStringExtra(SelectDecisionActivity.EXTRA_CONDITION);

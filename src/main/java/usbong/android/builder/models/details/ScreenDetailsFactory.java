@@ -1,0 +1,32 @@
+package usbong.android.builder.models.details;
+
+import usbong.android.builder.enums.ImagePosition;
+import usbong.android.builder.enums.UsbongBuilderScreenType;
+import usbong.android.builder.models.Screen;
+import usbong.android.builder.utils.JsonUtils;
+import usbong.android.builder.utils.StringUtils;
+
+/**
+ * Created by Rocky Camacho on 8/7/2014.
+ */
+public class ScreenDetailsFactory {
+    public static String create(Screen screen) {
+        if (UsbongBuilderScreenType.TEXT_AND_IMAGE.getName().equals(screen.screenType) ||
+                UsbongBuilderScreenType.IMAGE.getName().equals(screen.screenType)) {
+            ImageScreenDetails imageScreenDetails = new ImageScreenDetails();
+            imageScreenDetails.setText(screen.name);
+            imageScreenDetails.setImagePosition(ImagePosition.ABOVE_TEXT.getName());
+            imageScreenDetails.setImagePath(StringUtils.EMPTY);
+            return JsonUtils.toJson(imageScreenDetails);
+        }
+        if (UsbongBuilderScreenType.TEXT_INPUT.getName().equals(screen.screenType)) {
+            TextInputScreenDetails textInputScreenDetails = new TextInputScreenDetails();
+            textInputScreenDetails.setText(screen.name);
+            textInputScreenDetails.setUnit(StringUtils.EMPTY);
+            textInputScreenDetails.setVariableName(StringUtils.EMPTY);
+            return JsonUtils.toJson(textInputScreenDetails);
+        } else {
+            return screen.name;
+        }
+    }
+}

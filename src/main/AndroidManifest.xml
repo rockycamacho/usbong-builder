@@ -24,7 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="usbong.android.builder.activities.UtreeActivity">
+        <activity android:name="usbong.android.builder.activities.UtreeActivity"
+                android:parentActivityName="usbong.android.builder.activities.MainActivity" >>
         </activity>
         <activity
                 android:name="usbong.android.builder.activities.ScreenListActivity"

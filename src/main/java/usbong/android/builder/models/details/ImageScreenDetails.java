@@ -1,8 +1,8 @@
-package usbong.android.builder.models;
+package usbong.android.builder.models.details;
 
 import com.google.gson.annotations.Expose;
 
-public class ScreenDetails {
+public class ImageScreenDetails {
 
     @Expose
     private String text;

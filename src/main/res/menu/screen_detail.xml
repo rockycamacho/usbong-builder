@@ -7,4 +7,9 @@
           android:title="Add Child"
           android:orderInCategory="100"
           app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_remove_child"
+          android:title="Remove Child"
+          android:orderInCategory="101"
+          app:showAsAction="ifRoom" />
 </menu>

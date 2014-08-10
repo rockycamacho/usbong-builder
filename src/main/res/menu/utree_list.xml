@@ -11,6 +11,6 @@
 
     <item android:id="@+id/action_import"
           android:icon="@android:drawable/ic_menu_slideshow"
-          android:title="Import Tree"
+          android:title="Import .utree"
           app:showAsAction="ifRoom" />
 </menu>

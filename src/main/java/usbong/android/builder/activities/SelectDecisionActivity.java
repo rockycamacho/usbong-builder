@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -13,6 +15,7 @@ import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 import usbong.android.builder.R;
 import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.fragments.dialogs.DecisionListDialogFragment;
+import usbong.android.builder.utils.StringUtils;
 
 public class SelectDecisionActivity extends ActionBarActivity {
 
@@ -50,6 +53,11 @@ public class SelectDecisionActivity extends ActionBarActivity {
 
     @OnClick(android.R.id.button1)
     public void onSelectScreen() {
+        if(StringUtils.isEmpty(decision.getText().toString().trim())) {
+            Log.w(TAG, "Empty decision text");
+            Toast.makeText(this, "Please input a decision", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent data = new Intent(this, SelectScreenActivity.class);
         data.putExtra(SelectScreenFragment.EXTRA_SCREEN_RELATION, SelectScreenFragment.CHILD);
         data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);

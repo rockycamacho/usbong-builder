@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import butterknife.ButterKnife;
@@ -22,13 +21,10 @@ import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenDetailActivity;
 import usbong.android.builder.adapters.ScreenTypeAdapter;
 import usbong.android.builder.controllers.ScreenController;
-import usbong.android.builder.enums.ImagePosition;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.ScreenDetails;
+import usbong.android.builder.models.details.ScreenDetailsFactory;
 import usbong.android.builder.models.Utree;
-import usbong.android.builder.utils.JsonUtils;
-import usbong.android.builder.utils.StringUtils;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -107,10 +103,7 @@ public class ScreenFragment extends Fragment {
 
         ButterKnife.inject(this, view);
 
-        adapter.add(UsbongBuilderScreenType.TEXT);
-        adapter.add(UsbongBuilderScreenType.DECISION);
-        adapter.add(UsbongBuilderScreenType.IMAGE);
-        adapter.add(UsbongBuilderScreenType.TEXT_AND_IMAGE);
+        adapter.addAll(UsbongBuilderScreenType.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
@@ -156,16 +149,7 @@ public class ScreenFragment extends Fragment {
                 screen.name = name.getText().toString().trim();
                 screen.utree = new Select().from(Utree.class).where(Utree._ID + " = ?", treeId).executeSingle();
                 screen.screenType = adapter.getItem(spinner.getSelectedItemPosition()).getName();
-                if (UsbongBuilderScreenType.TEXT_AND_IMAGE.getName().equals(screen.screenType) ||
-                        UsbongBuilderScreenType.IMAGE.getName().equals(screen.screenType)) {
-                    ScreenDetails screenDetails = new ScreenDetails();
-                    screenDetails.setText(screen.name);
-                    screenDetails.setImagePosition(ImagePosition.ABOVE_TEXT.getName());
-                    screenDetails.setImagePath(StringUtils.EMPTY);
-                    screen.details = JsonUtils.toJson(screenDetails);
-                } else {
-                    screen.details = screen.name;
-                }
+                screen.details = ScreenDetailsFactory.create(screen);
                 controller.save(screen, callback);
             }
         });

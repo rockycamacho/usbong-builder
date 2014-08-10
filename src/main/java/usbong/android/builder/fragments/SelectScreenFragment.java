@@ -149,7 +149,7 @@ public class SelectScreenFragment extends Fragment {
 
     @OnClick(android.R.id.button1)
     public void onSelectScreen() {
-        if (listView.getSelectedItem() != null) {
+        if (listView.getSelectedItem() != null || listView.getCheckedItemPosition() == -1) {
             Toast.makeText(getActivity(), "Select a screen first", Toast.LENGTH_SHORT).show();
             return;
         }

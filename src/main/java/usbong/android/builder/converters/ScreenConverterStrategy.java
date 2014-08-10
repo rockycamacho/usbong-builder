@@ -21,6 +21,7 @@ public class ScreenConverterStrategy {
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.TEXT_AND_IMAGE.getName(), new TextImageDisplayScreenConverter());
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.DECISION.getName(), new DecisionScreenConverter());
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.IMAGE.getName(), new ImageDisplayScreenConverter());
+        SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.TEXT_INPUT.getName(), new TextInputScreenConverter());
     }
 
     public static final String DECISION_PREFIX = "DECISION~";

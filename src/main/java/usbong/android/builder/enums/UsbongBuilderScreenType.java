@@ -9,7 +9,8 @@ public enum UsbongBuilderScreenType {
     TEXT("text"),
     IMAGE("image"),
     TEXT_AND_IMAGE("textImage"),
-    TEXT_INPUT("textInput");;
+    TEXT_INPUT("textInput"),
+    SPECIAL_INPUT("specialInput");
 
     private final String name;
 

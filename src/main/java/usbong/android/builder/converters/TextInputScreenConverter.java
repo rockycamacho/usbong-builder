@@ -28,9 +28,10 @@ public class TextInputScreenConverter implements ScreenConverter {
         if(textInputScreenDetails.isStoreVariable()) {
             variablePart = String.format(STORE_VARIABLE_FORMAT, textInputScreenDetails.getVariableName()) + SEPARATOR;
         }
+        String content = StringUtils.toUsbongText(textInputScreenDetails.getText());
         if(textInputScreenDetails.isHasUnit()) {
             screenType = UsbongScreenType.TEXT_FIELD_WITH_UNIT.getName();
-            return screenType + SEPARATOR + textInputScreenDetails.getUnit() + SEPARATOR +variablePart + textInputScreenDetails.getText();
+            return screenType + SEPARATOR + textInputScreenDetails.getUnit() + SEPARATOR + variablePart + content;
         }
         if(TextInputScreenDetails.ALPHA_NUMERIC.equals(textInputScreenDetails.getInputType())) {
             if(textInputScreenDetails.isMultiLine()) {
@@ -43,6 +44,6 @@ public class TextInputScreenConverter implements ScreenConverter {
         else if(TextInputScreenDetails.NUMERIC.equals(textInputScreenDetails.getInputType())) {
             screenType = UsbongScreenType.TEXT_FIELD_NUMERICAL.getName();
         }
-        return screenType + SEPARATOR + textInputScreenDetails.getText();
+        return screenType + SEPARATOR + content;
     }
 }

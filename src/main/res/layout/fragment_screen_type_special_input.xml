@@ -59,61 +59,46 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <Button
-                        android:id="@+id/upload"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Select Image"/>
 
-                <Spinner
-                        android:id="@+id/image_position"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            </RelativeLayout>
+                    <TextView
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Input Type"/>
 
+                    <Spinner android:id="@+id/input_type"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
 
-            <ImageView
-                    android:id="@+id/image"
-                    android:background="@android:color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"/>
-
-            <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <TextView
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Show caption"/>
-
-                <Switch android:id="@+id/hasCaption"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textOn="Yes"
-                        android:textOff="No"/>
+                </RelativeLayout>
 
             </RelativeLayout>
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:id="@+id/caption"
+            <LinearLayout
+                    android:id="@+id/video_upload"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="top|left"
-                    android:enabled="false"
-                    float:fletHintTextColor="@color/usbong_color"
-                    float:fletFloatingHint="Image Caption"
-                    float:fletImeOptions="flagNoExtractUi"
-                    float:fletInputType="textMultiLine"/>
+                    android:orientation="vertical">
+
+                <Button
+                        android:id="@+id/upload"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select Video"/>
+
+                <TextView
+                        android:id="@+id/video"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

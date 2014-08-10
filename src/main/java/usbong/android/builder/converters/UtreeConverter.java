@@ -22,9 +22,6 @@ import java.util.*;
 public class UtreeConverter {
 
     private static final String TAG = UtreeConverter.class.getSimpleName();
-    public static final String FEATURE_INDENT_OUTPUT = "http://xmlpull.org/v1/doc/features.html#indent-output";
-    public static final String ENCODING = "UTF-8";
-    public static final String NAMESPACE = StringUtils.EMPTY;
     public static final String NEWLINE = "\n";
     public static final String TAB = "   ";
     private ScreenConverterStrategy strategy;

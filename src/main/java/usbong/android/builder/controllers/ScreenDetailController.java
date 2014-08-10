@@ -3,6 +3,7 @@ package usbong.android.builder.controllers;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import com.activeandroid.ActiveAndroid;
@@ -31,6 +32,8 @@ import java.util.List;
 public class ScreenDetailController implements Controller {
 
     private static final String TAG = ScreenDetailController.class.getSimpleName();
+    private static final String[] IMAGE_EXTENSIONS = new String[]{".jpg", ".png", ".jpeg"};
+    private static final String[] VIDEO_EXTENSIONS = new String[]{".3gp", ".mp4", ".ts", ".webm", ".mkv"};
 
     public void deleteAllChildScreens(final long screenId, Observer<Object> observer) {
         Observable.create(new Observable.OnSubscribe<Object>() {
@@ -185,9 +188,7 @@ public class ScreenDetailController implements Controller {
     }
 
     private boolean isValidImage(String filename) {
-        return filename.toLowerCase().endsWith(".jpg") ||
-                filename.toLowerCase().endsWith(".png") ||
-                filename.toLowerCase().endsWith(".jpeg");
+        return isValidFile(filename.toLowerCase(), IMAGE_EXTENSIONS);
     }
 
     public static String getPath(Context context, Uri uri) {
@@ -209,5 +210,40 @@ public class ScreenDetailController implements Controller {
             return uri.getPath();
         }
         return null;
+    }
+
+    public void uploadVideo(final Context context, final Uri uri, final String outputFolderLocation, Observer<File> observer) {
+        Observable.create(new Observable.OnSubscribe<File>() {
+            @Override
+            public void call(Subscriber<? super File> subscriber) {
+                String fileLocation = getPath(context, uri);
+                Log.d(TAG, "fileLocation: " + fileLocation);
+                if (!isValidVideo(fileLocation)) {
+                    throw new IllegalArgumentException("Not a valid video file. Please select a 3gp or mp4 file");
+                }
+                FileUtils.mkdir(outputFolderLocation);
+                File sourceFile = new File(fileLocation);
+                File destinationFile = new File(outputFolderLocation + File.separator + sourceFile.getName());
+                FileUtils.copy(sourceFile, destinationFile);
+                subscriber.onNext(destinationFile);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    private boolean isValidVideo(String filename) {
+        return isValidFile(filename.toLowerCase(), VIDEO_EXTENSIONS);
+    }
+
+    private boolean isValidFile(String filename, String[] supportedFileExtensions) {
+        String name = filename.toLowerCase();
+        for(String supportedFileExtension : supportedFileExtensions) {
+            if(name.endsWith(supportedFileExtension)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

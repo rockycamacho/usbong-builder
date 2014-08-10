@@ -20,6 +20,8 @@ public class ScreenFragmentFactory {
             return TextImageFragment.newInstance(arguments);
         } else if (UsbongBuilderScreenType.TEXT_INPUT.getName().equals(screenType)) {
             return TextInputScreenFragment.newInstance(arguments);
+        } else if (UsbongBuilderScreenType.SPECIAL_INPUT.getName().equals(screenType)) {
+            return SpecialInputScreenFragment.newInstance(arguments);
         }
         throw new IllegalArgumentException("unhandled screen type: " + screenType);
     }

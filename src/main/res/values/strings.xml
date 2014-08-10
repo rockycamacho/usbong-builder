@@ -34,6 +34,7 @@
     <string name="utree_saved">.utree saved</string>
     <string name="select_an_image">Select an image</string>
     <string name="please_install_file_manager">Please install a file manager.</string>
+    <string name="select_a_video">Select a video</string>
 
     <array name="decisions">
         <item>Yes</item>

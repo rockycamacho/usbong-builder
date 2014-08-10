@@ -3,12 +3,10 @@ package usbong.android.builder.controllers;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
-import com.activeandroid.query.Set;
 import com.activeandroid.query.Update;
 import rx.Observable;
 import rx.Observer;
@@ -23,7 +21,6 @@ import usbong.android.builder.utils.ResourceUtils;
 import usbong.android.builder.utils.ScreenUtils;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -193,7 +190,7 @@ public class ScreenDetailController implements Controller {
 
     public static String getPath(Context context, Uri uri) {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = { "_data" };
+            String[] projection = {"_data"};
             Cursor cursor = null;
 
             try {
@@ -205,8 +202,7 @@ public class ScreenDetailController implements Controller {
             } finally {
                 ResourceUtils.close(cursor);
             }
-        }
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
         return null;
@@ -239,8 +235,8 @@ public class ScreenDetailController implements Controller {
 
     private boolean isValidFile(String filename, String[] supportedFileExtensions) {
         String name = filename.toLowerCase();
-        for(String supportedFileExtension : supportedFileExtensions) {
-            if(name.endsWith(supportedFileExtension)) {
+        for (String supportedFileExtension : supportedFileExtensions) {
+            if (name.endsWith(supportedFileExtension)) {
                 return true;
             }
         }

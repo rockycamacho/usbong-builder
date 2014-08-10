@@ -57,8 +57,7 @@ public class ScreenController implements Controller {
                 } else if (Screen.getScreens(screen.utree.getId()).size() == 0) {
                     screen.isStart = 1;
                     screen.save();
-                }
-                else {
+                } else {
                     screen.save();
                 }
                 subscriber.onNext(screen);

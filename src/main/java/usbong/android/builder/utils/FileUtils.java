@@ -157,14 +157,13 @@ public class FileUtils {
         Stack<File> files = new Stack<File>();
         File sourceFolder = new File(sourceLocation);
         files.addAll(Arrays.asList(sourceFolder.listFiles()));
-        while(!files.isEmpty()) {
+        while (!files.isEmpty()) {
             File file = files.pop();
             File newFile = new File(destinationLocation + file.getAbsolutePath().substring(sourceFolder.getAbsolutePath().length() + 1));
-            if(file.isDirectory()) {
+            if (file.isDirectory()) {
                 mkdir(newFile);
                 files.addAll(Arrays.asList(file.listFiles()));
-            }
-            else {
+            } else {
                 FileUtils.copy(file, newFile);
             }
         }
@@ -174,18 +173,16 @@ public class FileUtils {
         Queue<File> files = new LinkedList<File>();
         File file = new File(tempFolderLocation);
         files.add(file);
-        while(!files.isEmpty()) {
+        while (!files.isEmpty()) {
             File fileToBeDeleted = files.remove();
-            if(fileToBeDeleted.isDirectory()) {
-                if(fileToBeDeleted.listFiles().length > 0) {
+            if (fileToBeDeleted.isDirectory()) {
+                if (fileToBeDeleted.listFiles().length > 0) {
                     files.addAll(Arrays.asList(fileToBeDeleted.listFiles()));
                     files.add(fileToBeDeleted);
-                }
-                else {
+                } else {
                     fileToBeDeleted.delete();
                 }
-            }
-            else {
+            } else {
                 fileToBeDeleted.delete();
             }
         }

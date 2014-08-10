@@ -66,7 +66,7 @@ public class TextInputScreenFragment extends BaseScreenFragment {
         }
         content.setText(new SpannableString(Html.fromHtml(details)));
         setInputType(TextInputScreenDetails.ALPHA_NUMERIC);  //Default
-        if(TextInputScreenDetails.NUMERIC.equals(textInputScreenDetails.getInputType())) {
+        if (TextInputScreenDetails.NUMERIC.equals(textInputScreenDetails.getInputType())) {
             setInputType(TextInputScreenDetails.NUMERIC);
         }
         hasMultipleLines.setChecked(textInputScreenDetails.isMultiLine());
@@ -77,19 +77,18 @@ public class TextInputScreenFragment extends BaseScreenFragment {
     }
 
     private void setInputType(String inputType) {
-        if(TextInputScreenDetails.ALPHA_NUMERIC.equals(inputType)) {
+        if (TextInputScreenDetails.ALPHA_NUMERIC.equals(inputType)) {
             alphanumeric.setChecked(true);  //Default
             numeric.setChecked(false);
             hasMultipleLines.setEnabled(true);
             hasUnit.setEnabled(false);
             unit.setEnabled(false);
-        }
-        else if(TextInputScreenDetails.NUMERIC.equals(inputType)) {
+        } else if (TextInputScreenDetails.NUMERIC.equals(inputType)) {
             numeric.setChecked(true);
             alphanumeric.setChecked(false);
             hasMultipleLines.setEnabled(false);
             hasUnit.setEnabled(true);
-            if(hasUnit.isChecked()) {
+            if (hasUnit.isChecked()) {
                 unit.setEnabled(true);
             }
         }
@@ -121,24 +120,24 @@ public class TextInputScreenFragment extends BaseScreenFragment {
     protected String convertFormDataToScreenDetails() throws Exception {
         TextInputScreenDetails textInputScreenDetails = new TextInputScreenDetails();
         textInputScreenDetails.setHasUnit(hasUnit.isChecked());
-        if(alphanumeric.isChecked()) {
+        if (alphanumeric.isChecked()) {
             textInputScreenDetails.setInputType(TextInputScreenDetails.ALPHA_NUMERIC);
         }
-        if(numeric.isChecked()) {
+        if (numeric.isChecked()) {
             textInputScreenDetails.setInputType(TextInputScreenDetails.NUMERIC);
         }
         textInputScreenDetails.setMultiLine(hasMultipleLines.isChecked());
         textInputScreenDetails.setStoreVariable(shouldStoreVariable.isChecked());
         textInputScreenDetails.setText(content.getTextString());
-        if(hasUnit.isChecked() && StringUtils.isEmpty(unit.getTextString())) {
+        if (hasUnit.isChecked() && StringUtils.isEmpty(unit.getTextString())) {
             throw new FormInputException("Please input a unit of measure");
         }
         textInputScreenDetails.setUnit(unit.getTextString());
         String variableName = variable.getTextString();
-        if(shouldStoreVariable.isChecked() && StringUtils.isEmpty(variableName)) {
+        if (shouldStoreVariable.isChecked() && StringUtils.isEmpty(variableName)) {
             throw new FormInputException("Please input a variable name");
         }
-        if(shouldStoreVariable.isChecked() && !VARIABLE_NAME.matcher(variableName).matches()) {
+        if (shouldStoreVariable.isChecked() && !VARIABLE_NAME.matcher(variableName).matches()) {
             throw new FormInputException("Variable names should begin with a letter and must be followed by letters or numbers");
         }
         textInputScreenDetails.setVariableName(variableName);

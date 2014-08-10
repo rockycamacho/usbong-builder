@@ -23,26 +23,23 @@ public class TextImageDisplayScreenConverter implements ScreenConverter {
         ImageScreenDetails imageScreenDetails = gson.fromJson(screen.details, ImageScreenDetails.class);
         String imageId = imageScreenDetails.getImagePath().substring(imageScreenDetails.getImagePath().lastIndexOf("/") + 1, imageScreenDetails.getImagePath().lastIndexOf("."));
         String screenType = getScreenType(imageScreenDetails);
-        if(imageScreenDetails.isHasCaption()) {
+        if (imageScreenDetails.isHasCaption()) {
             return screenType + SEPARATOR + imageId + SEPARATOR + StringUtils.toUsbongText(imageScreenDetails.getImageCaption());
         }
         return screenType + SEPARATOR + imageId + SEPARATOR + StringUtils.toUsbongText(imageScreenDetails.getText());
     }
 
     private String getScreenType(ImageScreenDetails imageScreenDetails) {
-        if(ImagePosition.ABOVE_TEXT.equals(imageScreenDetails.getImagePosition())) {
-            if(imageScreenDetails.isHasCaption()) {
+        if (ImagePosition.ABOVE_TEXT.equals(imageScreenDetails.getImagePosition())) {
+            if (imageScreenDetails.isHasCaption()) {
                 return UsbongScreenType.CLICKABLE_IMAGE_TEXT_DISPLAY.getName();
-            }
-            else {
+            } else {
                 return UsbongScreenType.IMAGE_TEXT_DISPLAY.getName();
             }
-        }
-        else {
-            if(imageScreenDetails.isHasCaption()) {
+        } else {
+            if (imageScreenDetails.isHasCaption()) {
                 return UsbongScreenType.TEXT_CLICKABLE_IMAGE_DISPLAY.getName();
-            }
-            else {
+            } else {
                 return UsbongScreenType.TEXT_IMAGE_DISPLAY.getName();
             }
         }

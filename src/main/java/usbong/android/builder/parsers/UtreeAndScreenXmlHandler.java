@@ -4,23 +4,12 @@ import android.util.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import usbong.android.builder.enums.ImagePosition;
-import usbong.android.builder.enums.UsbongBuilderScreenType;
-import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.details.ImageScreenDetails;
 import usbong.android.builder.models.Utree;
-import usbong.android.builder.models.details.TextInputScreenDetails;
-import usbong.android.builder.utils.JsonUtils;
-import usbong.android.builder.utils.StringUtils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Rocky Camacho on 7/5/2014.

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -53,7 +52,7 @@ public class SelectDecisionActivity extends ActionBarActivity {
 
     @OnClick(android.R.id.button1)
     public void onSelectScreen() {
-        if(StringUtils.isEmpty(decision.getText().toString().trim())) {
+        if (StringUtils.isEmpty(decision.getText().toString().trim())) {
             Log.w(TAG, "Empty decision text");
             Toast.makeText(this, "Please input a decision", Toast.LENGTH_SHORT).show();
             return;

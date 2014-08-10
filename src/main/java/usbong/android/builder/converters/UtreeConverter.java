@@ -1,14 +1,11 @@
 package usbong.android.builder.converters;
 
 import android.util.Log;
-import android.util.Xml;
-import org.xmlpull.v1.XmlSerializer;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
 import usbong.android.builder.models.Utree;
 import usbong.android.builder.utils.ResourceUtils;
-import usbong.android.builder.utils.StringUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -87,7 +84,7 @@ public class UtreeConverter {
                 fw.write(TAB);
                 String transitionTo = strategy.getTransition(screenRelation);
                 if (i == screenRelations.size() - 1) {
-                    if(UsbongBuilderScreenType.DECISION.getName().equals(screen.screenType)) {
+                    if (UsbongBuilderScreenType.DECISION.getName().equals(screen.screenType)) {
                         fw.write("<task name=\"" + transitionTo + "\"></task>");
                     }
                     fw.write("<transition to=\"" + transitionTo + "\" name=\"Any\"></transition>");

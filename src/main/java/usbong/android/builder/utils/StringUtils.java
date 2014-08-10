@@ -17,6 +17,7 @@ public class StringUtils {
     public static String toUsbongText(String text) {
         return text.replaceAll("\\<", "\\{").replaceAll("\\>", "\\}");
     }
+
     public static String toUsbongBuilderText(String text) {
         return text.replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
     }

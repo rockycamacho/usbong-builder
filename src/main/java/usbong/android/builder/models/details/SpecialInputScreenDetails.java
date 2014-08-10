@@ -1,6 +1,5 @@
 package usbong.android.builder.models.details;
 
-import android.widget.Switch;
 import com.google.gson.annotations.Expose;
 
 /**

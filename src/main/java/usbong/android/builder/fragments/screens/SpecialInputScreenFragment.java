@@ -1,6 +1,5 @@
 package usbong.android.builder.fragments.screens;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,19 +11,13 @@ import android.widget.*;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoUtils;
 import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 import rx.Observer;
 import usbong.android.builder.R;
-import usbong.android.builder.adapters.ImagePositionAdapter;
 import usbong.android.builder.adapters.SpecialInputTypeAdapter;
-import usbong.android.builder.enums.ImagePosition;
 import usbong.android.builder.exceptions.FormInputException;
 import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.details.ImageScreenDetails;
 import usbong.android.builder.models.details.SpecialInputScreenDetails;
-import usbong.android.builder.models.details.TextInputScreenDetails;
 import usbong.android.builder.utils.IntentUtils;
 import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
@@ -35,7 +28,7 @@ import java.util.Arrays;
 /**
  * Created by Rocky Camacho on 8/10/2014.
  */
-public class SpecialInputScreenFragment extends BaseScreenFragment{
+public class SpecialInputScreenFragment extends BaseScreenFragment {
 
     private static final String TAG = SpecialInputScreenFragment.class.getSimpleName();
     @InjectView(R.id.content)
@@ -86,7 +79,7 @@ public class SpecialInputScreenFragment extends BaseScreenFragment{
             details = specialInputScreenDetails.getText();
         }
         content.setText(new SpannableString(Html.fromHtml(details)));
-        if(SpecialInputScreenDetails.InputType.VIDEO.getName().equals(inputType)) {
+        if (SpecialInputScreenDetails.InputType.VIDEO.getName().equals(inputType)) {
             videoUploadSection.setVisibility(View.VISIBLE);
         } else {
             videoUploadSection.setVisibility(View.GONE);
@@ -97,7 +90,7 @@ public class SpecialInputScreenFragment extends BaseScreenFragment{
     }
 
     @Override
-     public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         adapter.addAll(Arrays.asList(SpecialInputScreenDetails.InputType.values()));
@@ -111,7 +104,7 @@ public class SpecialInputScreenFragment extends BaseScreenFragment{
         details.setText(screenContent);
         SpecialInputScreenDetails.InputType selectedInputType = adapter.getItem(inputType.getSelectedItemPosition());
         details.setInputType(selectedInputType.getName());
-        if(SpecialInputScreenDetails.InputType.VIDEO.equals(selectedInputType) && StringUtils.isEmpty(video.getText().toString())) {
+        if (SpecialInputScreenDetails.InputType.VIDEO.equals(selectedInputType) && StringUtils.isEmpty(video.getText().toString())) {
             throw new FormInputException("Please upload a video");
         }
         details.setVideo(video.getText().toString());
@@ -148,7 +141,7 @@ public class SpecialInputScreenFragment extends BaseScreenFragment{
     @OnItemSelected(R.id.input_type)
     public void onItemSelected(int position) {
         SpecialInputScreenDetails.InputType selectedInputType = adapter.getItem(position);
-        if(SpecialInputScreenDetails.InputType.VIDEO.equals(selectedInputType)) {
+        if (SpecialInputScreenDetails.InputType.VIDEO.equals(selectedInputType)) {
             videoUploadSection.setVisibility(View.VISIBLE);
         } else {
             videoUploadSection.setVisibility(View.GONE);

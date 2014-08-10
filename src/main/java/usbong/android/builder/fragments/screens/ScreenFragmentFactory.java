@@ -1,7 +1,6 @@
 package usbong.android.builder.fragments.screens;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
 
 /**
@@ -22,6 +21,8 @@ public class ScreenFragmentFactory {
             return TextInputScreenFragment.newInstance(arguments);
         } else if (UsbongBuilderScreenType.SPECIAL_INPUT.getName().equals(screenType)) {
             return SpecialInputScreenFragment.newInstance(arguments);
+        } else if (UsbongBuilderScreenType.PROCESSING.getName().equals(screenType)) {
+            return ProcessingScreenFragment.newInstance(arguments);
         }
         throw new IllegalArgumentException("unhandled screen type: " + screenType);
     }

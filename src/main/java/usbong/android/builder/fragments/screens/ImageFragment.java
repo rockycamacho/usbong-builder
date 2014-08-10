@@ -4,39 +4,25 @@ package usbong.android.builder.fragments.screens;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.*;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoUtils;
 import com.wrapp.floatlabelededittext.FloatLabeledEditText;
-import de.greenrobot.event.EventBus;
 import rx.Observer;
 import usbong.android.builder.R;
-import usbong.android.builder.activities.SelectScreenActivity;
-import usbong.android.builder.controllers.ScreenDetailController;
 import usbong.android.builder.enums.ImagePosition;
-import usbong.android.builder.events.OnNeedRefreshScreen;
-import usbong.android.builder.events.OnScreenDetailsSave;
-import usbong.android.builder.events.OnScreenSave;
-import usbong.android.builder.fragments.ScreenDetailFragment;
-import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.details.ImageScreenDetails;
-import usbong.android.builder.models.ScreenRelation;
 import usbong.android.builder.utils.IntentUtils;
 import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.

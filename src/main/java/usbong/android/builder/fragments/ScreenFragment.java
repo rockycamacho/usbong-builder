@@ -23,8 +23,8 @@ import usbong.android.builder.adapters.ScreenTypeAdapter;
 import usbong.android.builder.controllers.ScreenController;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.details.ScreenDetailsFactory;
 import usbong.android.builder.models.Utree;
+import usbong.android.builder.models.details.ScreenDetailsFactory;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.

@@ -103,12 +103,10 @@ public class ScreenFactory {
                 }
             }
             textInputScreenDetails.setInputType(inputType);
-
             screen = new Screen();
             screen.screenType = UsbongBuilderScreenType.TEXT_INPUT.getName();
             screen.name = details;
             screen.details = JsonUtils.toJson(textInputScreenDetails);
-
         } else if (isSpecialInput(screenType)) {
             String details = StringUtils.EMPTY;
             if (!UsbongScreenType.VIDEO_FROM_FILE.getName().equals(screenType)) {

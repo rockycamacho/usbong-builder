@@ -32,8 +32,13 @@ public class ScreenDetailsFactory {
             specialInputScreenDetails.setInputType(SpecialInputScreenDetails.InputType.DRAW.getName());
             specialInputScreenDetails.setVideo(StringUtils.EMPTY);
             return JsonUtils.toJson(specialInputScreenDetails);
-        } else {
-            return screen.name;
         }
+        if (UsbongBuilderScreenType.PROCESSING.getName().equals(screen.screenType)) {
+            ProcessingScreenDetails processingScreenDetails = new ProcessingScreenDetails();
+            processingScreenDetails.setText(screen.name);
+            processingScreenDetails.setProcessingType(ProcessingScreenDetails.ProcessingType.SEND_TO_WEB_SERVER.getName());
+            return JsonUtils.toJson(processingScreenDetails);
+        }
+        return screen.name;
     }
 }

@@ -5,14 +5,12 @@ import usbong.android.builder.enums.ImagePosition;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.details.ImageScreenDetails;
-import usbong.android.builder.models.details.ProcessingScreenDetails;
-import usbong.android.builder.models.details.SpecialInputScreenDetails;
-import usbong.android.builder.models.details.TextInputScreenDetails;
+import usbong.android.builder.models.details.*;
 import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +23,7 @@ public class ScreenFactory {
     private static final String TAG = ScreenFactory.class.getSimpleName();
     private static final String[] IMAGE_FILE_EXTENSIONS = new String[]{".jpg", ".jpeg", ".png"};
     private static final Pattern GET_INPUT_PATTERN = Pattern.compile("@([a-z][a-zA-Z0-9]*)=getInput\\(\\)");
+    public static final String ANSWER_PREFIX = "?Answer=";
 
     public static Screen createFrom(String[] attrs, String resFolder) {
         Screen screen = null;
@@ -84,6 +83,15 @@ public class ScreenFactory {
             TextInputScreenDetails textInputScreenDetails = new TextInputScreenDetails();
             textInputScreenDetails.setMultiLine(UsbongScreenType.TEXT_AREA.getName().equals(screenType));
             String inputType = TextInputScreenDetails.ALPHA_NUMERIC;
+
+            if(details.contains(ANSWER_PREFIX)) {
+                textInputScreenDetails.setHasAnswer(true);
+                int indexOfAnswer = details.indexOf(ANSWER_PREFIX);
+                String[] answers = details.substring(indexOfAnswer + ANSWER_PREFIX.length()).split("\\|\\|");
+                textInputScreenDetails.setAnswers(Arrays.asList(answers));
+                details = details.substring(0, indexOfAnswer);
+            }
+
             if (UsbongScreenType.TEXT_FIELD_NUMERICAL.getName().equals(screenType) ||
                     UsbongScreenType.TEXT_FIELD_WITH_UNIT.getName().equals(screenType)) {
                 inputType = TextInputScreenDetails.NUMERIC;
@@ -135,11 +143,54 @@ public class ScreenFactory {
             screen.screenType = UsbongBuilderScreenType.SPECIAL_INPUT.getName();
             screen.name = details;
             screen.details = JsonUtils.toJson(processingScreenDetails);
+        } else if (isList(screenType)) {
+            String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
+            ListScreenDetails listScreenDetails = new ListScreenDetails();
+            if(details.contains(ANSWER_PREFIX)) {
+                listScreenDetails.setHasAnswer(true);
+                int indexOfAnswer = details.indexOf(ANSWER_PREFIX);
+                String[] answers = details.substring(indexOfAnswer + ANSWER_PREFIX.length()).split("\\|\\|");
+                listScreenDetails.setAnswers(Arrays.asList(answers));
+                details = details.substring(0, indexOfAnswer);
+            }
+            listScreenDetails.setText(details);
+            ListScreenDetails.ListType listType = ListScreenDetails.ListType.SINGLE_RESPONSE;
+            if(UsbongScreenType.CHECKLIST.getName().equals(screenType)) {
+                listType = ListScreenDetails.ListType.MULTIPLE_RESPONSE;
+            }
+            listScreenDetails.setType(listType.getName());
+            listScreenDetails.setItems(new ArrayList<String>());
+            listScreenDetails.setAnswers(new ArrayList<String>());
+            screen = new Screen();
+            screen.screenType = UsbongBuilderScreenType.LIST.getName();
+            screen.name = details;
+            screen.details = JsonUtils.toJson(listScreenDetails);
+        } else if(isClassification(attrs)) {
+            String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
+            ListScreenDetails listScreenDetails = new ListScreenDetails();
+            listScreenDetails.setText(details);
+            listScreenDetails.setType(ListScreenDetails.ListType.NO_RESPONSE.getName());
+            listScreenDetails.setItems(new ArrayList<String>());
+            listScreenDetails.setAnswers(new ArrayList<String>());
+            screen = new Screen();
+            screen.screenType = UsbongBuilderScreenType.LIST.getName();
+            screen.name = details;
+            screen.details = JsonUtils.toJson(listScreenDetails);
         } else {
             Log.w(TAG, "unhandled screenType: " + screenType);
             Log.w(TAG, "screen details: " + Arrays.toString(attrs));
         }
         return screen;
+    }
+
+    private static boolean isList(String screenType) {
+        return UsbongScreenType.RADIO_BUTTONS.getName().equals(screenType) ||
+                UsbongScreenType.RADIO_BUTTONS_WITH_ANSWER.getName().equals(screenType) ||
+                UsbongScreenType.CHECKLIST.getName().equals(screenType);
+    }
+
+    private static boolean isClassification(String[] attrs) {
+        return attrs.length == 1;
     }
 
     private static boolean isProcessing(String screenType) {

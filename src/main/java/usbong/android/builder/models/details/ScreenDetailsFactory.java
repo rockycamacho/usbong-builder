@@ -6,6 +6,8 @@ import usbong.android.builder.models.Screen;
 import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
+import java.util.ArrayList;
+
 /**
  * Created by Rocky Camacho on 8/7/2014.
  */
@@ -24,6 +26,7 @@ public class ScreenDetailsFactory {
             textInputScreenDetails.setText(screen.name);
             textInputScreenDetails.setUnit(StringUtils.EMPTY);
             textInputScreenDetails.setVariableName(StringUtils.EMPTY);
+            textInputScreenDetails.setAnswers(new ArrayList<String>());
             return JsonUtils.toJson(textInputScreenDetails);
         }
         if (UsbongBuilderScreenType.SPECIAL_INPUT.getName().equals(screen.screenType)) {
@@ -38,6 +41,14 @@ public class ScreenDetailsFactory {
             processingScreenDetails.setText(screen.name);
             processingScreenDetails.setProcessingType(ProcessingScreenDetails.ProcessingType.SEND_TO_WEB_SERVER.getName());
             return JsonUtils.toJson(processingScreenDetails);
+        }
+        if (UsbongBuilderScreenType.LIST.getName().equals(screen.screenType)) {
+            ListScreenDetails listScreenDetails = new ListScreenDetails();
+            listScreenDetails.setText(screen.name);
+            listScreenDetails.setType(ListScreenDetails.ListType.NO_RESPONSE.getName());
+            listScreenDetails.setItems(new ArrayList<String>());
+            listScreenDetails.setAnswers(new ArrayList<String>());
+            return JsonUtils.toJson(listScreenDetails);
         }
         return screen.name;
     }

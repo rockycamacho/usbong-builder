@@ -2,6 +2,8 @@ package usbong.android.builder.models.details;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.List;
+
 /**
  * Created by Rocky Camacho on 8/7/2014.
  */
@@ -23,6 +25,10 @@ public class TextInputScreenDetails {
     private boolean storeVariable;
     @Expose
     private String variableName;
+    @Expose
+    private boolean hasAnswer;
+    @Expose
+    private List<String> answers;
 
     public String getVariableName() {
         return variableName;
@@ -78,5 +84,21 @@ public class TextInputScreenDetails {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public List<String> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<String> answers) {
+        this.answers = answers;
+    }
+
+    public boolean isHasAnswer() {
+        return hasAnswer;
+    }
+
+    public void setHasAnswer(boolean hasAnswer) {
+        this.hasAnswer = hasAnswer;
     }
 }

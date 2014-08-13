@@ -1,9 +1,10 @@
-package usbong.android.builder.converters;
+package usbong.android.builder.converters.screens;
 
 import com.google.gson.Gson;
 import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.details.TextInputScreenDetails;
+import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
 /**
@@ -12,15 +13,10 @@ import usbong.android.builder.utils.StringUtils;
 public class TextInputScreenConverter implements ScreenConverter {
 
     private static final String STORE_VARIABLE_FORMAT = "@%s=getInput()";
-    private final Gson gson;
-
-    public TextInputScreenConverter() {
-        gson = new Gson();
-    }
 
     @Override
     public String getName(Screen screen) {
-        TextInputScreenDetails textInputScreenDetails = gson.fromJson(screen.details, TextInputScreenDetails.class);
+        TextInputScreenDetails textInputScreenDetails = JsonUtils.fromJson(screen.details, TextInputScreenDetails.class);
         String screenType = UsbongScreenType.TEXT_FIELD.getName();
         String variablePart = StringUtils.EMPTY;
         if (textInputScreenDetails.isStoreVariable()) {

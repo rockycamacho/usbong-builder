@@ -62,7 +62,7 @@
         <ImageView
                 android:id="@+id/slide_left"
                 android:layout_gravity="center|left"
-                android:layout_width="32dp"
+                android:layout_width="16dp"
                 android:layout_height="wrap_content"
                 android:background="#33333333"
                 android:src="@drawable/slide_left_arrow"/>
@@ -70,7 +70,7 @@
         <ImageView
                 android:id="@+id/slide_right"
                 android:layout_gravity="center|right"
-                android:layout_width="32dp"
+                android:layout_width="16dp"
                 android:layout_height="wrap_content"
                 android:background="#33333333"
                 android:src="@drawable/slide_right_arrow"/>

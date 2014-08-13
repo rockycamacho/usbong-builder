@@ -3,9 +3,13 @@ package usbong.android.builder.parsers;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
+import usbong.android.builder.models.details.ListScreenDetails;
+import usbong.android.builder.utils.JsonUtils;
+import usbong.android.builder.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +39,26 @@ public class ScreenRelationXmlHandler extends DefaultHandler {
         } else if (TASK.equals(qName) ||
                 TRANSITION.equals(qName)) {
             if (parentScreen != null) {
-                ScreenRelation screenRelation = null;
-                if (UsbongScreenType.LINK.getName().equals(parentScreen.screenType) ||
-                        UsbongScreenType.DECISION.getName().equals(parentScreen.screenType)) {
-                    screenRelation = DECISION_TRANSITION_HANDLER.handle(qName, attributes);
-                } else {
-                    screenRelation = DEFAULT_TRANSITION_HANDLER.handle(qName, attributes);
+                if (UsbongBuilderScreenType.LIST.getName().equals(parentScreen.screenType) && TASK.equals(qName)) {
+                    ListScreenDetails listScreenDetails = JsonUtils.fromJson(parentScreen.details, ListScreenDetails.class);
+                    String listItem = attributes.getValue("to");
+                    if (StringUtils.isEmpty(listItem)) {
+                        listItem = attributes.getValue("name");
+                    }
+                    listScreenDetails.getItems().add(listItem);
+                    parentScreen.save();
                 }
-                if (screenRelation != null) {
-                    screenRelation.parent = parentScreen;
-                    screenRelations.add(screenRelation);
+                else {
+                    ScreenRelation screenRelation = null;
+                    if (UsbongBuilderScreenType.DECISION.getName().equals(parentScreen.screenType)) {
+                        screenRelation = DECISION_TRANSITION_HANDLER.handle(qName, attributes);
+                    } else {
+                        screenRelation = DEFAULT_TRANSITION_HANDLER.handle(qName, attributes);
+                    }
+                    if (screenRelation != null) {
+                        screenRelation.parent = parentScreen;
+                        screenRelations.add(screenRelation);
+                    }
                 }
             }
         }

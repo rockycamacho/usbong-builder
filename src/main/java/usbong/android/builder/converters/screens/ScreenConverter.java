@@ -1,4 +1,4 @@
-package usbong.android.builder.converters;
+package usbong.android.builder.converters.screens;
 
 import usbong.android.builder.models.Screen;
 

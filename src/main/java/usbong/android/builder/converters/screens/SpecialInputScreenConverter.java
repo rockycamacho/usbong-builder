@@ -1,9 +1,10 @@
-package usbong.android.builder.converters;
+package usbong.android.builder.converters.screens;
 
 import com.google.gson.Gson;
 import usbong.android.builder.enums.UsbongScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.details.SpecialInputScreenDetails;
+import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
 /**
@@ -11,15 +12,9 @@ import usbong.android.builder.utils.StringUtils;
  */
 public class SpecialInputScreenConverter implements ScreenConverter {
 
-    private final Gson gson;
-
-    public SpecialInputScreenConverter() {
-        gson = new Gson();
-    }
-
     @Override
     public String getName(Screen screen) {
-        SpecialInputScreenDetails specialInputScreenDetails = gson.fromJson(screen.details, SpecialInputScreenDetails.class);
+        SpecialInputScreenDetails specialInputScreenDetails = JsonUtils.fromJson(screen.details, SpecialInputScreenDetails.class);
         String content = StringUtils.toUsbongText(specialInputScreenDetails.getText());
         UsbongScreenType inputType = getUsbongScreenType(specialInputScreenDetails, content);
         if (UsbongScreenType.VIDEO_FROM_FILE.equals(inputType)) {

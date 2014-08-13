@@ -1,11 +1,16 @@
 package usbong.android.builder.converters;
 
 import android.util.Log;
+import com.google.gson.Gson;
+import usbong.android.builder.converters.screens.ScreenConverterStrategy;
 import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
 import usbong.android.builder.models.Utree;
+import usbong.android.builder.models.details.ListScreenDetails;
+import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.ResourceUtils;
+import usbong.android.builder.utils.StringUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -71,26 +76,45 @@ public class UtreeConverter {
         fw.write(TAB);
         fw.write("<task-node name=\"" + strategy.getName(screen) + "\">");
         fw.write(NEWLINE);
+
+        //TODO: need to abstract this part
+        if (UsbongBuilderScreenType.LIST.getName().equals(screen.screenType)) {
+            ListScreenDetails details = JsonUtils.fromJson(screen.details, ListScreenDetails.class);
+            for(String item : details.getItems()) {
+                fw.write(TAB);
+                fw.write(TAB);
+                fw.write("<task name=\"" + StringUtils.toUsbongText(item) + "\"></task>");
+                fw.write(NEWLINE);
+            }
+        }
         List<ScreenRelation> screenRelations = ScreenRelation.getChildrenOf(screen.getId());
         if (screenRelations.isEmpty()) {
             fw.write(TAB);
             fw.write(TAB);
             fw.write("<transition to=\"end-state1\" name=\"Any\"></transition>");
             fw.write(NEWLINE);
-        } else {
+        } else if (UsbongBuilderScreenType.DECISION.getName().equals(screen.screenType)) {
             for (int i = 0; i < screenRelations.size(); i++) {
                 ScreenRelation screenRelation = screenRelations.get(i);
                 fw.write(TAB);
                 fw.write(TAB);
                 String transitionTo = strategy.getTransition(screenRelation);
                 if (i == screenRelations.size() - 1) {
-                    if (UsbongBuilderScreenType.DECISION.getName().equals(screen.screenType)) {
-                        fw.write("<task name=\"" + transitionTo + "\"></task>");
-                    }
+                    fw.write("<task name=\"" + transitionTo + "\"></task>");
                     fw.write("<transition to=\"" + transitionTo + "\" name=\"Any\"></transition>");
                 } else {
                     fw.write("<task name=\"" + transitionTo + "\"></task>");
                 }
+                fw.write(NEWLINE);
+                pendingNodes.add(screenRelation.child);
+            }
+        } else {
+            for (int i = 0; i < screenRelations.size(); i++) {
+                ScreenRelation screenRelation = screenRelations.get(i);
+                fw.write(TAB);
+                fw.write(TAB);
+                String transitionTo = strategy.getTransition(screenRelation);
+                fw.write("<transition to=\"" + transitionTo + "\" name=\"Any\"></transition>");
                 fw.write(NEWLINE);
                 pendingNodes.add(screenRelation.child);
             }

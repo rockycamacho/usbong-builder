@@ -1,4 +1,4 @@
-package usbong.android.builder.converters;
+package usbong.android.builder.converters.screens;
 
 import usbong.android.builder.enums.UsbongBuilderScreenType;
 import usbong.android.builder.models.Screen;
@@ -24,6 +24,7 @@ public class ScreenConverterStrategy {
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.TEXT_INPUT.getName(), new TextInputScreenConverter());
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.SPECIAL_INPUT.getName(), new SpecialInputScreenConverter());
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.PROCESSING.getName(), new ProcessingScreenConverter());
+        SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.LIST.getName(), new ListScreenConverter());
     }
 
     public static final String DECISION_PREFIX = "DECISION~";

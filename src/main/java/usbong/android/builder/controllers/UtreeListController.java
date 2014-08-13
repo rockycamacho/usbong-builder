@@ -1,5 +1,6 @@
 package usbong.android.builder.controllers;
 
+import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import rx.Observable;
 import rx.Observer;
@@ -7,6 +8,8 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import usbong.android.builder.converters.UtreeConverter;
+import usbong.android.builder.exceptions.NoStartingScreenException;
+import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.Utree;
 import usbong.android.builder.parsers.UtreeParser;
 import usbong.android.builder.utils.FileUtils;
@@ -73,6 +76,13 @@ public class UtreeListController implements Controller {
         Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
+                Screen startScreen = new Select().from(Screen.class)
+                        .where("Utree = ? AND IsStart = ?", utree.getId(), 1)
+                        .executeSingle();
+                if(startScreen == null) {
+                    subscriber.onError(new NoStartingScreenException(".utree does not have a starting screen. Please mark one of the screens as the start screen"));
+                }
+
                 FileUtils.mkdir(treeFolderLocation);
                 String xmlFileLocation = treeFolderLocation + utree.name + ".xml";
                 String zipFilePath = folderLocation + File.separator + utree.name + ".utree";

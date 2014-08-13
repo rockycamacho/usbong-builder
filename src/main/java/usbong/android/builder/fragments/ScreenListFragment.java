@@ -17,6 +17,9 @@ import usbong.android.builder.activities.ScreenActivity;
 import usbong.android.builder.activities.ScreenDetailActivity;
 import usbong.android.builder.adapters.ScreenAdapter;
 import usbong.android.builder.controllers.ScreenListController;
+import usbong.android.builder.exceptions.NoStartingScreenException;
+import usbong.android.builder.fragments.dialogs.AddingChildToItselfWarningDialogFragment;
+import usbong.android.builder.fragments.dialogs.DeleteConfirmationDialogFragment;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.utils.StringUtils;
 
@@ -69,7 +72,10 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
                     mode.finish();
                     editScreen();
                     return true;
-
+                case R.id.action_delete:
+                    mode.finish();
+                    showDeleteConfirmationDialog();
+                    return true;
                 case R.id.action_mark_as_start:
                     mode.finish();
                     markAsStart();
@@ -83,6 +89,45 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
             actionMode = null;
         }
     };
+
+    private void showDeleteConfirmationDialog() {
+        DeleteConfirmationDialogFragment dialog = DeleteConfirmationDialogFragment.newInstance();
+        dialog.setCallback(new DeleteConfirmationDialogFragment.Callback() {
+            @Override
+            public void onYes() {
+                deleteScreen();
+            }
+
+            @Override
+            public void onNo() {
+
+            }
+        });
+        dialog.show(getFragmentManager(), "DIALOG");
+    }
+
+    private void deleteScreen() {
+        controller.deleteScreen(selectedScreen, new Observer<Object>() {
+
+            @Override
+            public void onCompleted() {
+                selectedScreen = null;
+                controller.fetchScreens(treeId, ScreenListFragment.this);
+                Toast.makeText(getActivity(), "Screen deleted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(Object o) {
+
+            }
+        });
+    }
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with

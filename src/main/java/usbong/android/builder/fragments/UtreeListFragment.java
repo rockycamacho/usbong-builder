@@ -20,6 +20,7 @@ import usbong.android.builder.activities.UtreeActivity;
 import usbong.android.builder.adapters.UtreeAdapter;
 import usbong.android.builder.controllers.UtreeListController;
 import usbong.android.builder.events.OnNeedRefreshTrees;
+import usbong.android.builder.exceptions.NoStartingScreenException;
 import usbong.android.builder.models.Utree;
 import usbong.android.builder.utils.IntentUtils;
 import usbong.android.builder.utils.StringUtils;
@@ -260,6 +261,9 @@ public class UtreeListFragment extends Fragment implements Observer<List<Utree>>
 
                 @Override
                 public void onError(Throwable e) {
+                    if(e instanceof NoStartingScreenException) {
+                        editUtree();
+                    }
                     Log.e(TAG, e.getMessage(), e);
                     Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     selectedUtree = null;

@@ -10,11 +10,11 @@
         android:icon="@android:drawable/ic_menu_edit"
         android:orderInCategory="100"
         app:showAsAction="never"/>
-    <!--<item android:id="@+id/action_delete"-->
-    <!--android:title="Delete"-->
-    <!--android:icon="@android:drawable/ic_menu_delete"-->
-    <!--android:orderInCategory="100"-->
-    <!--app:showAsAction="never"/>-->
+    <item android:id="@+id/action_delete"
+        android:title="Delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
     <item android:id="@+id/action_mark_as_start"
           android:title="Mark As Start"
           android:icon="@android:drawable/ic_menu_set_as"

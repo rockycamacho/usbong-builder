@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +38,7 @@ import java.util.List;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
- * Use the {@link usbong.android.builder.fragments.ScreenDetailFragment#newInstance} factory method to
+ * Use the {@link ScreenDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ScreenDetailFragment extends Fragment {
@@ -44,6 +46,12 @@ public class ScreenDetailFragment extends Fragment {
     public static final String TAG = ScreenDetailFragment.class.getSimpleName();
     public static final String EXTRA_SCREEN_ID = "EXTRA_SCREEN_ID";
     public static final String EXTRA_TREE_ID = "EXTRA_TREE_ID";
+    @InjectView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @InjectView(R.id.left_drawer)
+    LinearLayout mLeftDrawer;
+    @InjectView(R.id.right_drawer)
+    LinearLayout mRightDrawer;
 
     private long screenId = -1;
     private Screen currentScreen;
@@ -297,5 +305,17 @@ public class ScreenDetailFragment extends Fragment {
         intent.putExtra(ScreenDetailFragment.EXTRA_TREE_ID, getArguments().getLong(EXTRA_TREE_ID));
         startActivity(intent);
         getActivity().finish();
+    }
+
+    @OnClick(R.id.slide_left)
+    public void slideLeft() {
+        System.out.println("mDrawerLayout.openDrawer(mLeftDrawer)");
+        mDrawerLayout.openDrawer(mLeftDrawer);
+    }
+
+    @OnClick(R.id.slide_right)
+    public void slideRight() {
+        System.out.println("mDrawerLayout.openDrawer(mRightDrawer)");
+        mDrawerLayout.openDrawer(mRightDrawer);
     }
 }

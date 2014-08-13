@@ -40,14 +40,9 @@
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
                     android:text="Save"
-                    custom:pb_colorComplete="@color/green_complete"
-                    custom:pb_colorNormal="@color/blue_normal"
-                    custom:pb_colorPressed="@color/blue_pressed"
-                    custom:pb_colorProgress="@color/purple_progress"
                     custom:pb_textComplete="Saved"
                     custom:pb_textProgress="Saving..."
-                    custom:pb_textError="Error"
-                    custom:pb_colorError="@color/red_error" />
+                    custom:pb_textError="Error" />
 
             <com.dd.processbutton.iml.ActionProcessButton
                     android:id="@android:id/button2"
@@ -58,16 +53,27 @@
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
                     android:text="Save and Exit"
-                    custom:pb_colorComplete="@color/green_complete"
-                    custom:pb_colorNormal="@color/blue_normal"
-                    custom:pb_colorPressed="@color/blue_pressed"
-                    custom:pb_colorProgress="@color/purple_progress"
                     custom:pb_textComplete="Saved"
                     custom:pb_textProgress="Saving..."
-                    custom:pb_textError="Error"
-                    custom:pb_colorError="@color/red_error" />
+                    custom:pb_textError="Error" />
 
         </LinearLayout>
+
+        <ImageView
+                android:id="@+id/slide_left"
+                android:layout_gravity="center|left"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:background="#33333333"
+                android:src="@drawable/slide_left_arrow"/>
+
+        <ImageView
+                android:id="@+id/slide_right"
+                android:layout_gravity="center|right"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:background="#33333333"
+                android:src="@drawable/slide_right_arrow"/>
 
     </FrameLayout>
 

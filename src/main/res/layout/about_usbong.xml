@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center">
+
+        <TextView
+                android:id="@+id/version"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="--Usbong Builder (beta)--\nver: Aug. 19, 2014"/>
+
+        <TextView
+                android:id="@+id/background"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="&#34;Usbong&#34; is a tech company that helps people build their own mobile apps.\n\n Our flagship product, also called, &#34;Usbong&#34;, is an open source platform that helps even non-technical people build their own Android apps for use in data collection, assessment, training, screening, diagnostics, and digital storytelling by putting together components to form a &#34;tree&#34; using a Graphical User Interface (GUI), Google Drive Spreadsheet, or Usbong Builder."/>
+
+        <TextView
+                android:id="@+id/people"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Usbong Social Systems, Inc.\n--Core Developers--\nMichael B. Syson (Founder)\nDiane Jayne C. Gonzales (Community)\nRocky Camacho (Builder)\n"/>
+
+        <TextView
+                android:id="@+id/contact"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Contact:\nWebsite: www.usbong.ph\nMailing List: usbong-users@googlegroups.com\nEmail: usbong.ph@gmail.com\n"/>
+
+        <TextView
+                android:id="@+id/copyright"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Copyright 2011-2014"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -17,7 +17,8 @@
 
         <activity
                 android:name="usbong.android.builder.activities.MainActivity"
-                android:label="@string/app_name">
+                android:label="@string/app_name"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -25,19 +26,22 @@
             </intent-filter>
         </activity>
         <activity android:name="usbong.android.builder.activities.UtreeActivity"
-                android:parentActivityName="usbong.android.builder.activities.MainActivity" >>
+                android:parentActivityName="usbong.android.builder.activities.MainActivity"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name="usbong.android.builder.activities.ScreenListActivity"
                 android:label="@string/title_activity_screen_list"
-                android:parentActivityName="usbong.android.builder.activities.MainActivity" >
+                android:parentActivityName="usbong.android.builder.activities.MainActivity"
+                android:screenOrientation="portrait">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="usbong.android.builder.activities.MainActivity" />
         </activity>
         <activity android:name="usbong.android.builder.activities.ScreenActivity"
-                  android:parentActivityName="usbong.android.builder.activities.ScreenListActivity" >
+                  android:parentActivityName="usbong.android.builder.activities.ScreenListActivity"
+                  android:screenOrientation="portrait">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -47,7 +51,8 @@
         <activity
                 android:name="usbong.android.builder.activities.ScreenDetailActivity"
                 android:label="Screen Detail"
-                android:parentActivityName="usbong.android.builder.activities.ScreenListActivity" >
+                android:parentActivityName="usbong.android.builder.activities.ScreenListActivity"
+                android:screenOrientation="portrait">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -55,17 +60,30 @@
         </activity>
         <activity
                 android:name="usbong.android.builder.activities.SelectScreenActivity"
-                android:label="Select screen">
+                android:label="Select screen"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name="usbong.android.builder.activities.SelectDecisionActivity"
-                android:label="Add decision">
+                android:label="Add decision"
+                android:screenOrientation="portrait">
         </activity>
 
         <activity
                 android:name="com.nononsenseapps.filepicker.FilePickerActivity"
                 android:label="@string/app_name"
                 android:theme="@style/FilePicker.Theme">
+        </activity>
+
+        <activity
+                android:name=".activities.AboutUsbongActivity"
+                android:label="About Usbong"
+                android:parentActivityName="usbong.android.builder.activities.MainActivity"
+                android:screenOrientation="portrait">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="usbong.android.builder.activities.MainActivity" />
         </activity>
 
         <!--<activity-->

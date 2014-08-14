@@ -15,6 +15,7 @@ import butterknife.OnItemClick;
 import de.greenrobot.event.EventBus;
 import rx.Observer;
 import usbong.android.builder.R;
+import usbong.android.builder.activities.AboutUsbongActivity;
 import usbong.android.builder.activities.ScreenListActivity;
 import usbong.android.builder.activities.UtreeActivity;
 import usbong.android.builder.adapters.UtreeAdapter;
@@ -213,6 +214,9 @@ public class UtreeListFragment extends Fragment implements Observer<List<Utree>>
                 Log.e(TAG, e.getMessage(), e);
                 Toast.makeText(getActivity(), getString(R.string.no_file_managers_found), Toast.LENGTH_SHORT).show();
             }
+        } else if (item.getItemId() == R.id.action_about) {
+            Intent intent = new Intent(getActivity(), AboutUsbongActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

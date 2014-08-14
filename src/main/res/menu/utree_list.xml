@@ -13,4 +13,9 @@
           android:icon="@android:drawable/ic_menu_slideshow"
           android:title="Import .utree"
           app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_about"
+          android:icon="@android:drawable/ic_menu_info_details"
+          android:title="About Usbong"
+          app:showAsAction="never" />
 </menu>

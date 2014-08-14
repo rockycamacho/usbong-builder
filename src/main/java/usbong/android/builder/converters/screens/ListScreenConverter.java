@@ -20,6 +20,6 @@ public class ListScreenConverter implements ScreenConverter {
         if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.getName().equals(listScreenDetails.getType())) {
             screenType = UsbongScreenType.CHECKLIST.getName();
         }
-        return screen + SEPARATOR + StringUtils.toUsbongText(listScreenDetails.getText());
+        return screenType + SEPARATOR + StringUtils.toUsbongText(listScreenDetails.getText());
     }
 }

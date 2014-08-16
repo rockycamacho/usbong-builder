@@ -16,6 +16,8 @@ import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.fragments.dialogs.DecisionListDialogFragment;
 import usbong.android.builder.utils.StringUtils;
 
+import java.util.ArrayList;
+
 public class SelectDecisionActivity extends ActionBarActivity {
 
     private static final String TAG = SelectDecisionActivity.class.getSimpleName();
@@ -23,13 +25,18 @@ public class SelectDecisionActivity extends ActionBarActivity {
     public static final String EXTRA_SCREEN_ID = "EXTRA_SCREEN_ID";
     public static final String EXTRA_TREE_ID = "EXTRA_TREE_ID";
     public static final String EXTRA_CONDITION = "EXTRA_CONDITION";
+    public static final String EXTRA_POSSIBLE_DECISIONS = "EXTRA_POSSIBLE_DECISIONS";
+    public static final String EXTRA_CONDITION_PREFIX = "EXTRA_CONDITION_PREFIX";
+    public static final String DEFAULT_CONDITION_PREFIX = "DECISION";
     @InjectView(R.id.decision)
     FloatLabeledEditText decision;
     @InjectView(android.R.id.button1)
     Button selectScreen;
 
+    private ArrayList<String> decisions = new ArrayList<String>();
     private long screenId = -1;
     private long treeId = -1;
+    private String conditionPrefix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,11 @@ public class SelectDecisionActivity extends ActionBarActivity {
         if (getIntent() != null) {
             screenId = getIntent().getLongExtra(EXTRA_SCREEN_ID, -1);
             treeId = getIntent().getLongExtra(EXTRA_TREE_ID, -1);
+            conditionPrefix = getIntent().getStringExtra(EXTRA_CONDITION_PREFIX);
+            if(conditionPrefix == null) {
+                conditionPrefix = DEFAULT_CONDITION_PREFIX;
+            }
+            decisions = getIntent().getStringArrayListExtra(EXTRA_POSSIBLE_DECISIONS);
         }
         if (screenId == -1) {
             throw new IllegalArgumentException("screen id is required");
@@ -57,6 +69,21 @@ public class SelectDecisionActivity extends ActionBarActivity {
             Toast.makeText(this, "Please input a decision", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(decisions != null && !decisions.isEmpty()) {
+            boolean isValidDecisionText = false;
+            for(String decisionText : decisions) {
+                if(decision.getTextString().trim().equals(decisionText)) {
+                    isValidDecisionText = true;
+                    break;
+                }
+            }
+            if(!isValidDecisionText) {
+                Log.w(TAG, "Invalid decision text");
+                Toast.makeText(this, "Please choose a decision text by selecting one from the list", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
         Intent data = new Intent(this, SelectScreenActivity.class);
         data.putExtra(SelectScreenFragment.EXTRA_SCREEN_RELATION, SelectScreenFragment.CHILD);
         data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
@@ -66,7 +93,7 @@ public class SelectDecisionActivity extends ActionBarActivity {
 
     @OnClick(android.R.id.button2)
     public void onOpenDialog() {
-        DecisionListDialogFragment dialog = DecisionListDialogFragment.newInstance();
+        DecisionListDialogFragment dialog = DecisionListDialogFragment.newInstance(decisions);
         dialog.setCallback(new DecisionListDialogFragment.Callback() {
             @Override
             public void onSelect(String text) {
@@ -80,7 +107,7 @@ public class SelectDecisionActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_CHILD_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                data.putExtra(EXTRA_CONDITION, "DECISION" + "~" + decision.getText().toString().trim());
+                data.putExtra(EXTRA_CONDITION, conditionPrefix + "~" + decision.getText().toString().trim());
                 setResult(Activity.RESULT_OK, data);
                 finish();
             }

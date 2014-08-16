@@ -1,23 +1,33 @@
 package usbong.android.builder.fragments.screens;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableString;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Spinner;
+import android.widget.*;
 import butterknife.InjectView;
+import butterknife.OnItemSelected;
 import com.wrapp.floatlabelededittext.FloatLabeledEditText;
+import de.greenrobot.event.EventBus;
+import rx.Observer;
 import usbong.android.builder.R;
+import usbong.android.builder.activities.SelectDecisionActivity;
+import usbong.android.builder.activities.SelectScreenActivity;
 import usbong.android.builder.adapters.ListTypeAdapter;
-import usbong.android.builder.adapters.ProcessingTypeAdapter;
-import usbong.android.builder.enums.ImagePosition;
+import usbong.android.builder.events.OnNeedRefreshScreen;
+import usbong.android.builder.exceptions.FormInputException;
+import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.details.ImageScreenDetails;
+import usbong.android.builder.models.ScreenRelation;
 import usbong.android.builder.models.details.ListScreenDetails;
-import usbong.android.builder.models.details.ProcessingScreenDetails;
 import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -25,12 +35,20 @@ import java.util.Arrays;
  */
 public class ListScreenFragment extends BaseScreenFragment {
 
+    public static final String TAG = ListScreenFragment.class.getSimpleName();
+    public static final int ADD_CHILD_FOR_ANSWER_REQUEST_CODE = 200;
     @InjectView(R.id.content)
     FloatLabeledEditText mContent;
     @InjectView(R.id.type)
     Spinner mType;
     @InjectView(R.id.items)
     FloatLabeledEditText mItems;
+    @InjectView(R.id.has_answer)
+    CheckBox hasAnswer;
+    @InjectView(R.id.answers)
+    FloatLabeledEditText answers;
+    @InjectView(R.id.number_of_checks_needed)
+    FloatLabeledEditText numberOfChecksNeeded;
 
     private ListTypeAdapter adapter;
 
@@ -62,8 +80,30 @@ public class ListScreenFragment extends BaseScreenFragment {
         adapter.setNotifyOnChange(false);
         adapter.add(ListScreenDetails.ListType.NO_RESPONSE);
         adapter.add(ListScreenDetails.ListType.SINGLE_RESPONSE);
+        adapter.add(ListScreenDetails.ListType.MULTIPLE_RESPONSE);
         adapter.notifyDataSetChanged();
         mType.setAdapter(adapter);
+        numberOfChecksNeeded.setText("1");
+    }
+
+    @OnItemSelected(R.id.type)
+    public void onTypeSelected() {
+        ListScreenDetails.ListType selectedListType = adapter.getItem(mType.getSelectedItemPosition());
+        if(ListScreenDetails.ListType.NO_RESPONSE.equals(selectedListType)) {
+            hasAnswer.setVisibility(View.GONE);
+            answers.setVisibility(View.GONE);
+            numberOfChecksNeeded.setVisibility(View.GONE);
+        }
+        else if(ListScreenDetails.ListType.SINGLE_RESPONSE.equals(selectedListType)) {
+            hasAnswer.setVisibility(View.VISIBLE);
+            answers.setVisibility(View.VISIBLE);
+            numberOfChecksNeeded.setVisibility(View.GONE);
+        }
+        else if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.equals(selectedListType)) {
+            hasAnswer.setVisibility(View.GONE);
+            answers.setVisibility(View.GONE);
+            numberOfChecksNeeded.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -79,13 +119,27 @@ public class ListScreenFragment extends BaseScreenFragment {
                 mType.setSelection(adapter.getPosition(listType));
             }
             StringBuilder sb = new StringBuilder();
-            for(String item : listScreenDetails.getItems()) {
-                if(sb.length() > 0) {
+            for (String item : listScreenDetails.getItems()) {
+                if (sb.length() > 0) {
                     sb.append("\n");
                 }
                 sb.append(item);
             }
             mItems.setText(sb.toString());
+            hasAnswer.setChecked(listScreenDetails.isHasAnswer());
+            sb.setLength(0);
+            if (listScreenDetails.getAnswers() != null) {
+                for (String answer : listScreenDetails.getAnswers()) {
+                    if (sb.length() > 0) {
+                        sb.append("\n");
+                    }
+                    sb.append(answer);
+                }
+            }
+            answers.setText(sb.toString());
+            numberOfChecksNeeded.setText(String.valueOf(listScreenDetails.getNumberOfChecksNeeded()));
+
+            onTypeSelected();
         }
         mContent.setText(new SpannableString(Html.fromHtml(details)));
     }
@@ -101,6 +155,134 @@ public class ListScreenFragment extends BaseScreenFragment {
         ListScreenDetails.ListType selectedListType = adapter.getItem(mType.getSelectedItemPosition());
         listScreenDetails.setType(selectedListType.getName());
 
+        listScreenDetails.setHasAnswer(hasAnswer.isChecked());
+        String[] answersArray = answers.getTextString().trim().split("\n");
+        if (answersArray.length == 0 && listScreenDetails.isHasAnswer() && ListScreenDetails.ListType.SINGLE_RESPONSE.equals(selectedListType)) {
+            throw new FormInputException("Please input at least one answer");
+        }
+        listScreenDetails.setAnswers(Arrays.asList(answersArray));
+        if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.equals(selectedListType)) {
+            try {
+                int checksNeeded = Integer.parseInt(numberOfChecksNeeded.getTextString());
+                if(checksNeeded > listScreenDetails.getItems().size()) {
+                    throw new FormInputException("Number of checks is bigger than number of items in list");
+                }
+                if(checksNeeded <= 0) {
+                    throw new FormInputException("Invalid value for number of checks");
+                }
+                listScreenDetails.setNumberOfChecksNeeded(checksNeeded);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+                throw new FormInputException("Invalid value for number of checks");
+            }
+        }
         return JsonUtils.toJson(listScreenDetails);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_add_child) {
+            ListScreenDetails.ListType selectedListType = adapter.getItem(mType.getSelectedItemPosition());
+            if((ListScreenDetails.ListType.SINGLE_RESPONSE.equals(selectedListType) && hasAnswer.isChecked()) ||
+                    ListScreenDetails.ListType.MULTIPLE_RESPONSE.equals(selectedListType)) {
+                Intent data = new Intent(getActivity(), SelectDecisionActivity.class);
+                ArrayList<String> decisions = new ArrayList<String>();
+                decisions.add("Correct");
+                decisions.add("Incorrect");
+                data.putStringArrayListExtra(SelectDecisionActivity.EXTRA_POSSIBLE_DECISIONS, decisions);
+                data.putExtra(SelectDecisionActivity.EXTRA_SCREEN_ID, screenId);
+                data.putExtra(SelectDecisionActivity.EXTRA_TREE_ID, treeId);
+                data.putExtra(SelectDecisionActivity.EXTRA_CONDITION_PREFIX, "ANSWER");
+                getParentFragment().startActivityForResult(data, ADD_CHILD_FOR_ANSWER_REQUEST_CODE);
+            }
+            else {
+                Intent data = new Intent(getActivity(), SelectScreenActivity.class);
+                data.putExtra(SelectScreenFragment.EXTRA_SCREEN_RELATION, SelectScreenFragment.CHILD);
+                data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
+                data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
+                getParentFragment().startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
+            }
+        }
+        if (item.getItemId() == R.id.action_remove_child) {
+            controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
+                @Override
+                public void onCompleted() {
+                    Toast.makeText(getActivity(), "Screen navigation removed", Toast.LENGTH_SHORT).show();
+                    EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNext(Object o) {
+
+                }
+            });
+        }
+        return true;
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", Intent data)");
+        if (requestCode == ADD_CHILD_FOR_ANSWER_REQUEST_CODE) {
+            Log.d(TAG, "requestCode == ADD_CHILD_FOR_ANSWER_REQUEST_CODE");
+            if (resultCode == Activity.RESULT_OK) {
+                updateChildrenForAnswers(data);
+            }
+        }
+    }
+
+    private void updateChildrenForAnswers(Intent data) {
+        long childScreenId = data.getLongExtra(SelectScreenFragment.EXTRA_SELECTED_SCREEN_ID, -1);
+        final String condition = data.getStringExtra(SelectDecisionActivity.EXTRA_CONDITION);
+        controller.loadScreen(childScreenId, new Observer<Screen>() {
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(Screen childScreen) {
+                addOrUpdateDecision(childScreen, condition);
+            }
+        });
+    }
+
+    private void addOrUpdateDecision(Screen childScreen, String condition) {
+        controller.addOrUpdateRelation(currentScreen, childScreen, condition, new Observer<ScreenRelation>() {
+            @Override
+            public void onCompleted() {
+                Toast.makeText(getActivity(), "Screen navigation saved", Toast.LENGTH_SHORT).show();
+                EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(ScreenRelation screenRelation) {
+
+            }
+        });
+    }
+
+
 }

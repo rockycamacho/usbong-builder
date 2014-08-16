@@ -45,7 +45,7 @@
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                     android:id="@+id/content"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:gravity="top|left"
                     float:fletHintTextColor="@color/usbong_color"
                     float:fletFloatingHint="Content"
@@ -68,6 +68,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Multiple lines"/>
+
+            <CheckBox
+                    android:id="@+id/has_answer"
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Has answer"/>
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:id="@+id/answers"
+                    android:layout_marginLeft="60dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    float:fletHintTextColor="@color/usbong_color"
+                    float:fletFloatingHint="Answer (separated by new lines)"
+                    float:fletImeOptions="flagNoExtractUi"
+                    float:fletInputType="textMultiLine"/>
 
             <RadioButton
                     android:id="@+id/numeric"

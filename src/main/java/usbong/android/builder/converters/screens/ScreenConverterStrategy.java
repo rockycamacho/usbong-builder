@@ -28,6 +28,7 @@ public class ScreenConverterStrategy {
     }
 
     public static final String DECISION_PREFIX = "DECISION~";
+    public static final String ANSWER_PREFIX = "ANSWER~";
 
     public String getName(Screen screen) {
         if (SCREEN_CONVERTER_MAP.containsKey(screen.screenType)) {
@@ -41,7 +42,10 @@ public class ScreenConverterStrategy {
             return getName(screenRelation.child);
         } else if (screenRelation.condition.startsWith(DECISION_PREFIX)) {
             return getName(screenRelation.child) + ScreenConverter.SEPARATOR + screenRelation.condition.substring(DECISION_PREFIX.length());
+        } else if (screenRelation.condition.startsWith(ANSWER_PREFIX)) {
+            return getName(screenRelation.child);
         }
+
         return getName(screenRelation.child) + ScreenConverter.SEPARATOR + screenRelation.condition;
     }
 }

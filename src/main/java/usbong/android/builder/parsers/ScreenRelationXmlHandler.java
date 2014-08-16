@@ -50,7 +50,7 @@ public class ScreenRelationXmlHandler extends DefaultHandler {
                 }
                 else {
                     ScreenRelation screenRelation = null;
-                    if (UsbongBuilderScreenType.DECISION.getName().equals(parentScreen.screenType)) {
+                    if (UsbongBuilderScreenType.DECISION.getName().equals(parentScreen.screenType) || !"Any".equals(attributes.getValue("name"))) {
                         screenRelation = DECISION_TRANSITION_HANDLER.handle(qName, attributes);
                     } else {
                         screenRelation = DEFAULT_TRANSITION_HANDLER.handle(qName, attributes);

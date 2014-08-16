@@ -101,6 +101,9 @@ public class UtreeConverter {
                 String transitionTo = strategy.getTransition(screenRelation);
                 if (i == screenRelations.size() - 1) {
                     fw.write("<task name=\"" + transitionTo + "\"></task>");
+                    fw.write(NEWLINE);
+                    fw.write(TAB);
+                    fw.write(TAB);
                     fw.write("<transition to=\"" + transitionTo + "\" name=\"Any\"></transition>");
                 } else {
                     fw.write("<task name=\"" + transitionTo + "\"></task>");
@@ -114,7 +117,8 @@ public class UtreeConverter {
                 fw.write(TAB);
                 fw.write(TAB);
                 String transitionTo = strategy.getTransition(screenRelation);
-                fw.write("<transition to=\"" + transitionTo + "\" name=\"Any\"></transition>");
+                String name = getName(screenRelation);
+                fw.write("<transition to=\"" + transitionTo + "\" name=\"" + name + "\"></transition>");
                 fw.write(NEWLINE);
                 pendingNodes.add(screenRelation.child);
             }
@@ -123,6 +127,17 @@ public class UtreeConverter {
         fw.write("</task-node>");
         fw.write(NEWLINE);
         fw.write(NEWLINE);
+    }
+
+    private String getName(ScreenRelation screenRelation) {
+        String name = "Any";
+        if("ANSWER~Correct".equals(screenRelation.condition)) {
+            name = "Yes";
+        }
+        if("ANSWER~Incorrect".equals(screenRelation.condition)) {
+            name = "No";
+        }
+        return name;
     }
 
     private void createStartNode(Screen screen) throws IOException {

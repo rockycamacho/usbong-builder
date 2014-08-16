@@ -16,10 +16,35 @@ public class ListScreenConverter implements ScreenConverter {
         if(ListScreenDetails.ListType.NO_RESPONSE.getName().equals(listScreenDetails.getType())) {
             return StringUtils.toUsbongText(listScreenDetails.getText());
         }
-        String screenType = UsbongScreenType.RADIO_BUTTONS.getName();
-        if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.getName().equals(listScreenDetails.getType())) {
-            screenType = UsbongScreenType.CHECKLIST.getName();
+        String contentPart = StringUtils.toUsbongText(listScreenDetails.getText());
+        String screenType = StringUtils.EMPTY;
+        if(ListScreenDetails.ListType.SINGLE_RESPONSE.getName().equals(listScreenDetails.getType())) {
+            screenType = UsbongScreenType.RADIO_BUTTONS.getName();
+            if(listScreenDetails.isHasAnswer()) {
+                screenType = UsbongScreenType.RADIO_BUTTONS_WITH_ANSWER.getName();
+                String answerPart = getAnswerPart(listScreenDetails);
+                contentPart += answerPart;
+            }
         }
-        return screenType + SEPARATOR + StringUtils.toUsbongText(listScreenDetails.getText());
+        else  if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.getName().equals(listScreenDetails.getType())) {
+            screenType = UsbongScreenType.CHECKLIST.getName();
+            contentPart = listScreenDetails.getNumberOfChecksNeeded() + SEPARATOR + contentPart;
+        }
+        return screenType + SEPARATOR + contentPart;
+    }
+
+    private String getAnswerPart(ListScreenDetails listScreenDetails) {
+        String answerPart = StringUtils.EMPTY;
+        if(listScreenDetails.isHasAnswer() && listScreenDetails.getAnswers() != null && !listScreenDetails.getAnswers().isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for(String answer : listScreenDetails.getAnswers()) {
+                if(sb.length() > 0) {
+                    sb.append("||");
+                }
+                sb.append(answer);
+            }
+            answerPart = "?Answer=" + sb.toString();
+        }
+        return answerPart;
     }
 }

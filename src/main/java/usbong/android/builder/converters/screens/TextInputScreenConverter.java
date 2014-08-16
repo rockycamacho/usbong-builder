@@ -30,12 +30,37 @@ public class TextInputScreenConverter implements ScreenConverter {
         if (TextInputScreenDetails.ALPHA_NUMERIC.equals(textInputScreenDetails.getInputType())) {
             if (textInputScreenDetails.isMultiLine()) {
                 screenType = UsbongScreenType.TEXT_AREA.getName();
+                if(textInputScreenDetails.isHasAnswer()) {
+                    screenType = UsbongScreenType.TEXT_AREA_WITH_ANSWER.getName();
+                }
             } else {
                 screenType = UsbongScreenType.TEXT_FIELD.getName();
+                if(textInputScreenDetails.isHasAnswer()) {
+                    screenType = UsbongScreenType.TEXT_FIELD_WITH_ANSWER.getName();
+                }
             }
+            String answerPart = getAnswerPart(textInputScreenDetails);
+            content += answerPart;
         } else if (TextInputScreenDetails.NUMERIC.equals(textInputScreenDetails.getInputType())) {
             screenType = UsbongScreenType.TEXT_FIELD_NUMERICAL.getName();
         }
         return screenType + SEPARATOR + content;
+    }
+
+    private String getAnswerPart(TextInputScreenDetails textInputScreenDetails) {
+        String answerPart = StringUtils.EMPTY;
+        if(textInputScreenDetails.isHasAnswer() && textInputScreenDetails.getAnswers() != null && !textInputScreenDetails.getAnswers().isEmpty()) {
+            if(textInputScreenDetails.getAnswers() != null) {
+                StringBuilder sb = new StringBuilder();
+                for (String answer : textInputScreenDetails.getAnswers()) {
+                    if (sb.length() > 0) {
+                        sb.append("||");
+                    }
+                    sb.append(answer);
+                }
+                answerPart = "?Answer=" + sb.toString();
+            }
+        }
+        return answerPart;
     }
 }

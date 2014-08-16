@@ -44,6 +44,8 @@ public class ListScreenDetails {
     private boolean hasAnswer;
     @Expose
     private List<String> answers;
+    @Expose
+    private int numberOfChecksNeeded = 1;
 
     public String getText() {
         return text;
@@ -83,5 +85,13 @@ public class ListScreenDetails {
 
     public void setAnswers(List<String> answers) {
         this.answers = answers;
+    }
+
+    public int getNumberOfChecksNeeded() {
+        return numberOfChecksNeeded;
+    }
+
+    public void setNumberOfChecksNeeded(int numberOfChecksNeeded) {
+        this.numberOfChecksNeeded = numberOfChecksNeeded;
     }
 }

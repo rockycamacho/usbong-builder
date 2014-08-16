@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
 import rx.Observable;
@@ -121,6 +122,33 @@ public class ScreenDetailController implements Controller {
                 screenRelation.condition = condition;
                 screenRelation.save();
                 subscriber.onNext(screenRelation);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void addOrUpdateRelation(final Screen parentScreen, final Screen childScreen, final String condition, Observer<ScreenRelation> observer) {
+        Observable.create(new Observable.OnSubscribe<ScreenRelation>() {
+            @Override
+            public void call(Subscriber<? super ScreenRelation> subscriber) {
+                ScreenRelation existingRelationWithSameCondition = new Select().from(ScreenRelation.class)
+                        .where("parent = ? and condition = ?", parentScreen.getId(), condition)
+                        .executeSingle();
+                if(existingRelationWithSameCondition != null) {
+                    existingRelationWithSameCondition.child = childScreen;
+                    existingRelationWithSameCondition.save();
+                    subscriber.onNext(existingRelationWithSameCondition);
+                }
+                else {
+                    ScreenRelation screenRelation = new ScreenRelation();
+                    screenRelation.parent = parentScreen;
+                    screenRelation.child = childScreen;
+                    screenRelation.condition = condition;
+                    screenRelation.save();
+                    subscriber.onNext(screenRelation);
+                }
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())

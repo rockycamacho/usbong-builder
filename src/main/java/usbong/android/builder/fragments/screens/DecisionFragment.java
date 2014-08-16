@@ -138,13 +138,13 @@ public class DecisionFragment extends BaseScreenFragment {
 
             @Override
             public void onNext(Screen childScreen) {
-                addDecision(childScreen, condition);
+                addOrUpdateDecision(childScreen, condition);
             }
         });
     }
 
-    private void addDecision(Screen childScreen, String condition) {
-        controller.addRelation(currentScreen, childScreen, condition, new Observer<ScreenRelation>() {
+    private void addOrUpdateDecision(Screen childScreen, String condition) {
+        controller.addOrUpdateRelation(currentScreen, childScreen, condition, new Observer<ScreenRelation>() {
             @Override
             public void onCompleted() {
                 Toast.makeText(getActivity(), "Screen navigation saved", Toast.LENGTH_SHORT).show();

@@ -15,11 +15,11 @@ public class StringUtils {
     }
 
     public static String toUsbongText(String text) {
-        return text.replaceAll("\n", "<br>").replaceAll("\\<", "\\{").replaceAll("\\>", "\\}");
+        return text.replaceAll("\n", "<br>").replaceAll("\\<", "\\{").replaceAll("\\>", "\\}").replaceAll("(<(@[a-zA-Z][a-zA-Z0-9]*)>)", "{$2}");
     }
 
     public static String toUsbongBuilderText(String text) {
-        return text.replaceAll("<br>", "\n").replaceAll("\\{", "\\<").replaceAll("\\}", "\\>");
+        return text.replaceAll("<br>", "\n").replaceAll("\\{", "\\<").replaceAll("\\}", "\\>").replaceAll("(<(@[a-zA-Z][a-zA-Z0-9]*)>)", "{$2}");
     }
 
 }

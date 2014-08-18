@@ -7,6 +7,7 @@
     <uses-sdk android:minSdkVersion="15"
               android:targetSdkVersion="19"/>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application android:name="usbong.android.builder.UsbongBuilder"
@@ -103,6 +104,8 @@
         <meta-data
                 android:name="AA_DB_VERSION"
                 android:value="9"/>
+
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="e2282ab7e34460f9c175a7d31af1ea2dcb62b808"/>
 
     </application>
 </manifest>

@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
 import com.activeandroid.ActiveAndroid;
+import com.crashlytics.android.Crashlytics;
 
 /**
  * Created by Rocky Camacho on 6/26/2014.
@@ -18,6 +19,8 @@ public class UsbongBuilder extends Application {
         super.onCreate();
         ActiveAndroid.initialize(this);
         ActiveAndroid.setLoggingEnabled(true);
+
+        Crashlytics.start(this);
 
         if (DEVELOPER_MODE) {
             //enableStrictMode();

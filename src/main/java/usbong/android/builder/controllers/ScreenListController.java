@@ -7,10 +7,12 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import usbong.android.builder.models.Screen;
 import usbong.android.builder.models.ScreenRelation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,6 +70,28 @@ public class ScreenListController implements Controller {
                         .execute();
                 subscriber.onNext(null);
                 subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void fetchChildrenScreens(final long screenId, Observer<List<Screen>> observer) {
+        Observable.create(new Observable.OnSubscribe<List<ScreenRelation>>() {
+            @Override
+            public void call(Subscriber<? super List<ScreenRelation>> subscriber) {
+                List<ScreenRelation> screenRelations = ScreenRelation.getChildrenOf(screenId);
+                subscriber.onNext(screenRelations);
+                subscriber.onCompleted();
+            }
+        }).map(new Func1<List<ScreenRelation>, List<Screen>>() {
+            @Override
+            public List<Screen> call(List<ScreenRelation> screenRelations) {
+                List<Screen> screens = new ArrayList<Screen>();
+                for(ScreenRelation screenRelation : screenRelations) {
+                    screens.add(screenRelation.child);
+                }
+                return screens;
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

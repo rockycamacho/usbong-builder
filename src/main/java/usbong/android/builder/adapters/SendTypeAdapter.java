@@ -8,17 +8,17 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import usbong.android.builder.models.details.ListScreenDetails;
+import usbong.android.builder.models.details.SendScreenDetails;
 
 /**
  * Created by Rocky Camacho on 6/27/2014.
  */
-public class ListTypeAdapter extends ArrayAdapter<ListScreenDetails.ListType> {
+public class SendTypeAdapter extends ArrayAdapter<SendScreenDetails.Type> {
 
     public static final int LAYOUT_RES_ID = android.R.layout.simple_list_item_1;
     private final Context context;
 
-    public ListTypeAdapter(Context context) {
+    public SendTypeAdapter(Context context) {
         super(context, LAYOUT_RES_ID);
         this.context = context;
     }
@@ -33,8 +33,8 @@ public class ListTypeAdapter extends ArrayAdapter<ListScreenDetails.ListType> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        ListScreenDetails.ListType listType = getItem(position);
-        viewHolder.name.setText(listType.getName());
+        SendScreenDetails.Type type = getItem(position);
+        viewHolder.name.setText(type.getName());
         return convertView;
     }
 

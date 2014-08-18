@@ -21,8 +21,12 @@ public class ScreenFragmentFactory {
             return TextInputScreenFragment.newInstance(arguments);
         } else if (UsbongBuilderScreenType.SPECIAL_INPUT.getName().equals(screenType)) {
             return SpecialInputScreenFragment.newInstance(arguments);
-        } else if (UsbongBuilderScreenType.PROCESSING.getName().equals(screenType)) {
-            return ProcessingScreenFragment.newInstance(arguments);
+        } else if (UsbongBuilderScreenType.SEND.getName().equals(screenType)) {
+            return SendScreenFragment.newInstance(arguments);
+        } else if (UsbongBuilderScreenType.VIDEO.getName().equals(screenType)) {
+            return VideoScreenFragment.newInstance(arguments);
+        } else if (UsbongBuilderScreenType.MISC.getName().equals(screenType)) {
+            return MiscScreenFragment.newInstance(arguments);
         } else if (UsbongBuilderScreenType.LIST.getName().equals(screenType)) {
             return ListScreenFragment.newInstance(arguments);
         }

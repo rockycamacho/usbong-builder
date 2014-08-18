@@ -23,8 +23,10 @@ public class ScreenRelation extends Model implements BaseColumns, Serializable {
     @Column(name = "condition")
     public String condition;
 
-    public static void deleteAll(long screenId) {
+    public static int deleteAll(long screenId) {
+        int count = new Select().from(ScreenRelation.class).where("parent = ?", screenId).count();
         new Delete().from(ScreenRelation.class).where("parent = ?", screenId).execute();
+        return count;
     }
 
     public static List<ScreenRelation> getParentsOf(long screenId) {

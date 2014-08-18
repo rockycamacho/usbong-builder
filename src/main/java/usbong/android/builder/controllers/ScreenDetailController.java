@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Model;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
 import rx.Observable;
@@ -33,12 +34,12 @@ public class ScreenDetailController implements Controller {
     private static final String[] IMAGE_EXTENSIONS = new String[]{".jpg", ".png", ".jpeg"};
     private static final String[] VIDEO_EXTENSIONS = new String[]{".3gp", ".mp4", ".ts", ".webm", ".mkv"};
 
-    public void deleteAllChildScreens(final long screenId, Observer<Object> observer) {
-        Observable.create(new Observable.OnSubscribe<Object>() {
+    public void deleteAllChildScreens(final long screenId, Observer<Integer> observer) {
+        Observable.create(new Observable.OnSubscribe<Integer>() {
             @Override
-            public void call(Subscriber<? super Object> subscriber) {
-                ScreenRelation.deleteAll(screenId);
-                subscriber.onNext(null);
+            public void call(Subscriber<? super Integer> subscriber) {
+                int deletedItems = ScreenRelation.deleteAll(screenId);
+                subscriber.onNext(deletedItems);
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())
@@ -149,6 +150,26 @@ public class ScreenDetailController implements Controller {
                     screenRelation.save();
                     subscriber.onNext(screenRelation);
                 }
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public void removeRelation(final Screen parentScreen, final Screen childScreen, Observer<Integer> observer) {
+        Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                int count = new Select().from(ScreenRelation.class)
+                        .where("parent = ? and child = ?", parentScreen.getId(), childScreen.getId())
+                        .count();
+                if(count > 0) {
+                    new Delete().from(ScreenRelation.class)
+                            .where("parent = ? and child = ?", parentScreen.getId(), childScreen.getId())
+                            .execute();
+                }
+                subscriber.onNext(count);
                 subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io())

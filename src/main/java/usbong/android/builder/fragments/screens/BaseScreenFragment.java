@@ -34,6 +34,7 @@ public abstract class BaseScreenFragment extends Fragment {
 
     private static final String TAG = BaseScreenFragment.class.getSimpleName();
     public static final int ADD_CHILD_REQUEST_CODE = 101;
+    protected static final int DELETE_SELECTED_CHILD_REQUEST_CODE = 301;
     public static final String RELATION_CONDITION = "DEFAULT";
 
     protected long screenId = -1;
@@ -136,24 +137,11 @@ public abstract class BaseScreenFragment extends Fragment {
             getParentFragment().startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
         }
         if (item.getItemId() == R.id.action_remove_child) {
-            controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
-                @Override
-                public void onCompleted() {
-                    Toast.makeText(getActivity(), "Screen navigation removed", Toast.LENGTH_SHORT).show();
-                    EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onNext(Object o) {
-
-                }
-            });
+            Intent data = new Intent(getActivity(), SelectScreenActivity.class);
+            data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
+            data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
+            data.putExtra(SelectScreenFragment.EXTRA_IS_FOR_DELETE_CHILD, true);
+            getParentFragment().startActivityForResult(data, DELETE_SELECTED_CHILD_REQUEST_CODE);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -165,12 +153,65 @@ public abstract class BaseScreenFragment extends Fragment {
         if (requestCode == ADD_CHILD_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             updateChildren(data);
         }
+        if (requestCode == DELETE_SELECTED_CHILD_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                deleteConnectionWithSelectedScreen(data);
+            }
+        }
+    }
+
+    private void deleteConnectionWithSelectedScreen(Intent data) {
+        long childScreenId = data.getLongExtra(SelectScreenFragment.EXTRA_SELECTED_SCREEN_ID, -1);
+        controller.loadScreen(childScreenId, new Observer<Screen>() {
+
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(Screen childScreen) {
+                deleteRelationWith(childScreen);
+            }
+        });
+    }
+
+    private void deleteRelationWith(Screen childScreen) {
+        controller.removeRelation(currentScreen, childScreen, new Observer<Integer>() {
+            @Override
+            public void onCompleted() {
+                EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(Integer count) {
+                if(count > 0) {
+                    Toast.makeText(getActivity(), "Screen children removed", Toast.LENGTH_SHORT).show();
+                    EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
+                }
+                else {
+                    Toast.makeText(getActivity(), "This screen has no children.", Toast.LENGTH_SHORT).show();
+                    EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
+                }
+            }
+        });
     }
 
     protected void updateChildren(Intent data) {
         Log.d(TAG, "resultCode == Activity.RESULT_OK");
         long childScreenId = data.getLongExtra(SelectScreenFragment.EXTRA_SELECTED_SCREEN_ID, -1);
-        Toast.makeText(getActivity(), "screenId: " + childScreenId, Toast.LENGTH_SHORT).show();
 
         controller.loadScreen(childScreenId, new Observer<Screen>() {
 
@@ -193,7 +234,7 @@ public abstract class BaseScreenFragment extends Fragment {
     }
 
     private void replaceChildren(final Screen childScreen) {
-        controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
+        controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Integer>() {
             @Override
             public void onCompleted() {
                 saveChildScreen(childScreen);
@@ -206,7 +247,7 @@ public abstract class BaseScreenFragment extends Fragment {
             }
 
             @Override
-            public void onNext(Object o) {
+            public void onNext(Integer o) {
 
             }
         });

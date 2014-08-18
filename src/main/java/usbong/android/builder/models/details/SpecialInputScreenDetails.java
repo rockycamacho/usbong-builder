@@ -8,13 +8,11 @@ import com.google.gson.annotations.Expose;
 public class SpecialInputScreenDetails {
 
     public static enum InputType {
-        VIDEO("video"),
         DRAW("draw"),
         DATE("date"),
         AUDIO("audio"),
         CAMERA("camera"),
-        QR_CODE("qrCode"),
-        TIMESTAMP("timestamp");
+        QR_CODE("qrCode");
 
         private final String name;
 
@@ -35,8 +33,6 @@ public class SpecialInputScreenDetails {
             return null;
         }
     }
-
-    public static final String VIDEO = "video";
 
     @Expose
     private String text;

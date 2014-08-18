@@ -11,7 +11,9 @@ public enum UsbongBuilderScreenType {
     TEXT_AND_IMAGE("textImage"),
     TEXT_INPUT("textInput"),
     SPECIAL_INPUT("specialInput"),
-    PROCESSING("processing"),
+    VIDEO("video"),
+    MISC("misc"),
+    SEND("send"),
     LIST("list");
 
     private final String name;

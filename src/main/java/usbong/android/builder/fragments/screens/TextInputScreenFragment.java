@@ -216,24 +216,11 @@ public class TextInputScreenFragment extends BaseScreenFragment {
             }
         }
         if (item.getItemId() == R.id.action_remove_child) {
-            controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
-                @Override
-                public void onCompleted() {
-                    Toast.makeText(getActivity(), "Screen navigation removed", Toast.LENGTH_SHORT).show();
-                    EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onNext(Object o) {
-
-                }
-            });
+            Intent data = new Intent(getActivity(), SelectScreenActivity.class);
+            data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
+            data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
+            data.putExtra(SelectScreenFragment.EXTRA_IS_FOR_DELETE_CHILD, true);
+            getParentFragment().startActivityForResult(data, DELETE_SELECTED_CHILD_REQUEST_CODE);
         }
         return true;
     }

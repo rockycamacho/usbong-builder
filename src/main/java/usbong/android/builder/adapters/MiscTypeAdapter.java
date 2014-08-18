@@ -8,17 +8,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import usbong.android.builder.models.details.ProcessingScreenDetails;
+import usbong.android.builder.models.details.MiscScreenDetails;
+import usbong.android.builder.models.details.SendScreenDetails;
 
 /**
  * Created by Rocky Camacho on 6/27/2014.
  */
-public class ProcessingTypeAdapter extends ArrayAdapter<ProcessingScreenDetails.ProcessingType> {
+public class MiscTypeAdapter extends ArrayAdapter<MiscScreenDetails.Type> {
 
     public static final int LAYOUT_RES_ID = android.R.layout.simple_list_item_1;
     private final Context context;
 
-    public ProcessingTypeAdapter(Context context) {
+    public MiscTypeAdapter(Context context) {
         super(context, LAYOUT_RES_ID);
         this.context = context;
     }
@@ -33,8 +34,8 @@ public class ProcessingTypeAdapter extends ArrayAdapter<ProcessingScreenDetails.
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        ProcessingScreenDetails.ProcessingType processingType = getItem(position);
-        viewHolder.name.setText(processingType.getName());
+        MiscScreenDetails.Type type = getItem(position);
+        viewHolder.name.setText(type.getName());
         return convertView;
     }
 

@@ -22,7 +22,7 @@ public enum UsbongScreenType {
     CLASSIFICATION("classification"),
     CHECKLIST("checkList"),
     RADIO_BUTTONS("radioButtons"),
-    AUDIO_RECORDER("audioRecorder"),
+    AUDIO_RECORDER("audioRecord"),
     PHOTO_CAPTURE("photoCapture"),
     LINK("link"),
     SEND_TO_WEBSERVER("sendToWebServer"),

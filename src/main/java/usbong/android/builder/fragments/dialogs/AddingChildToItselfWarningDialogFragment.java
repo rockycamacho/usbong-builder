@@ -14,6 +14,7 @@ import android.support.v4.app.DialogFragment;
  */
 public class AddingChildToItselfWarningDialogFragment extends DialogFragment {
 
+    public static final String TAG = AddingChildToItselfWarningDialogFragment.class.getSimpleName();
     private Callback callback;
 
     /**

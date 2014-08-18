@@ -23,7 +23,9 @@ public class ScreenConverterStrategy {
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.IMAGE.getName(), new ImageDisplayScreenConverter());
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.TEXT_INPUT.getName(), new TextInputScreenConverter());
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.SPECIAL_INPUT.getName(), new SpecialInputScreenConverter());
-        SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.PROCESSING.getName(), new ProcessingScreenConverter());
+        SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.SEND.getName(), new SendScreenConverter());
+        SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.VIDEO.getName(), new VideoScreenConverter());
+        SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.MISC.getName(), new MiscScreenConverter());
         SCREEN_CONVERTER_MAP.put(UsbongBuilderScreenType.LIST.getName(), new ListScreenConverter());
     }
 

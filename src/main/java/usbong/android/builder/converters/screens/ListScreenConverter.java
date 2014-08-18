@@ -35,15 +35,8 @@ public class ListScreenConverter implements ScreenConverter {
 
     private String getAnswerPart(ListScreenDetails listScreenDetails) {
         String answerPart = StringUtils.EMPTY;
-        if(listScreenDetails.isHasAnswer() && listScreenDetails.getAnswers() != null && !listScreenDetails.getAnswers().isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for(String answer : listScreenDetails.getAnswers()) {
-                if(sb.length() > 0) {
-                    sb.append("||");
-                }
-                sb.append(answer);
-            }
-            answerPart = "?Answer=" + sb.toString();
+        if(listScreenDetails.isHasAnswer()) {
+            answerPart = "?Answer=" + listScreenDetails.getAnswer();
         }
         return answerPart;
     }

@@ -45,8 +45,8 @@ public class ListScreenFragment extends BaseScreenFragment {
     FloatLabeledEditText mItems;
     @InjectView(R.id.has_answer)
     CheckBox hasAnswer;
-    @InjectView(R.id.answers)
-    FloatLabeledEditText answers;
+    @InjectView(R.id.answer)
+    FloatLabeledEditText answer;
     @InjectView(R.id.number_of_checks_needed)
     FloatLabeledEditText numberOfChecksNeeded;
 
@@ -91,17 +91,17 @@ public class ListScreenFragment extends BaseScreenFragment {
         ListScreenDetails.ListType selectedListType = adapter.getItem(mType.getSelectedItemPosition());
         if(ListScreenDetails.ListType.NO_RESPONSE.equals(selectedListType)) {
             hasAnswer.setVisibility(View.GONE);
-            answers.setVisibility(View.GONE);
+            answer.setVisibility(View.GONE);
             numberOfChecksNeeded.setVisibility(View.GONE);
         }
         else if(ListScreenDetails.ListType.SINGLE_RESPONSE.equals(selectedListType)) {
             hasAnswer.setVisibility(View.VISIBLE);
-            answers.setVisibility(View.VISIBLE);
+            answer.setVisibility(View.VISIBLE);
             numberOfChecksNeeded.setVisibility(View.GONE);
         }
         else if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.equals(selectedListType)) {
             hasAnswer.setVisibility(View.GONE);
-            answers.setVisibility(View.GONE);
+            answer.setVisibility(View.GONE);
             numberOfChecksNeeded.setVisibility(View.VISIBLE);
         }
     }
@@ -127,16 +127,7 @@ public class ListScreenFragment extends BaseScreenFragment {
             }
             mItems.setText(sb.toString());
             hasAnswer.setChecked(listScreenDetails.isHasAnswer());
-            sb.setLength(0);
-            if (listScreenDetails.getAnswers() != null) {
-                for (String answer : listScreenDetails.getAnswers()) {
-                    if (sb.length() > 0) {
-                        sb.append("\n");
-                    }
-                    sb.append(answer);
-                }
-            }
-            answers.setText(sb.toString());
+            answer.setText(String.valueOf(listScreenDetails.getAnswer()));
             numberOfChecksNeeded.setText(String.valueOf(listScreenDetails.getNumberOfChecksNeeded()));
 
             onTypeSelected();
@@ -156,11 +147,15 @@ public class ListScreenFragment extends BaseScreenFragment {
         listScreenDetails.setType(selectedListType.getName());
 
         listScreenDetails.setHasAnswer(hasAnswer.isChecked());
-        String[] answersArray = answers.getTextString().trim().split("\n");
-        if (answersArray.length == 0 && listScreenDetails.isHasAnswer() && ListScreenDetails.ListType.SINGLE_RESPONSE.equals(selectedListType)) {
-            throw new FormInputException("Please input at least one answer");
+        String[] answersArray = answer.getTextString().trim().split("\n");
+        int answerIndex = Integer.valueOf(answer.getTextString());
+        if (hasAnswer.isChecked() && items.length <= answerIndex) {
+            throw new FormInputException("Invalid answer position");
         }
-        listScreenDetails.setAnswers(Arrays.asList(answersArray));
+        if (hasAnswer.isChecked() && answerIndex < 0) {
+            throw new FormInputException("Invalid answer position");
+        }
+        listScreenDetails.setAnswer(answerIndex);
         if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.equals(selectedListType)) {
             try {
                 int checksNeeded = Integer.parseInt(numberOfChecksNeeded.getTextString());
@@ -204,24 +199,11 @@ public class ListScreenFragment extends BaseScreenFragment {
             }
         }
         if (item.getItemId() == R.id.action_remove_child) {
-            controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
-                @Override
-                public void onCompleted() {
-                    Toast.makeText(getActivity(), "Screen navigation removed", Toast.LENGTH_SHORT).show();
-                    EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onNext(Object o) {
-
-                }
-            });
+            Intent data = new Intent(getActivity(), SelectScreenActivity.class);
+            data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
+            data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
+            data.putExtra(SelectScreenFragment.EXTRA_IS_FOR_DELETE_CHILD, true);
+            getParentFragment().startActivityForResult(data, DELETE_SELECTED_CHILD_REQUEST_CODE);
         }
         return true;
     }

@@ -36,6 +36,7 @@ public class SelectScreenFragment extends Fragment {
     public static final String EXTRA_SCREEN_ID = "EXTRA_SCREEN_ID";
     public static final String EXTRA_TREE_ID = "EXTRA_TREE_ID";
     public static final String EXTRA_SCREEN_RELATION = "EXTRA_SCREEN_RELATION";
+    public static final String EXTRA_IS_FOR_DELETE_CHILD = "EXTRA_IS_FOR_DELETE_CHILD";
     public static final String PARENT = "PARENT";
     public static final String CHILD = "CHILD";
     private static final String TAG = SelectScreenFragment.class.getSimpleName();
@@ -47,6 +48,7 @@ public class SelectScreenFragment extends Fragment {
     private ScreenAdapter adapter;
     private String screenRelation;
     private ScreenListController controller;
+    private boolean isForDeleteChild;
 
     @InjectView(android.R.id.list)
     ListView listView;
@@ -77,6 +79,7 @@ public class SelectScreenFragment extends Fragment {
         if (getArguments() != null) {
             screenId = getArguments().getLong(EXTRA_SCREEN_ID, -1);
             treeId = getArguments().getLong(EXTRA_TREE_ID, -1);
+            isForDeleteChild = getArguments().getBoolean(EXTRA_IS_FOR_DELETE_CHILD, false);
         }
         if (screenId == -1) {
             throw new IllegalArgumentException("screen id is required");
@@ -117,7 +120,7 @@ public class SelectScreenFragment extends Fragment {
 
             }
         });
-        controller.fetchScreens(treeId, new Observer<List<Screen>>() {
+        Observer<List<Screen>> observer = new Observer<List<Screen>>() {
             @Override
             public void onCompleted() {
 
@@ -134,7 +137,13 @@ public class SelectScreenFragment extends Fragment {
                 adapter.clear();
                 adapter.addAll(screens);
             }
-        });
+        };
+        if(isForDeleteChild) {
+            controller.fetchChildrenScreens(screenId, observer);
+        }
+        else {
+            controller.fetchScreens(treeId, observer);
+        }
     }
 
     @OnItemClick(android.R.id.list)
@@ -154,7 +163,7 @@ public class SelectScreenFragment extends Fragment {
             return;
         }
         final Screen screen = adapter.getItem(listView.getCheckedItemPosition());
-        if (screen.getId() == screenId) {
+        if (screen.getId() == screenId && !isForDeleteChild) {
             AddingChildToItselfWarningDialogFragment dialog = AddingChildToItselfWarningDialogFragment.newInstance();
             dialog.setCallback(new AddingChildToItselfWarningDialogFragment.Callback() {
                 @Override
@@ -167,7 +176,7 @@ public class SelectScreenFragment extends Fragment {
 
                 }
             });
-            dialog.show(getFragmentManager(), "DIALOG");
+            dialog.show(getFragmentManager(), AddingChildToItselfWarningDialogFragment.TAG);
         } else {
             passSelectedScreenIdToCallerActivity(screen);
         }

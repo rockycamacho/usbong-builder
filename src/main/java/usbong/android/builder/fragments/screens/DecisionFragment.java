@@ -17,6 +17,7 @@ import de.greenrobot.event.EventBus;
 import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.SelectDecisionActivity;
+import usbong.android.builder.activities.SelectScreenActivity;
 import usbong.android.builder.events.OnNeedRefreshScreen;
 import usbong.android.builder.fragments.SelectScreenFragment;
 import usbong.android.builder.models.Screen;
@@ -30,6 +31,7 @@ import usbong.android.builder.models.ScreenRelation;
 public class DecisionFragment extends BaseScreenFragment {
 
     private static final String TAG = DecisionFragment.class.getSimpleName();
+    public static final int ADD_DECISION_CHILD_REQUEST_CODE = 302;
     @InjectView(R.id.content)
     FloatLabeledEditText textDisplay;
 
@@ -81,36 +83,22 @@ public class DecisionFragment extends BaseScreenFragment {
             Intent data = new Intent(getActivity(), SelectDecisionActivity.class);
             data.putExtra(SelectDecisionActivity.EXTRA_SCREEN_ID, screenId);
             data.putExtra(SelectDecisionActivity.EXTRA_TREE_ID, treeId);
-            getParentFragment().startActivityForResult(data, ADD_CHILD_REQUEST_CODE);
+            getParentFragment().startActivityForResult(data, ADD_DECISION_CHILD_REQUEST_CODE);
         }
-        //TODO: change this to remove a single child selected by the user
         if (item.getItemId() == R.id.action_remove_child) {
-            controller.deleteAllChildScreens(currentScreen.getId(), new Observer<Object>() {
-                @Override
-                public void onCompleted() {
-                    Toast.makeText(getActivity(), "Screen navigation removed", Toast.LENGTH_SHORT).show();
-                    EventBus.getDefault().post(OnNeedRefreshScreen.EVENT);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onNext(Object o) {
-
-                }
-            });
+            Intent data = new Intent(getActivity(), SelectScreenActivity.class);
+            data.putExtra(SelectScreenFragment.EXTRA_SCREEN_ID, screenId);
+            data.putExtra(SelectScreenFragment.EXTRA_TREE_ID, treeId);
+            data.putExtra(SelectScreenFragment.EXTRA_IS_FOR_DELETE_CHILD, true);
+            getParentFragment().startActivityForResult(data, DELETE_SELECTED_CHILD_REQUEST_CODE);
         }
         return true;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", Intent data)");
-        if (requestCode == ADD_CHILD_REQUEST_CODE) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_DECISION_CHILD_REQUEST_CODE) {
             Log.d(TAG, "requestCode == ADD_CHILD_REQUEST_CODE");
             if (resultCode == Activity.RESULT_OK) {
                 updateChildren(data);

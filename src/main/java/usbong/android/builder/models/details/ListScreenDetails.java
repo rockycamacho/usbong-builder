@@ -43,7 +43,7 @@ public class ListScreenDetails {
     @Expose
     private boolean hasAnswer;
     @Expose
-    private List<String> answers;
+    private int answer;
     @Expose
     private int numberOfChecksNeeded = 1;
 
@@ -79,12 +79,12 @@ public class ListScreenDetails {
         this.hasAnswer = hasAnswer;
     }
 
-    public List<String> getAnswers() {
-        return answers;
+    public int getAnswer() {
+        return answer;
     }
 
-    public void setAnswers(List<String> answers) {
-        this.answers = answers;
+    public void setAnswer(int answer) {
+        this.answer = answer;
     }
 
     public int getNumberOfChecksNeeded() {

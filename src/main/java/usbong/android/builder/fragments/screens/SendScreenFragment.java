@@ -8,9 +8,9 @@ import android.widget.Spinner;
 import butterknife.InjectView;
 import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 import usbong.android.builder.R;
-import usbong.android.builder.adapters.ProcessingTypeAdapter;
+import usbong.android.builder.adapters.SendTypeAdapter;
 import usbong.android.builder.models.Screen;
-import usbong.android.builder.models.details.ProcessingScreenDetails;
+import usbong.android.builder.models.details.SendScreenDetails;
 import usbong.android.builder.utils.JsonUtils;
 import usbong.android.builder.utils.StringUtils;
 
@@ -19,65 +19,65 @@ import java.util.Arrays;
 /**
  * Created by Rocky Camacho on 8/10/2014.
  */
-public class ProcessingScreenFragment extends BaseScreenFragment {
+public class SendScreenFragment extends BaseScreenFragment {
 
-    private static final String TAG = ProcessingScreenFragment.class.getSimpleName();
+    private static final String TAG = SendScreenFragment.class.getSimpleName();
     @InjectView(R.id.content)
     FloatLabeledEditText content;
     @InjectView(R.id.type)
     Spinner processingType;
 
-    private ProcessingTypeAdapter adapter;
+    private SendTypeAdapter adapter;
 
-    public static ProcessingScreenFragment newInstance(Bundle args) {
-        ProcessingScreenFragment fragment = new ProcessingScreenFragment();
+    public static SendScreenFragment newInstance(Bundle args) {
+        SendScreenFragment fragment = new SendScreenFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    private ProcessingScreenFragment() {
+    private SendScreenFragment() {
         // Required empty public constructor
     }
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.fragment_screen_type_processing;
+        return R.layout.fragment_screen_type_send;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new ProcessingTypeAdapter(getActivity());
+        adapter = new SendTypeAdapter(getActivity());
     }
 
     @Override
     protected void onScreenLoad(Screen screen) {
         name.setText(screen.name);
-        ProcessingScreenDetails processingScreenDetails = JsonUtils.fromJson(screen.details, ProcessingScreenDetails.class);
+        SendScreenDetails sendScreenDetails = JsonUtils.fromJson(screen.details, SendScreenDetails.class);
         String details = StringUtils.EMPTY;
         if (currentScreen.details != null) {
-            details = processingScreenDetails.getText();
+            details = sendScreenDetails.getText();
         }
         content.setText(new SpannableString(Html.fromHtml(details)));
-        ProcessingScreenDetails.ProcessingType selectedProcessingType = ProcessingScreenDetails.ProcessingType.from(processingScreenDetails.getProcessingType());
-        processingType.setSelection(adapter.getPosition(selectedProcessingType));
+        SendScreenDetails.Type selectedType = SendScreenDetails.Type.from(sendScreenDetails.getType());
+        processingType.setSelection(adapter.getPosition(selectedType));
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter.addAll(Arrays.asList(ProcessingScreenDetails.ProcessingType.values()));
+        adapter.addAll(Arrays.asList(SendScreenDetails.Type.values()));
         processingType.setAdapter(adapter);
     }
 
     @Override
     protected String convertFormDataToScreenDetails() throws Exception {
-        ProcessingScreenDetails details = new ProcessingScreenDetails();
+        SendScreenDetails details = new SendScreenDetails();
         String screenContent = content.getText().toString().replaceAll("\n", "<br>");
         details.setText(screenContent);
-        ProcessingScreenDetails.ProcessingType selectedProcessingType = adapter.getItem(processingType.getSelectedItemPosition());
-        details.setProcessingType(selectedProcessingType.getName());
+        SendScreenDetails.Type selectedType = adapter.getItem(processingType.getSelectedItemPosition());
+        details.setType(selectedType.getName());
 
         return JsonUtils.toJson(details);
     }

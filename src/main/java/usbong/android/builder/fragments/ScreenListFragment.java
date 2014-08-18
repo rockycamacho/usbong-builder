@@ -1,5 +1,6 @@
 package usbong.android.builder.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,18 +12,21 @@ import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnItemClick;
+import com.activeandroid.query.Select;
 import rx.Observer;
 import usbong.android.builder.R;
 import usbong.android.builder.activities.ScreenActivity;
 import usbong.android.builder.activities.ScreenDetailActivity;
 import usbong.android.builder.adapters.ScreenAdapter;
 import usbong.android.builder.controllers.ScreenListController;
-import usbong.android.builder.exceptions.NoStartingScreenException;
-import usbong.android.builder.fragments.dialogs.AddingChildToItselfWarningDialogFragment;
+import usbong.android.builder.controllers.UtreeListController;
 import usbong.android.builder.fragments.dialogs.DeleteConfirmationDialogFragment;
 import usbong.android.builder.models.Screen;
+import usbong.android.builder.models.Utree;
+import usbong.android.builder.utils.IntentUtils;
 import usbong.android.builder.utils.StringUtils;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -50,6 +54,7 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
     EditText search;
 
     private ScreenListController controller;
+    private UtreeListController utreeListController;
     private Screen selectedScreen;
     private ActionMode actionMode;
     private ActionMode.Callback selectedScreenCallback = new ActionMode.Callback() {
@@ -89,6 +94,7 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
             actionMode = null;
         }
     };
+    private Utree utree;
 
     private void showDeleteConfirmationDialog() {
         DeleteConfirmationDialogFragment dialog = DeleteConfirmationDialogFragment.newInstance();
@@ -165,9 +171,13 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
             if (treeId == -1) {
                 throw new IllegalArgumentException("tree is required");
             }
+            utree = new Select().from(Utree.class)
+                    .where(Utree._ID + " = ?", treeId)
+                    .executeSingle();
         }
         setHasOptionsMenu(true);
         controller = new ScreenListController();
+        utreeListController = new UtreeListController();
         adapter = new ScreenAdapter(getActivity());
     }
 
@@ -304,7 +314,44 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
             intent.putExtra(ScreenFragment.EXTRA_TREE_ID, treeId);
             startActivity(intent);
         }
+        if (item.getItemId() == R.id.action_export) {
+            exportTree();
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void exportTree() {
+        Intent intent = IntentUtils.getSelectFolderIntent(getActivity());
+        startActivityForResult(intent, IntentUtils.CHOOSE_FOLDER_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == IntentUtils.CHOOSE_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            String outputFolderLocation = data.getData().getPath();
+            String treeFolderLocation = getActivity().getFilesDir() + File.separator + "trees" + File.separator + utree.name + File.separator;
+            String tempFolderLocation = getActivity().getFilesDir() + File.separator + "temp" + File.separator;
+            utreeListController.exportTree(utree, outputFolderLocation, treeFolderLocation, tempFolderLocation, new Observer<String>() {
+
+                @Override
+                public void onCompleted() {
+                    Toast.makeText(getActivity(), ".utree exported", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e(TAG, e.getMessage(), e);
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNext(String s) {
+
+                }
+            });
+        }
     }
 
 }

@@ -122,10 +122,6 @@ public class ScreenFactory {
             }
             SpecialInputScreenDetails specialInputScreenDetails = new SpecialInputScreenDetails();
             specialInputScreenDetails.setText(details);
-            if (isVideoInput(screenType)) {
-                String video = attrs[1];
-                specialInputScreenDetails.setVideo(video);
-            }
             SpecialInputScreenDetails.InputType inputType = getInputType(screenType);
             specialInputScreenDetails.setInputType(inputType.getName());
 
@@ -133,24 +129,55 @@ public class ScreenFactory {
             screen.screenType = UsbongBuilderScreenType.SPECIAL_INPUT.getName();
             screen.name = details;
             screen.details = JsonUtils.toJson(specialInputScreenDetails);
-        } else if (isProcessing(screenType)) {
+        } else if (isSend(screenType)) {
             String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
-            ProcessingScreenDetails processingScreenDetails = new ProcessingScreenDetails();
-            processingScreenDetails.setText(details);
-            ProcessingScreenDetails.ProcessingType processingType = ProcessingScreenDetails.ProcessingType.from(screenType);
-            processingScreenDetails.setProcessingType(processingType.getName());
+            SendScreenDetails sendScreenDetails = new SendScreenDetails();
+            sendScreenDetails.setText(details);
+            SendScreenDetails.Type type = SendScreenDetails.Type.from(screenType);
+            sendScreenDetails.setType(type.getName());
             screen = new Screen();
-            screen.screenType = UsbongBuilderScreenType.SPECIAL_INPUT.getName();
+            screen.screenType = UsbongBuilderScreenType.SEND.getName();
             screen.name = details;
-            screen.details = JsonUtils.toJson(processingScreenDetails);
+            screen.details = JsonUtils.toJson(sendScreenDetails);
+        } else if (isVideoInput(screenType)) {
+            String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
+            VideoScreenDetails videoScreenDetails = new VideoScreenDetails();
+            videoScreenDetails.setText(StringUtils.EMPTY);
+            if(UsbongScreenType.VIDEO_FROM_FILE_WITH_TEXT.getName().equals(screenType)) {
+                videoScreenDetails.setText(details);
+            }
+            String video = attrs[1];
+            videoScreenDetails.setVideo(video);
+            screen = new Screen();
+            screen.screenType = UsbongBuilderScreenType.VIDEO.getName();
+            screen.name = details;
+            screen.details = JsonUtils.toJson(videoScreenDetails);
+        } else if (isMisc(screenType)) {
+            String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
+            MiscScreenDetails miscScreenDetails = new MiscScreenDetails();
+            miscScreenDetails.setText(details);
+            if(UsbongScreenType.SIMPLE_ENCRYPT.getName().equals(screenType)) {
+                miscScreenDetails.setType(MiscScreenDetails.Type.SIMPLE_ENCRYPT.getName());
+            }
+            else if(UsbongScreenType.TIMESTAMP_DISPLAY.getName().equals(screenType)) {
+                miscScreenDetails.setType(MiscScreenDetails.Type.TIMESTAMP.getName());
+            }
+            screen = new Screen();
+            screen.screenType = UsbongBuilderScreenType.MISC.getName();
+            screen.name = details;
+            screen.details = JsonUtils.toJson(miscScreenDetails);
         } else if (isList(screenType)) {
             String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
             ListScreenDetails listScreenDetails = new ListScreenDetails();
             if(details.contains(ANSWER_PREFIX)) {
                 listScreenDetails.setHasAnswer(true);
                 int indexOfAnswer = details.indexOf(ANSWER_PREFIX);
-                String[] answers = details.substring(indexOfAnswer + ANSWER_PREFIX.length()).split("\\|\\|");
-                listScreenDetails.setAnswers(Arrays.asList(answers));
+                try {
+                    int answer = Integer.parseInt(details.substring(indexOfAnswer + ANSWER_PREFIX.length()));
+                    listScreenDetails.setAnswer(answer);
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
                 details = details.substring(0, indexOfAnswer);
             }
             listScreenDetails.setText(details);
@@ -160,7 +187,7 @@ public class ScreenFactory {
             }
             listScreenDetails.setType(listType.getName());
             listScreenDetails.setItems(new ArrayList<String>());
-            listScreenDetails.setAnswers(new ArrayList<String>());
+            listScreenDetails.setAnswer(0);
             screen = new Screen();
             screen.screenType = UsbongBuilderScreenType.LIST.getName();
             screen.name = details;
@@ -171,7 +198,7 @@ public class ScreenFactory {
             listScreenDetails.setText(details);
             listScreenDetails.setType(ListScreenDetails.ListType.NO_RESPONSE.getName());
             listScreenDetails.setItems(new ArrayList<String>());
-            listScreenDetails.setAnswers(new ArrayList<String>());
+            listScreenDetails.setAnswer(0);
             screen = new Screen();
             screen.screenType = UsbongBuilderScreenType.LIST.getName();
             screen.name = details;
@@ -193,9 +220,13 @@ public class ScreenFactory {
         return attrs.length == 1;
     }
 
-    private static boolean isProcessing(String screenType) {
+    private static boolean isSend(String screenType) {
         return UsbongScreenType.SEND_TO_WEBSERVER.getName().equals(screenType) ||
-                UsbongScreenType.SEND_TO_CLOUD_BASED_SERVICE.getName().equals(screenType) ||
+                UsbongScreenType.SEND_TO_CLOUD_BASED_SERVICE.getName().equals(screenType);
+    }
+
+    private static boolean isMisc(String screenType) {
+        return UsbongScreenType.TIMESTAMP_DISPLAY.getName().equals(screenType) ||
                 UsbongScreenType.SIMPLE_ENCRYPT.getName().equals(screenType);
     }
 
@@ -229,20 +260,16 @@ public class ScreenFactory {
     }
 
     private static boolean isSpecialInput(String screenType) {
-        return isVideoInput(screenType) ||
-                UsbongScreenType.AUDIO_RECORDER.getName().equals(screenType) ||
+        return UsbongScreenType.AUDIO_RECORDER.getName().equals(screenType) ||
                 UsbongScreenType.DATE.getName().equals(screenType) ||
                 UsbongScreenType.PAINT.getName().equals(screenType) ||
                 UsbongScreenType.PHOTO_CAPTURE.getName().equals(screenType) ||
-                UsbongScreenType.QR_CODE_READER.getName().equals(screenType) ||
-                UsbongScreenType.TIMESTAMP_DISPLAY.getName().equals(screenType);
+                UsbongScreenType.QR_CODE_READER.getName().equals(screenType);
     }
 
     private static SpecialInputScreenDetails.InputType getInputType(String screenType) {
         SpecialInputScreenDetails.InputType inputType = SpecialInputScreenDetails.InputType.DATE;
-        if (isVideoInput(screenType)) {
-            inputType = SpecialInputScreenDetails.InputType.VIDEO;
-        } else if (UsbongScreenType.AUDIO_RECORDER.getName().equals(screenType)) {
+        if (UsbongScreenType.AUDIO_RECORDER.getName().equals(screenType)) {
             inputType = SpecialInputScreenDetails.InputType.AUDIO;
         } else if (UsbongScreenType.DATE.getName().equals(screenType)) {
             inputType = SpecialInputScreenDetails.InputType.DATE;
@@ -252,8 +279,6 @@ public class ScreenFactory {
             inputType = SpecialInputScreenDetails.InputType.CAMERA;
         } else if (UsbongScreenType.QR_CODE_READER.getName().equals(screenType)) {
             inputType = SpecialInputScreenDetails.InputType.QR_CODE;
-        } else if (UsbongScreenType.TIMESTAMP_DISPLAY.getName().equals(screenType)) {
-            inputType = SpecialInputScreenDetails.InputType.TIMESTAMP;
         }
         return inputType;
     }

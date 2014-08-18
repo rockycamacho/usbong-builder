@@ -5,16 +5,15 @@ import com.google.gson.annotations.Expose;
 /**
  * Created by Rocky Camacho on 8/10/2014.
  */
-public class ProcessingScreenDetails {
+public class MiscScreenDetails {
 
-    public static enum ProcessingType {
-        SEND_TO_WEB_SERVER("sendToWebServer"),
-        SEND_TO_CLOUD_BASED_SERVICE("sendToCloudBasedService"),
+    public static enum Type {
+        TIMESTAMP("timestamp"),
         SIMPLE_ENCRYPT("simpleEncrypt");
 
         private final String name;
 
-        private ProcessingType(String name) {
+        private Type(String name) {
             this.name = name;
         }
 
@@ -22,8 +21,8 @@ public class ProcessingScreenDetails {
             return name;
         }
 
-        public static ProcessingType from(String name) {
-            for (ProcessingType processingType : ProcessingType.values()) {
+        public static Type from(String name) {
+            for (Type processingType : Type.values()) {
                 if (processingType.getName().equals(name)) {
                     return processingType;
                 }
@@ -35,7 +34,7 @@ public class ProcessingScreenDetails {
     @Expose
     private String text;
     @Expose
-    private String processingType;
+    private String type;
 
     public String getText() {
         return text;
@@ -45,12 +44,12 @@ public class ProcessingScreenDetails {
         this.text = text;
     }
 
-    public String getProcessingType() {
-        return processingType;
+    public String getType() {
+        return type;
     }
 
-    public void setProcessingType(String processingType) {
-        this.processingType = processingType;
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

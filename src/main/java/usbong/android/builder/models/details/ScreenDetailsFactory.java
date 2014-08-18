@@ -36,18 +36,30 @@ public class ScreenDetailsFactory {
             specialInputScreenDetails.setVideo(StringUtils.EMPTY);
             return JsonUtils.toJson(specialInputScreenDetails);
         }
-        if (UsbongBuilderScreenType.PROCESSING.getName().equals(screen.screenType)) {
-            ProcessingScreenDetails processingScreenDetails = new ProcessingScreenDetails();
-            processingScreenDetails.setText(screen.name);
-            processingScreenDetails.setProcessingType(ProcessingScreenDetails.ProcessingType.SEND_TO_WEB_SERVER.getName());
-            return JsonUtils.toJson(processingScreenDetails);
+        if (UsbongBuilderScreenType.SEND.getName().equals(screen.screenType)) {
+            SendScreenDetails sendScreenDetails = new SendScreenDetails();
+            sendScreenDetails.setText(screen.name);
+            sendScreenDetails.setType(SendScreenDetails.Type.SEND_TO_WEB_SERVER.getName());
+            return JsonUtils.toJson(sendScreenDetails);
+        }
+        if (UsbongBuilderScreenType.VIDEO.getName().equals(screen.screenType)) {
+            VideoScreenDetails videoScreenDetails = new VideoScreenDetails();
+            videoScreenDetails.setText(screen.name);
+            videoScreenDetails.setVideo(StringUtils.EMPTY);
+            return JsonUtils.toJson(videoScreenDetails);
+        }
+        if (UsbongBuilderScreenType.MISC.getName().equals(screen.screenType)) {
+            MiscScreenDetails miscScreenDetails = new MiscScreenDetails();
+            miscScreenDetails.setText(screen.name);
+            miscScreenDetails.setType(MiscScreenDetails.Type.SIMPLE_ENCRYPT.getName());
+            return JsonUtils.toJson(miscScreenDetails);
         }
         if (UsbongBuilderScreenType.LIST.getName().equals(screen.screenType)) {
             ListScreenDetails listScreenDetails = new ListScreenDetails();
             listScreenDetails.setText(screen.name);
             listScreenDetails.setType(ListScreenDetails.ListType.NO_RESPONSE.getName());
             listScreenDetails.setItems(new ArrayList<String>());
-            listScreenDetails.setAnswers(new ArrayList<String>());
+            listScreenDetails.setAnswer(0);
             return JsonUtils.toJson(listScreenDetails);
         }
         return screen.name;

@@ -60,14 +60,14 @@
 	</task-node>
 
 	<task-node name="textDisplay~'That story was written by Victor Hugo, sir.'{br}{br}'Correct, Jessa,' the teacher says, and continues lecturing.{br}{br}A knock makes the class look at the door. Professor Benedict enters.">
-		<transition to="textDisplay~'Good Morning, everyone!'{br}{br}Everyone answers with a 'good morning' as well.{br}{br}Prof. Benedict looks at the other teacher, and says, 'Sir! I’m so sorry for bothering your English Literature class! But, may I please excuse Jessa and Carl?'" name="Any"></transition>
+		<transition to="textDisplay~'Good Morning, everyone!'{br}{br}Everyone answer with a 'good morning' as well.{br}{br}Prof. Benedict looks at the other teacher, and says, 'Sir! I’m so sorry for bothering your English Literature class! But, may I please excuse Jessa and Carl?'" name="Any"></transition>
 	</task-node>
 
-	<task-node name="textDisplay~'Good Morning, everyone!'{br}{br}Everyone answers with a 'good morning' as well.{br}{br}Prof. Benedict looks at the other teacher, and says, 'Sir! I’m so sorry for bothering your English Literature class! But, may I please excuse Jessa and Carl?'">
-		<transition to="textDisplay~'It’s not a problem, Manong Bok! But remember, Jessa, Carl, the essays I asked you to write are due tomorrow.'{br}{br}'Yes, sir,' answers Jessa and Carl in unison." name="Any"></transition>
+	<task-node name="textDisplay~'Good Morning, everyone!'{br}{br}Everyone answer with a 'good morning' as well.{br}{br}Prof. Benedict looks at the other teacher, and says, 'Sir! I’m so sorry for bothering your English Literature class! But, may I please excuse Jessa and Carl?'">
+		<transition to="textDisplay~'It’s not a problem, Manong Bok! But remember, Jessa, Carl, the essays I asked you to write are due tomorrow.'{br}{br}'Yes, sir,' answer Jessa and Carl in unison." name="Any"></transition>
 	</task-node>
 
-	<task-node name="textDisplay~'It’s not a problem, Manong Bok! But remember, Jessa, Carl, the essays I asked you to write are due tomorrow.'{br}{br}'Yes, sir,' answers Jessa and Carl in unison.">
+	<task-node name="textDisplay~'It’s not a problem, Manong Bok! But remember, Jessa, Carl, the essays I asked you to write are due tomorrow.'{br}{br}'Yes, sir,' answer Jessa and Carl in unison.">
 		<transition to="textImageDisplay~briefingroom~The two of them leave the classroom and follow Manong Bok. He leads them to his office; inside are Rex and Mia. Without saying anything, Manong Bok goes to the TV and turns it on. A report is shown and Ratdago’s face is seen." name="Any"></transition>
 	</task-node>
 	

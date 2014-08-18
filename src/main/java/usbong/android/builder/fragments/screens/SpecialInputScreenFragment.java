@@ -35,12 +35,6 @@ public class SpecialInputScreenFragment extends BaseScreenFragment {
     FloatLabeledEditText content;
     @InjectView(R.id.input_type)
     Spinner inputType;
-    @InjectView(R.id.upload)
-    Button upload;
-    @InjectView(R.id.video)
-    TextView video;
-    @InjectView(R.id.video_upload)
-    LinearLayout videoUploadSection;
     private SpecialInputTypeAdapter adapter;
 
     /**
@@ -79,12 +73,6 @@ public class SpecialInputScreenFragment extends BaseScreenFragment {
             details = specialInputScreenDetails.getText();
         }
         content.setText(new SpannableString(Html.fromHtml(details)));
-        if (SpecialInputScreenDetails.InputType.VIDEO.getName().equals(inputType)) {
-            videoUploadSection.setVisibility(View.VISIBLE);
-        } else {
-            videoUploadSection.setVisibility(View.GONE);
-        }
-        video.setText(specialInputScreenDetails.getVideo());
         SpecialInputScreenDetails.InputType selectedInputType = SpecialInputScreenDetails.InputType.from(specialInputScreenDetails.getInputType());
         inputType.setSelection(adapter.getPosition(selectedInputType));
     }
@@ -104,59 +92,6 @@ public class SpecialInputScreenFragment extends BaseScreenFragment {
         details.setText(screenContent);
         SpecialInputScreenDetails.InputType selectedInputType = adapter.getItem(inputType.getSelectedItemPosition());
         details.setInputType(selectedInputType.getName());
-        if (SpecialInputScreenDetails.InputType.VIDEO.equals(selectedInputType) && StringUtils.isEmpty(video.getText().toString())) {
-            throw new FormInputException("Please upload a video");
-        }
-        details.setVideo(video.getText().toString());
-
         return JsonUtils.toJson(details);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IntentUtils.CHOOSE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            final String outputFolderLocation = getActivity().getFilesDir() + File.separator + "trees" + File.separator + currentScreen.utree.name + File.separator + "res";
-            controller.uploadVideo(getActivity(), data.getData(), outputFolderLocation, new Observer<File>() {
-
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onNext(File uploadedFile) {
-                    video.setText(uploadedFile.getName());
-                }
-            });
-        }
-    }
-
-    @OnItemSelected(R.id.input_type)
-    public void onItemSelected(int position) {
-        SpecialInputScreenDetails.InputType selectedInputType = adapter.getItem(position);
-        if (SpecialInputScreenDetails.InputType.VIDEO.equals(selectedInputType)) {
-            videoUploadSection.setVisibility(View.VISIBLE);
-        } else {
-            videoUploadSection.setVisibility(View.GONE);
-        }
-    }
-
-    @OnClick(R.id.upload)
-    public void onUploadClicked() {
-        Intent fileDialogIntent = IntentUtils.getSelectFileIntent(getActivity(), "file/*.mp4");
-        try {
-            startActivityForResult(
-                    Intent.createChooser(fileDialogIntent, getString(R.string.select_a_video)),
-                    IntentUtils.CHOOSE_FILE_REQUEST_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getActivity(), getString(R.string.please_install_file_manager), Toast.LENGTH_SHORT).show();
-        }
     }
 }

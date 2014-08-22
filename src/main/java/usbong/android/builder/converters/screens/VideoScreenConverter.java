@@ -26,7 +26,7 @@ public class VideoScreenConverter implements ScreenConverter {
         if (UsbongScreenType.VIDEO_FROM_FILE_WITH_TEXT.equals(inputType)) {
             contentPart = SEPARATOR + content;
         }
-        return contentPart;
+        return StringUtils.toUsbongText(contentPart);
     }
 
     private UsbongScreenType getUsbongScreenType(String content) {

@@ -11,10 +11,10 @@ public enum UsbongBuilderScreenType {
     TEXT_AND_IMAGE("textImage"),
     TEXT_INPUT("textInput"),
     SPECIAL_INPUT("specialInput"),
+    LIST("list"),
     VIDEO("video"),
-    MISC("misc"),
     SEND("send"),
-    LIST("list");
+    MISC("misc");
 
     private final String name;
 

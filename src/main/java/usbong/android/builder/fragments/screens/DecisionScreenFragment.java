@@ -25,12 +25,12 @@ import usbong.android.builder.models.ScreenRelation;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
- * Use the {@link DecisionFragment#newInstance} factory method to
+ * Use the {@link DecisionScreenFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DecisionFragment extends BaseScreenFragment {
+public class DecisionScreenFragment extends BaseScreenFragment {
 
-    private static final String TAG = DecisionFragment.class.getSimpleName();
+    private static final String TAG = DecisionScreenFragment.class.getSimpleName();
     public static final int ADD_DECISION_CHILD_REQUEST_CODE = 302;
     @InjectView(R.id.content)
     FloatLabeledEditText textDisplay;
@@ -41,13 +41,13 @@ public class DecisionFragment extends BaseScreenFragment {
      *
      * @return A new instance of fragment TextDisplayFragment.
      */
-    public static DecisionFragment newInstance(Bundle args) {
-        DecisionFragment fragment = new DecisionFragment();
+    public static DecisionScreenFragment newInstance(Bundle args) {
+        DecisionScreenFragment fragment = new DecisionScreenFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public DecisionFragment() {
+    public DecisionScreenFragment() {
         // Required empty public constructor
     }
 

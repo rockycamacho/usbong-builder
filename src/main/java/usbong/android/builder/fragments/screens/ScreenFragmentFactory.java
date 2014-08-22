@@ -10,9 +10,9 @@ public class ScreenFragmentFactory {
 
     public static BaseScreenFragment getFragment(String screenType, Bundle arguments) {
         if (UsbongBuilderScreenType.TEXT.getName().equals(screenType)) {
-            return TextDisplayFragment.newInstance(arguments);
+            return TextDisplayScreenFragment.newInstance(arguments);
         } else if (UsbongBuilderScreenType.DECISION.getName().equals(screenType)) {
-            return DecisionFragment.newInstance(arguments);
+            return DecisionScreenFragment.newInstance(arguments);
         } else if (UsbongBuilderScreenType.IMAGE.getName().equals(screenType)) {
             return ImageFragment.newInstance(arguments);
         } else if (UsbongBuilderScreenType.TEXT_AND_IMAGE.getName().equals(screenType)) {

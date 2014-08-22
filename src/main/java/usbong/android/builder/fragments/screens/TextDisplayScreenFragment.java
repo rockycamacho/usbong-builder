@@ -11,12 +11,12 @@ import usbong.android.builder.models.Screen;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
- * Use the {@link TextDisplayFragment#newInstance} factory method to
+ * Use the {@link TextDisplayScreenFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TextDisplayFragment extends BaseScreenFragment {
+public class TextDisplayScreenFragment extends BaseScreenFragment {
 
-    private static final String TAG = TextDisplayFragment.class.getSimpleName();
+    private static final String TAG = TextDisplayScreenFragment.class.getSimpleName();
 
     @InjectView(R.id.content)
     FloatLabeledEditText textDisplay;
@@ -27,13 +27,13 @@ public class TextDisplayFragment extends BaseScreenFragment {
      *
      * @return A new instance of fragment TextDisplayFragment.
      */
-    public static TextDisplayFragment newInstance(Bundle args) {
-        TextDisplayFragment fragment = new TextDisplayFragment();
+    public static TextDisplayScreenFragment newInstance(Bundle args) {
+        TextDisplayScreenFragment fragment = new TextDisplayScreenFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public TextDisplayFragment() {
+    public TextDisplayScreenFragment() {
         // Required empty public constructor
     }
 

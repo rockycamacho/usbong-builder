@@ -17,7 +17,7 @@
         app:showAsAction="never"/>
     <item android:id="@+id/action_mark_as_start"
           android:title="Mark As Start"
-          android:icon="@android:drawable/ic_menu_set_as"
+          android:icon="@drawable/select_start_node"
           android:orderInCategory="100"
           app:showAsAction="never"/>
 </menu>

@@ -13,12 +13,12 @@ public class ListScreenConverter implements ScreenConverter {
     @Override
     public String getName(Screen screen) {
         ListScreenDetails listScreenDetails = JsonUtils.fromJson(screen.details, ListScreenDetails.class);
-        if(ListScreenDetails.ListType.NO_RESPONSE.getName().equals(listScreenDetails.getType())) {
+        if(ListScreenDetails.ListType.ANY_ANSWER.getName().equals(listScreenDetails.getType())) {
             return StringUtils.toUsbongText(listScreenDetails.getText());
         }
         String contentPart = StringUtils.toUsbongText(listScreenDetails.getText());
         String screenType = StringUtils.EMPTY;
-        if(ListScreenDetails.ListType.SINGLE_RESPONSE.getName().equals(listScreenDetails.getType())) {
+        if(ListScreenDetails.ListType.SINGLE_ANSWER.getName().equals(listScreenDetails.getType())) {
             screenType = UsbongScreenType.RADIO_BUTTONS.getName();
             if(listScreenDetails.isHasAnswer()) {
                 screenType = UsbongScreenType.RADIO_BUTTONS_WITH_ANSWER.getName();
@@ -26,7 +26,7 @@ public class ListScreenConverter implements ScreenConverter {
                 contentPart += answerPart;
             }
         }
-        else  if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.getName().equals(listScreenDetails.getType())) {
+        else  if(ListScreenDetails.ListType.MULTIPLE_ANSWERS.getName().equals(listScreenDetails.getType())) {
             screenType = UsbongScreenType.CHECKLIST.getName();
             contentPart = listScreenDetails.getNumberOfChecksNeeded() + SEPARATOR + contentPart;
         }

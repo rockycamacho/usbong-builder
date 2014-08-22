@@ -78,9 +78,9 @@ public class ListScreenFragment extends BaseScreenFragment {
         super.onViewCreated(view, savedInstanceState);
 
         adapter.setNotifyOnChange(false);
-        adapter.add(ListScreenDetails.ListType.NO_RESPONSE);
-        adapter.add(ListScreenDetails.ListType.SINGLE_RESPONSE);
-        adapter.add(ListScreenDetails.ListType.MULTIPLE_RESPONSE);
+        adapter.add(ListScreenDetails.ListType.ANY_ANSWER);
+        adapter.add(ListScreenDetails.ListType.SINGLE_ANSWER);
+        adapter.add(ListScreenDetails.ListType.MULTIPLE_ANSWERS);
         adapter.notifyDataSetChanged();
         mType.setAdapter(adapter);
         numberOfChecksNeeded.setText("1");
@@ -89,17 +89,17 @@ public class ListScreenFragment extends BaseScreenFragment {
     @OnItemSelected(R.id.type)
     public void onTypeSelected() {
         ListScreenDetails.ListType selectedListType = adapter.getItem(mType.getSelectedItemPosition());
-        if(ListScreenDetails.ListType.NO_RESPONSE.equals(selectedListType)) {
+        if(ListScreenDetails.ListType.ANY_ANSWER.equals(selectedListType)) {
             hasAnswer.setVisibility(View.GONE);
             answer.setVisibility(View.GONE);
             numberOfChecksNeeded.setVisibility(View.GONE);
         }
-        else if(ListScreenDetails.ListType.SINGLE_RESPONSE.equals(selectedListType)) {
+        else if(ListScreenDetails.ListType.SINGLE_ANSWER.equals(selectedListType)) {
             hasAnswer.setVisibility(View.VISIBLE);
             answer.setVisibility(View.VISIBLE);
             numberOfChecksNeeded.setVisibility(View.GONE);
         }
-        else if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.equals(selectedListType)) {
+        else if(ListScreenDetails.ListType.MULTIPLE_ANSWERS.equals(selectedListType)) {
             hasAnswer.setVisibility(View.GONE);
             answer.setVisibility(View.GONE);
             numberOfChecksNeeded.setVisibility(View.VISIBLE);
@@ -156,7 +156,7 @@ public class ListScreenFragment extends BaseScreenFragment {
             throw new FormInputException("Invalid answer position");
         }
         listScreenDetails.setAnswer(answerIndex);
-        if(ListScreenDetails.ListType.MULTIPLE_RESPONSE.equals(selectedListType)) {
+        if(ListScreenDetails.ListType.MULTIPLE_ANSWERS.equals(selectedListType)) {
             try {
                 int checksNeeded = Integer.parseInt(numberOfChecksNeeded.getTextString());
                 if(checksNeeded > listScreenDetails.getItems().size()) {
@@ -178,8 +178,8 @@ public class ListScreenFragment extends BaseScreenFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_child) {
             ListScreenDetails.ListType selectedListType = adapter.getItem(mType.getSelectedItemPosition());
-            if((ListScreenDetails.ListType.SINGLE_RESPONSE.equals(selectedListType) && hasAnswer.isChecked()) ||
-                    ListScreenDetails.ListType.MULTIPLE_RESPONSE.equals(selectedListType)) {
+            if((ListScreenDetails.ListType.SINGLE_ANSWER.equals(selectedListType) && hasAnswer.isChecked()) ||
+                    ListScreenDetails.ListType.MULTIPLE_ANSWERS.equals(selectedListType)) {
                 Intent data = new Intent(getActivity(), SelectDecisionActivity.class);
                 ArrayList<String> decisions = new ArrayList<String>();
                 decisions.add("Correct");

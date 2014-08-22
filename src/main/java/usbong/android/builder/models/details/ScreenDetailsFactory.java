@@ -57,7 +57,7 @@ public class ScreenDetailsFactory {
         if (UsbongBuilderScreenType.LIST.getName().equals(screen.screenType)) {
             ListScreenDetails listScreenDetails = new ListScreenDetails();
             listScreenDetails.setText(screen.name);
-            listScreenDetails.setType(ListScreenDetails.ListType.NO_RESPONSE.getName());
+            listScreenDetails.setType(ListScreenDetails.ListType.ANY_ANSWER.getName());
             listScreenDetails.setItems(new ArrayList<String>());
             listScreenDetails.setAnswer(0);
             return JsonUtils.toJson(listScreenDetails);

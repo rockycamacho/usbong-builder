@@ -103,7 +103,16 @@ public class ScreenFragment extends Fragment {
 
         ButterKnife.inject(this, view);
 
-        adapter.addAll(UsbongBuilderScreenType.values());
+        adapter.add(UsbongBuilderScreenType.DECISION);
+        adapter.add(UsbongBuilderScreenType.TEXT);
+        adapter.add(UsbongBuilderScreenType.IMAGE);
+        adapter.add(UsbongBuilderScreenType.TEXT_AND_IMAGE);
+        adapter.add(UsbongBuilderScreenType.TEXT_INPUT);
+        adapter.add(UsbongBuilderScreenType.SPECIAL_INPUT);
+        adapter.add(UsbongBuilderScreenType.LIST);
+        adapter.add(UsbongBuilderScreenType.VIDEO);
+        adapter.add(UsbongBuilderScreenType.SEND);
+        adapter.add(UsbongBuilderScreenType.MISC);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }

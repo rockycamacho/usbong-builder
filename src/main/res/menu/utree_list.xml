@@ -10,7 +10,7 @@
           app:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_import"
-          android:icon="@android:drawable/ic_menu_slideshow"
+          android:icon="@drawable/ic_menu_archive"
           android:title="Import .utree"
           app:showAsAction="ifRoom" />
 

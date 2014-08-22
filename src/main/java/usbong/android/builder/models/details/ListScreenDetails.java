@@ -10,9 +10,9 @@ import java.util.List;
 public class ListScreenDetails {
 
     public static enum ListType {
-        NO_RESPONSE("NO_RESPONSE"),
-        SINGLE_RESPONSE("SINGLE_RESPONSE"),
-        MULTIPLE_RESPONSE("MULTIPLE_RESPONSE");
+        ANY_ANSWER("ANY_ANSWER"),
+        SINGLE_ANSWER("SINGLE_ANSWER"),
+        MULTIPLE_ANSWERS("MULTIPLE_ANSWERS");
 
         private final String name;
 

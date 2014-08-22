@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     float:fletHintTextColor="@color/usbong_color"
-                    float:fletFloatingHint="Answer (separated by new lines)"
+                    float:fletFloatingHint="Answers separated by new lines. Press enter to create a new line."
                     float:fletImeOptions="flagNoExtractUi"
                     float:fletInputType="textMultiLine"/>
 

@@ -181,9 +181,9 @@ public class ScreenFactory {
                 details = details.substring(0, indexOfAnswer);
             }
             listScreenDetails.setText(details);
-            ListScreenDetails.ListType listType = ListScreenDetails.ListType.SINGLE_RESPONSE;
+            ListScreenDetails.ListType listType = ListScreenDetails.ListType.SINGLE_ANSWER;
             if(UsbongScreenType.CHECKLIST.getName().equals(screenType)) {
-                listType = ListScreenDetails.ListType.MULTIPLE_RESPONSE;
+                listType = ListScreenDetails.ListType.MULTIPLE_ANSWERS;
             }
             listScreenDetails.setType(listType.getName());
             listScreenDetails.setItems(new ArrayList<String>());
@@ -196,7 +196,7 @@ public class ScreenFactory {
             String details = StringUtils.toUsbongBuilderText(attrs[attrs.length - 1]);
             ListScreenDetails listScreenDetails = new ListScreenDetails();
             listScreenDetails.setText(details);
-            listScreenDetails.setType(ListScreenDetails.ListType.NO_RESPONSE.getName());
+            listScreenDetails.setType(ListScreenDetails.ListType.ANY_ANSWER.getName());
             listScreenDetails.setItems(new ArrayList<String>());
             listScreenDetails.setAnswer(0);
             screen = new Screen();

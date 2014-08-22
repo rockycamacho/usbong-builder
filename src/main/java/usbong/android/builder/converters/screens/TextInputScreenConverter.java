@@ -44,7 +44,7 @@ public class TextInputScreenConverter implements ScreenConverter {
         } else if (TextInputScreenDetails.NUMERIC.equals(textInputScreenDetails.getInputType())) {
             screenType = UsbongScreenType.TEXT_FIELD_NUMERICAL.getName();
         }
-        return screenType + SEPARATOR + content;
+        return screenType + SEPARATOR + variablePart + content;
     }
 
     private String getAnswerPart(TextInputScreenDetails textInputScreenDetails) {

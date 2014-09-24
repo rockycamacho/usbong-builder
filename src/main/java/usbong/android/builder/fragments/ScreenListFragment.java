@@ -184,14 +184,7 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_screen_list_list, container, false);
-
-        // Set the adapter
-        listView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) listView).setAdapter(adapter);
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_screen_list_list, container, false);
     }
 
     @Override
@@ -199,6 +192,9 @@ public class ScreenListFragment extends Fragment implements Observer<List<Screen
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.inject(this, view);
+
+        ((AdapterView<ListAdapter>) listView).setAdapter(adapter);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

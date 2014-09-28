@@ -67,7 +67,7 @@ public class TextInputScreenFragment extends BaseScreenFragment {
         return fragment;
     }
 
-    private TextInputScreenFragment() {
+    public TextInputScreenFragment() {
         // Required empty public constructor
     }
 

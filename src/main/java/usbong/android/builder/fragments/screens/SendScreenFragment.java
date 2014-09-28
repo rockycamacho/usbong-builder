@@ -35,7 +35,7 @@ public class SendScreenFragment extends BaseScreenFragment {
         return fragment;
     }
 
-    private SendScreenFragment() {
+    public SendScreenFragment() {
         // Required empty public constructor
     }
 

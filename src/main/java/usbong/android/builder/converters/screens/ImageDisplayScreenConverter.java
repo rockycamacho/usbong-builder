@@ -17,11 +17,11 @@ public class ImageDisplayScreenConverter implements ScreenConverter {
         ImageScreenDetails imageScreenDetails = JsonUtils.fromJson(screen.details, ImageScreenDetails.class);
         String imageId = imageScreenDetails.getImagePath().substring(imageScreenDetails.getImagePath().lastIndexOf("/") + 1, imageScreenDetails.getImagePath().lastIndexOf("."));
         String screenType = UsbongScreenType.IMAGE_DISPLAY.getName();
+        String captionPart = StringUtils.EMPTY;
         if (imageScreenDetails.isHasCaption()) {
             screenType = UsbongScreenType.CLICKABLE_IMAGE_DISPLAY.getName();
-            String imageCaption = StringUtils.toUsbongText(imageScreenDetails.getImageCaption());
-            return screenType + SEPARATOR + imageId + SEPARATOR + imageCaption;
+            captionPart = SEPARATOR + StringUtils.toUsbongText(imageScreenDetails.getImageCaption());
         }
-        return screenType + SEPARATOR + imageId + SEPARATOR + "null";
+        return screenType + SEPARATOR + imageId + captionPart;
     }
 }

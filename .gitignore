@@ -11,3 +11,4 @@ local.properties
 .pairs
 .travis.yml
 sh.exe.stackdump
+src/main/assets/crashlytics-build.properties

@@ -18,10 +18,11 @@ public class TextImageDisplayScreenConverter implements ScreenConverter {
         ImageScreenDetails imageScreenDetails = JsonUtils.fromJson(screen.details, ImageScreenDetails.class);
         String imageId = imageScreenDetails.getImagePath().substring(imageScreenDetails.getImagePath().lastIndexOf("/") + 1, imageScreenDetails.getImagePath().lastIndexOf("."));
         String screenType = getScreenType(imageScreenDetails);
+        String captionPart = StringUtils.EMPTY;
         if (imageScreenDetails.isHasCaption()) {
-            return screenType + SEPARATOR + imageId + SEPARATOR + StringUtils.toUsbongText(imageScreenDetails.getImageCaption());
+            captionPart =  SEPARATOR + StringUtils.toUsbongText(imageScreenDetails.getImageCaption());
         }
-        return screenType + SEPARATOR + imageId + SEPARATOR + StringUtils.toUsbongText(imageScreenDetails.getText());
+        return screenType + SEPARATOR + imageId + captionPart + SEPARATOR + StringUtils.toUsbongText(imageScreenDetails.getText());
     }
 
     private String getScreenType(ImageScreenDetails imageScreenDetails) {

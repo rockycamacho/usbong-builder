@@ -37,12 +37,10 @@ public class ScreenUtils {
             out = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
-
             clearCache(screenContainer.getContext());
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         } finally {
-            ResourceUtils.free(bmp);
             ResourceUtils.close(out);
         }
     }

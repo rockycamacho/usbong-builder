@@ -134,7 +134,9 @@ public class ScreenDetailFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, e.getMessage(), e);
-                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                if(e.getMessage() != null) {
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -281,8 +283,11 @@ public class ScreenDetailFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", Intent data)");
-        for (Fragment fragment : getChildFragmentManager().getFragments()) {
-            fragment.onActivityResult(requestCode, resultCode, data);
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        if(fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

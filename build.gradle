@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
         classpath 'org.robolectric.gradle:gradle-android-test-plugin:0.10.+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
     }
@@ -39,16 +39,24 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 2
-        versionName "1.0.0-SNAPSHOT"
+        versionCode 3
+        versionName "Sept. 11, 2014"
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
+
+    signingConfigs {
+        myConfig {
+        }
+    }
+
     buildTypes {
         debug {
 
         }
         release {
+            debuggable false
             runProguard false
+            signingConfig signingConfigs.myConfig
         }
     }
 

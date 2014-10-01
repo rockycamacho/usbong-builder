@@ -58,7 +58,7 @@ public class ListScreenFragment extends BaseScreenFragment {
         return fragment;
     }
 
-    private ListScreenFragment() {
+    public ListScreenFragment() {
         // Required empty public constructor
     }
 

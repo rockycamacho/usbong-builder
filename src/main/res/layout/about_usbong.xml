@@ -16,7 +16,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="--Usbong Builder (beta)--\nver: Aug. 19, 2014"/>
+                android:text="--Usbong Builder (beta)--\nver: Sept. 10, 2014"/>
 
         <TextView
                 android:id="@+id/background"

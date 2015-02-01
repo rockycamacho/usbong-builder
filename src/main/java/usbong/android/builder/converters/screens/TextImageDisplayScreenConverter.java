@@ -26,7 +26,7 @@ public class TextImageDisplayScreenConverter implements ScreenConverter {
     }
 
     private String getScreenType(ImageScreenDetails imageScreenDetails) {
-        if (ImagePosition.ABOVE_TEXT.equals(imageScreenDetails.getImagePosition())) {
+        if (ImagePosition.ABOVE_TEXT.getName().equals(imageScreenDetails.getImagePosition())) {
             if (imageScreenDetails.isHasCaption()) {
                 return UsbongScreenType.CLICKABLE_IMAGE_TEXT_DISPLAY.getName();
             } else {
